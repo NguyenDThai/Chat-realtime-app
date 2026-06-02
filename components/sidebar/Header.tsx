@@ -1,6 +1,6 @@
 import React from "react";
 
-const Header = ({ createNewRoom }: { createNewRoom: () => void }) => {
+const Header = () => {
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center space-x-3">
@@ -24,10 +24,7 @@ const Header = ({ createNewRoom }: { createNewRoom: () => void }) => {
           <p className="text-emerald-200 text-xs">Đang online</p>
         </div>
       </div>
-      <button
-        onClick={createNewRoom}
-        className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200"
-      >
+      <button className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200">
         <svg
           className="w-5 h-5 text-white"
           fill="none"

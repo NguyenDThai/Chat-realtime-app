@@ -1,9 +1,12 @@
+import type { UserType } from "@/types/user.type";
+
 export interface ChatListType {
-  id: number;
+  _id: string;
   name: string;
+  avatar: string;
+  type: "single" | "group";
+  members: UserType[];
   lastMessage: string;
   time: string;
-  unread: number;
-  avatar: string;
   isOnline: boolean;
 }

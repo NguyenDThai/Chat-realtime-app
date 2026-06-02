@@ -1,35 +1,17 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { LogOut, User } from "lucide-react";
-import type { UserType } from "@/types/user.type";
-import { getMeApi } from "@/src/api/auth.api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Footer = () => {
-  const [user, setUser] = useState<UserType | null>(null);
+  const { logout, user } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     navigate("/login");
     toast.success("Đăng xuất thành công");
   };
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await getMeApi();
-        setUser(res);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          toast.error(error.response?.data);
-        }
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   return (
     <div className="p-4 border-t border-white/20 bg-white/5">

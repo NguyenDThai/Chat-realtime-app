@@ -3,12 +3,14 @@ import { loginApi } from "@/src/api/auth.api";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const { login } = useAuth();
 
   const navigate = useNavigate();
 
@@ -26,7 +28,7 @@ const Login = () => {
     try {
       const res = await loginApi(formData);
       toast.success("Đăng nhập thành công");
-      localStorage.setItem("token", res.token);
+      login(res.token, res.user);
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {

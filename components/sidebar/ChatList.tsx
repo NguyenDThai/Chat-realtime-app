@@ -1,3 +1,4 @@
+import { useAuth } from "@/hooks/useAuth";
 import type { ChatListType } from "../../types/list.chat.type";
 
 const ChatList = ({
@@ -9,14 +10,25 @@ const ChatList = ({
   selectedRoom: ChatListType | null;
   setSelectedRoom: (room: ChatListType) => void;
 }) => {
+  const { user } = useAuth();
+
+  const getRoomName = (room: ChatListType) => {
+    if (room.type === "group") {
+      return room.name || "Nhóm chưa đặt tên";
+    }
+
+    const partner = room.members.find((member) => member._id !== user?._id);
+    return partner ? partner.name : "Người dùng ẩn danh";
+  };
+
   return (
     <div className="flex-1 overflow-y-auto custom-scrollbar">
       {filteredRooms.map((room) => (
         <div
-          key={room.id}
+          key={room._id}
           onClick={() => setSelectedRoom(room)}
           className={`p-4 hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-white/10 ${
-            selectedRoom?.id === room.id
+            selectedRoom?._id === room._id
               ? "bg-white/20 border-l-4 border-l-emerald-400"
               : ""
           }`}
@@ -26,7 +38,7 @@ const ChatList = ({
             <div className="relative">
               <div
                 className={`w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center ${
-                  selectedRoom?.id === room.id
+                  selectedRoom?._id === room._id
                     ? "shadow-lg shadow-emerald-500/30"
                     : ""
                 }`}
@@ -54,7 +66,7 @@ const ChatList = ({
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
                 <h3 className="text-white font-semibold truncate">
-                  {room.name}
+                  {getRoomName(room)}
                 </h3>
                 <span className="text-xs text-white/50">{room.time}</span>
               </div>
@@ -62,15 +74,6 @@ const ChatList = ({
                 {room.lastMessage}
               </p>
             </div>
-
-            {/* Unread badge */}
-            {room.unread > 0 && (
-              <div className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center">
-                <span className="text-white text-xs font-bold">
-                  {room.unread}
-                </span>
-              </div>
-            )}
           </div>
         </div>
       ))}

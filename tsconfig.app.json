@@ -25,5 +25,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "config/axios.ts"]
+  "include": ["src", "components", "hooks", "lib", "types", "config", "context"]
 }

@@ -1,63 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatList from "@/components/sidebar/ChatList";
 import Header from "@/components/sidebar/Header";
 import Footer from "@/components/sidebar/Footer";
 import type { ChatListType } from "@/types/list.chat.type";
+import { getChatListApi } from "@/src/api/chat.list.api";
 
 const Home = () => {
-  const [rooms, setRooms] = useState<ChatListType[]>([
-    {
-      id: 1,
-      name: "Tổng đài hỗ trợ",
-      lastMessage: "Xin chào! Tôi có thể giúp gì cho bạn?",
-      time: "10:30",
-      unread: 2,
-      avatar: "support",
-      isOnline: true,
-    },
-    {
-      id: 2,
-      name: "Phòng kỹ thuật",
-      lastMessage: "Lỗi đã được fix rồi bạn nhé",
-      time: "09:45",
-      unread: 0,
-      avatar: "tech",
-      isOnline: true,
-    },
-    {
-      id: 3,
-      name: "Cộng đồng Real Chat",
-      lastMessage: "Chào mừng thành viên mới! 🎉",
-      time: "Hôm qua",
-      unread: 5,
-      avatar: "community",
-      isOnline: true,
-    },
-    {
-      id: 4,
-      name: "Hỗ trợ thanh toán",
-      lastMessage: "Bạn đã thanh toán thành công",
-      time: "Hôm qua",
-      unread: 0,
-      avatar: "payment",
-      isOnline: false,
-    },
-    {
-      id: 5,
-      name: "Phòng admin",
-      lastMessage: "Chính sách bảo mật mới",
-      time: "02/01/2024",
-      unread: 1,
-      avatar: "admin",
-      isOnline: true,
-    },
-  ]);
+  const [rooms, setRooms] = useState<ChatListType[]>([]);
 
   const [selectedRoom, setSelectedRoom] = useState<ChatListType | null>(null);
   const [messages, setMessages] = useState<Record<number, any>>({});
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const fetchChatList = async () => {
+      try {
+        const res = await getChatListApi();
+        setRooms(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchChatList();
+  }, []);
 
   // Khởi tạo messages cho từng room
   const getRoomMessages = (roomId) => {
@@ -109,121 +76,7 @@ const Home = () => {
     return messages[roomId];
   };
 
-  const currentMessages = selectedRoom ? getRoomMessages(selectedRoom.id) : [];
-
-  const handleSendMessage = (e) => {
-    e.preventDefault();
-    if (!inputMessage.trim() || !selectedRoom) return;
-
-    // Thêm tin nhắn của user
-    const newMessage = {
-      id: currentMessages.length + 1,
-      text: inputMessage,
-      sender: "user",
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    setMessages((prev) => ({
-      ...prev,
-      [selectedRoom.id]: [
-        ...(prev[selectedRoom.id] || getRoomMessages(selectedRoom.id)),
-        newMessage,
-      ],
-    }));
-    setInputMessage("");
-
-    // Cập nhật lastMessage và time cho room
-    setRooms((prevRooms) =>
-      prevRooms.map((room) =>
-        room.id === selectedRoom.id
-          ? {
-              ...room,
-              lastMessage: inputMessage,
-              time: "Vừa xong",
-              unread: room.unread + 1,
-            }
-          : room,
-      ),
-    );
-
-    // Giả lập bot đang gõ
-    setIsTyping(true);
-
-    // Bot trả lời sau 1.5s
-    setTimeout(() => {
-      const botReply = {
-        id: currentMessages.length + 2,
-        text: getBotReply(inputMessage, selectedRoom.name),
-        sender: "bot",
-        time: new Date().toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        }),
-      };
-      setMessages((prev) => ({
-        ...prev,
-        [selectedRoom.id]: [
-          ...(prev[selectedRoom.id] || getRoomMessages(selectedRoom.id)),
-          botReply,
-        ],
-      }));
-      setIsTyping(false);
-    }, 1500);
-  };
-
-  const getBotReply = (message, roomName) => {
-    const msg = message.toLowerCase();
-    if (
-      msg.includes("xin chào") ||
-      msg.includes("hello") ||
-      msg.includes("hi")
-    ) {
-      return `Chào bạn! Rất vui được gặp bạn trong ${roomName}! 💚`;
-    } else if (msg.includes("cảm ơn")) {
-      return "Không có gì! Rất hân hạnh được giúp đỡ bạn! 😊";
-    } else if (msg.includes("tính năng")) {
-      return "Real Chat có nhiều tính năng: nhắn tin realtime, gọi video, chia sẻ file, group chat, và bảo mật đầu cuối! 🚀";
-    } else if (msg.includes("giá") || msg.includes("phí")) {
-      return "Real Chat có phiên bản miễn phí và premium với nhiều tính năng nâng cao. Bạn muốn biết thêm chi tiết không? 💰";
-    } else if (roomName.includes("kỹ thuật")) {
-      return "Bạn gặp vấn đề kỹ thuật gì? Hãy mô tả chi tiết để team hỗ trợ nhanh nhất nhé! 🔧";
-    } else if (roomName.includes("thanh toán")) {
-      return "Về vấn đề thanh toán, bạn vui lòng cung cấp mã giao dịch để mình kiểm tra giúp bạn! 💳";
-    } else {
-      return "Cảm ơn bạn đã nhắn tin! Nhân viên hỗ trợ sẽ phản hồi bạn trong giây lát. Hoặc bạn có thể tham khảo thêm tại website của chúng tôi! 🌟";
-    }
-  };
-
-  const createNewRoom = () => {
-    const newRoomName = prompt("Nhập tên phòng chat mới:");
-    if (newRoomName && newRoomName.trim()) {
-      const newRoom = {
-        id: rooms.length + 1,
-        name: newRoomName,
-        lastMessage: "Phòng chat mới được tạo",
-        time: "Vừa xong",
-        unread: 0,
-        avatar: "custom",
-        isOnline: true,
-      };
-      setRooms([newRoom, ...rooms]);
-      setSelectedRoom(newRoom);
-      setMessages((prev) => ({
-        ...prev,
-        [newRoom.id]: [
-          {
-            id: 1,
-            text: `Chào mừng bạn đến với phòng ${newRoomName}! Hãy bắt đầu trò chuyện nhé! 🎉`,
-            sender: "bot",
-            time: "Vừa xong",
-          },
-        ],
-      }));
-    }
-  };
+  const currentMessages = selectedRoom ? getRoomMessages(selectedRoom._id) : [];
 
   const filteredRooms = rooms.filter((room) =>
     room.name.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -240,7 +93,7 @@ const Home = () => {
       <div className="relative w-80 bg-emerald-900/40 backdrop-blur-md border-r border-white/20 flex flex-col">
         {/* Sidebar Header */}
         <div className="p-6 border-b border-white/20">
-          <Header createNewRoom={createNewRoom} />
+          <Header />
 
           {/* Search Box */}
           <div className="relative">
@@ -302,7 +155,8 @@ const Home = () => {
                         />
                       </svg>
                     </div>
-                    {rooms.find((r) => r.id === selectedRoom.id)?.isOnline && (
+                    {rooms.find((r) => r._id === selectedRoom._id)
+                      ?.isOnline && (
                       <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 rounded-full border-2 border-emerald-900 animate-pulse"></div>
                     )}
                   </div>
@@ -311,7 +165,7 @@ const Home = () => {
                       {selectedRoom.name}
                     </h2>
                     <p className="text-emerald-200 text-xs">
-                      {rooms.find((r) => r.id === selectedRoom.id)?.isOnline
+                      {rooms.find((r) => r._id === selectedRoom._id)?.isOnline
                         ? "Đang hoạt động"
                         : "Offline"}{" "}
                       • {currentMessages.length} tin nhắn
@@ -449,7 +303,7 @@ const Home = () => {
             {/* Input Area */}
             <div className="p-4 border-t border-white/20 bg-gradient-to-t from-emerald-900/30 to-transparent">
               <form
-                onSubmit={handleSendMessage}
+                // onSubmit={handleSendMessage}
                 className="flex items-center space-x-3"
               >
                 <button className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200">
@@ -535,7 +389,7 @@ const Home = () => {
                 Hãy chọn hoặc tạo một phòng chat để bắt đầu trò chuyện
               </p>
               <button
-                onClick={createNewRoom}
+                // onClick={createNewRoom}
                 className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-semibold hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-500/30 inline-flex items-center space-x-2"
               >
                 <svg
