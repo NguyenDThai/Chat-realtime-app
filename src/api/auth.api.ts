@@ -12,12 +12,6 @@ export const loginApi = async (data: LoginPayload) => {
 };
 
 export const getMeApi = async () => {
-  const token = localStorage.getItem("token");
-
-  const res = await axiosApi.get("/auth/me", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const res = await axiosApi.get("/auth/me");
   return res.data;
 };
