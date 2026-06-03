@@ -1,80 +1,28 @@
-import { Camera, X } from "lucide-react";
-import React, { useState } from "react";
+import { getAllUserApi } from "@/src/api/user.api";
+import type { UserType } from "@/types/user.type";
+import { Camera, Search, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 const CreateChatRoom = ({ onClose }) => {
   const [roomName, setRoomName] = useState("");
-  const [selectedAvatar, setSelectedAvatar] = useState(null);
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedAvatar, setSelectedAvatar] = useState("");
+  const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Danh sách user mẫu
-  const usersList = [
-    {
-      id: 1,
-      name: "Nguyễn Văn A",
-      email: "nguyenvana@example.com",
-      avatar: "A",
-      online: true,
-      status: "Đang hoạt động",
-    },
-    {
-      id: 2,
-      name: "Trần Thị B",
-      email: "tranthib@example.com",
-      avatar: "B",
-      online: true,
-      status: "Đang hoạt động",
-    },
-    {
-      id: 3,
-      name: "Lê Văn C",
-      email: "levanc@example.com",
-      avatar: "C",
-      online: false,
-      status: "Offline",
-    },
-    {
-      id: 4,
-      name: "Phạm Thị D",
-      email: "phamthid@example.com",
-      avatar: "D",
-      online: true,
-      status: "Đang hoạt động",
-    },
-    {
-      id: 5,
-      name: "Hoàng Văn E",
-      email: "hoangvane@example.com",
-      avatar: "E",
-      online: false,
-      status: "Offline",
-    },
-    {
-      id: 6,
-      name: "Ngô Thị F",
-      email: "ngothif@example.com",
-      avatar: "F",
-      online: true,
-      status: "Đang hoạt động",
-    },
-    {
-      id: 7,
-      name: "Đặng Văn G",
-      email: "dangvang@example.com",
-      avatar: "G",
-      online: true,
-      status: "Đang hoạt động",
-    },
-    {
-      id: 8,
-      name: "Bùi Thị H",
-      email: "buithih@example.com",
-      avatar: "H",
-      online: false,
-      status: "Offline",
-    },
-  ];
+  const [usersList, setUsersList] = useState<UserType[]>([]);
+
+  useEffect(() => {
+    const fetchAllUser = async () => {
+      try {
+        const data = await getAllUserApi();
+        setUsersList(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchAllUser();
+  }, []);
 
   // Hàm xử lý khi người dùng chọn ảnh
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -89,8 +37,8 @@ const CreateChatRoom = ({ onClose }) => {
   };
 
   const handleToggleUser = (user) => {
-    if (selectedUsers.find((u) => u.id === user.id)) {
-      setSelectedUsers(selectedUsers.filter((u) => u.id !== user.id));
+    if (selectedUsers.find((u) => u._id === user._id)) {
+      setSelectedUsers(selectedUsers.filter((u) => u._id !== user._id));
     } else {
       setSelectedUsers([...selectedUsers, user]);
     }
@@ -104,7 +52,7 @@ const CreateChatRoom = ({ onClose }) => {
     onClose();
   };
 
-  const filteredUsers = usersList.filter(
+  const filteredUsers = usersList?.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -210,7 +158,7 @@ const CreateChatRoom = ({ onClose }) => {
                 <div className="flex flex-wrap gap-2">
                   {selectedUsers.map((user) => (
                     <div
-                      key={user.id}
+                      key={user._id}
                       className="flex items-center space-x-2 px-3 py-1.5 bg-emerald-500/20 border border-emerald-400/50 rounded-xl"
                     >
                       <span className="text-white text-sm">{user.name}</span>
@@ -219,19 +167,7 @@ const CreateChatRoom = ({ onClose }) => {
                         onClick={() => handleToggleUser(user)}
                         className="hover:bg-white/10 rounded-full p-0.5"
                       >
-                        <svg
-                          className="w-3 h-3 text-white/70"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
+                        <X className="w-3.5 h-3.5 text-white/70" />
                       </button>
                     </div>
                   ))}
@@ -259,30 +195,18 @@ const CreateChatRoom = ({ onClose }) => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full px-4 py-2 pl-10 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/50 transition-all duration-200 text-white placeholder-white/50 text-sm"
                 />
-                <svg
-                  className="absolute left-3 top-2.5 w-4 h-4 text-white/50"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
+                <Search className="w-4 h-4 text-white/50 absolute left-3 top-2.5" />
               </div>
 
               {/* Danh sách user */}
               <div className="space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
                 {filteredUsers.map((user) => (
                   <button
-                    key={user.id}
+                    key={user._id}
                     type="button"
                     onClick={() => handleToggleUser(user)}
                     className={`w-full p-3 rounded-xl transition-all duration-200 flex items-center justify-between group ${
-                      selectedUsers.find((u) => u.id === user.id)
+                      selectedUsers.find((u) => u._id === user._id)
                         ? "bg-emerald-500/20 border border-emerald-400/50"
                         : "bg-white/5 hover:bg-white/10 border border-white/10"
                     }`}
@@ -290,12 +214,19 @@ const CreateChatRoom = ({ onClose }) => {
                     <div className="flex items-center space-x-3">
                       {/* Avatar user */}
                       <div className="relative">
-                        <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center font-bold text-white">
-                          {user.avatar}
+                        <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center font-bold text-white overflow-hidden">
+                          {user.avatar &&
+                          (user.avatar.startsWith("http") ||
+                            user.avatar.includes("/")) ? (
+                            <img
+                              src={user.avatar}
+                              alt={user.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            user.avatar || user.name.charAt(0).toUpperCase()
+                          )}
                         </div>
-                        {user.online && (
-                          <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-emerald-900"></div>
-                        )}
                       </div>
 
                       {/* Thông tin user */}
@@ -310,12 +241,12 @@ const CreateChatRoom = ({ onClose }) => {
                     {/* Checkbox tùy chỉnh */}
                     <div
                       className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200 ${
-                        selectedUsers.find((u) => u.id === user.id)
+                        selectedUsers.find((u) => u._id === user._id)
                           ? "bg-emerald-500 border-emerald-500"
                           : "border-white/30 group-hover:border-emerald-400"
                       }`}
                     >
-                      {selectedUsers.find((u) => u.id === user.id) && (
+                      {selectedUsers.find((u) => u._id === user._id) && (
                         <svg
                           className="w-3 h-3 text-white"
                           fill="none"
