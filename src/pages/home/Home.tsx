@@ -65,6 +65,7 @@ const Home = () => {
           filteredRooms={filteredRooms}
           selectedRoom={selectedRoom}
           setSelectedRoom={setSelectedRoom}
+          fetchChatList={fetchChatList}
         />
 
         {/* User Info Footer */}
