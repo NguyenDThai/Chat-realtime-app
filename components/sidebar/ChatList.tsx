@@ -1,5 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import type { ChatListType } from "../../types/list.chat.type";
+import { Users } from "lucide-react";
 
 const ChatList = ({
   filteredRooms,
@@ -35,27 +36,38 @@ const ChatList = ({
         >
           <div className="flex items-center space-x-3">
             {/* Avatar */}
+            {/* Avatar */}
             <div className="relative">
+              {/* Thêm font-bold, text-white và đặc biệt là overflow-hidden để cắt ảnh vừa khít viền bo tròn */}
               <div
-                className={`w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center ${
+                className={`w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center font-bold text-white overflow-hidden ${
                   selectedRoom?._id === room._id
                     ? "shadow-lg shadow-emerald-500/30"
                     : ""
                 }`}
               >
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
+                {room.type === "single" ? (
+                  // Nếu là chat 1-1: Tìm avatar/chữ cái đầu của đối phương
+                  (() => {
+                    const partner = room.members.find(
+                      (m) => m._id !== user?._id,
+                    );
+                    return partner?.avatar &&
+                      (partner.avatar.startsWith("http") ||
+                        partner.avatar.includes("/")) ? (
+                      <img
+                        src={partner.avatar}
+                        alt={partner.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      partner?.name.charAt(0).toUpperCase() || "?"
+                    );
+                  })()
+                ) : (
+                  // Nếu là chat nhóm (group): Hiển thị icon nhóm mặc định của bạn
+                  <Users className="w-6 h-6 text-white" />
+                )}
               </div>
               {room.isOnline && (
                 <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 rounded-full border-2 border-emerald-900"></div>
