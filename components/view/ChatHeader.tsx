@@ -1,8 +1,15 @@
 import ChatAvatar from "@/components/share/ChatAvatar";
 import { useAuth } from "@/hooks/useAuth";
 import type { ChatListType } from "@/types/list.chat.type";
+import { EllipsisVertical } from "lucide-react";
 
-const ChatHeader = ({ selectedRoom }: { selectedRoom: ChatListType }) => {
+const ChatHeader = ({
+  selectedRoom,
+  setShowDetailSidebar,
+}: {
+  selectedRoom: ChatListType;
+  setShowDetailSidebar: (show: boolean) => void;
+}) => {
   const { user } = useAuth();
 
   const getRoomName = (room: ChatListType) => {
@@ -69,20 +76,11 @@ const ChatHeader = ({ selectedRoom }: { selectedRoom: ChatListType }) => {
               />
             </svg>
           </button>
-          <button className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200">
-            <svg
-              className="w-5 h-5 text-white/70"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-              />
-            </svg>
+          <button
+            onClick={() => setShowDetailSidebar(true)}
+            className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200"
+          >
+            <EllipsisVertical className="w-5 h-5 text-white/70" />
           </button>
         </div>
       </div>

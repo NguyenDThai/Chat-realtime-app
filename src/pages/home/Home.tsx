@@ -9,11 +9,13 @@ import MessageList from "@/components/view/MessageList";
 import ChatHeader from "@/components/view/ChatHeader";
 import EmptyChat from "@/components/view/EmptyChat";
 import { Search } from "lucide-react";
+import RoomDetailSidebar from "@/components/sidebar/RoomDetailSidebar";
 
 const Home = () => {
   const [rooms, setRooms] = useState<ChatListType[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<ChatListType | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showDetailSidebar, setShowDetailSidebar] = useState(false);
 
   const fetchChatList = async () => {
     try {
@@ -72,16 +74,29 @@ const Home = () => {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col relative">
         {selectedRoom ? (
-          <>
+          <div className="flex flex-1 overflow-hidden">
             {/* Chat Header */}
-            <ChatHeader selectedRoom={selectedRoom} />
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <ChatHeader
+                selectedRoom={selectedRoom}
+                setShowDetailSidebar={setShowDetailSidebar}
+              />
 
-            {/* Messages Area */}
-            <MessageList />
+              {/* Messages Area */}
+              <MessageList />
 
-            {/* Input Area */}
-            <ChatInput />
-          </>
+              {/* Input Area */}
+              <ChatInput />
+            </div>
+
+            {/* Side bar thong tin chi tiet room */}
+            {showDetailSidebar && (
+              <RoomDetailSidebar
+                room={selectedRoom}
+                onClose={() => setShowDetailSidebar(false)}
+              />
+            )}
+          </div>
         ) : (
           // Empty State - Chưa chọn phòng chat
           <EmptyChat />

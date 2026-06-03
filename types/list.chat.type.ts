@@ -9,4 +9,5 @@ export interface ChatListType {
   lastMessage: string;
   time: string;
   isOnline: boolean;
+  createdBy: UserType;
 }
