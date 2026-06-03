@@ -1,9 +1,8 @@
 import CreateChatRoom from "@/components/modal/CreateChatRoom";
-import { createChatListApi } from "@/src/api/chat.list.api";
 import { MessageSquareMore, Plus } from "lucide-react";
 import { useState } from "react";
 
-const Header = () => {
+const Header = ({ fetchChatList }: { fetchChatList: () => void }) => {
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -24,7 +23,12 @@ const Header = () => {
         <Plus className="text-white w-5 h-5" />
       </button>
 
-      {showModal && <CreateChatRoom onClose={() => setShowModal(false)} />}
+      {showModal && (
+        <CreateChatRoom
+          onClose={() => setShowModal(false)}
+          fetchChatList={fetchChatList}
+        />
+      )}
     </div>
   );
 };

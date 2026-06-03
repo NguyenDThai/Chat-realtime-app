@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
-import type { ChatListType } from "../../types/list.chat.type";
-import { Users } from "lucide-react";
+import type { ChatListType } from "@/types/list.chat.type";
+import ChatAvatar from "@/components/share/ChatAvatar";
 
 const ChatList = ({
   filteredRooms,
@@ -36,42 +36,12 @@ const ChatList = ({
         >
           <div className="flex items-center space-x-3">
             {/* Avatar */}
-            {/* Avatar */}
             <div className="relative">
-              {/* Thêm font-bold, text-white và đặc biệt là overflow-hidden để cắt ảnh vừa khít viền bo tròn */}
-              <div
-                className={`w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center font-bold text-white overflow-hidden ${
-                  selectedRoom?._id === room._id
-                    ? "shadow-lg shadow-emerald-500/30"
-                    : ""
-                }`}
-              >
-                {room.type === "single" ? (
-                  // Nếu là chat 1-1: Tìm avatar/chữ cái đầu của đối phương
-                  (() => {
-                    const partner = room.members.find(
-                      (m) => m._id !== user?._id,
-                    );
-                    return partner?.avatar &&
-                      (partner.avatar.startsWith("http") ||
-                        partner.avatar.includes("/")) ? (
-                      <img
-                        src={partner.avatar}
-                        alt={partner.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      partner?.name.charAt(0).toUpperCase() || "?"
-                    );
-                  })()
-                ) : (
-                  // Nếu là chat nhóm (group): Hiển thị icon nhóm mặc định của bạn
-                  <Users className="w-6 h-6 text-white" />
-                )}
-              </div>
-              {room.isOnline && (
-                <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 rounded-full border-2 border-emerald-900"></div>
-              )}
+              <ChatAvatar
+                room={room}
+                currentUserId={user?._id}
+                className={`w-12 h-12 ${selectedRoom?._id === room._id ? "shadow-lg shadow-emerald-500/30" : ""}`}
+              />
             </div>
 
             {/* Thông tin phòng */}

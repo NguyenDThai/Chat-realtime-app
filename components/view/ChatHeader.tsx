@@ -1,7 +1,6 @@
+import ChatAvatar from "@/components/share/ChatAvatar";
 import { useAuth } from "@/hooks/useAuth";
 import type { ChatListType } from "@/types/list.chat.type";
-import { Users } from "lucide-react";
-import React from "react";
 
 const ChatHeader = ({ selectedRoom }: { selectedRoom: ChatListType }) => {
   const { user } = useAuth();
@@ -21,30 +20,11 @@ const ChatHeader = ({ selectedRoom }: { selectedRoom: ChatListType }) => {
         <div className="flex items-center space-x-3">
           {/* Image user and group */}
           <div className="relative">
-            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center font-bold text-white overflow-hidden">
-              {selectedRoom.type === "single" ? (
-                // Nếu là chat 1-1, tìm avatar đối phương
-                (() => {
-                  const partner = selectedRoom.members.find(
-                    (m) => m._id !== user?._id,
-                  );
-                  return partner?.avatar &&
-                    (partner.avatar.startsWith("http") ||
-                      partner.avatar.includes("/")) ? (
-                    <img
-                      src={partner.avatar}
-                      alt={partner.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    partner?.name.charAt(0).toUpperCase() || "?"
-                  );
-                })()
-              ) : (
-                // Nếu là nhóm, hiển thị icon nhóm mặc định
-                <Users className="w-6 h-6 text-white" />
-              )}
-            </div>
+            <ChatAvatar
+              room={selectedRoom}
+              currentUserId={user?._id}
+              className={"w-12 h-12"}
+            />
           </div>
 
           <div>

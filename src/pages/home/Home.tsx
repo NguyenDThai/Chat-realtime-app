@@ -13,18 +13,18 @@ import { Search } from "lucide-react";
 const Home = () => {
   const [rooms, setRooms] = useState<ChatListType[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<ChatListType | null>(null);
-  const [isTyping, setIsTyping] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const fetchChatList = async () => {
+    try {
+      const res = await getChatListApi();
+      setRooms(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    const fetchChatList = async () => {
-      try {
-        const res = await getChatListApi();
-        setRooms(res);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchChatList();
   }, []);
 
@@ -43,7 +43,7 @@ const Home = () => {
       <div className="relative w-80 bg-emerald-900/40 border-r border-white/20 flex flex-col">
         {/* Sidebar Header */}
         <div className="p-6 border-b border-white/20">
-          <Header />
+          <Header fetchChatList={fetchChatList} />
 
           {/* Search Box */}
           <div className="relative">
@@ -77,7 +77,7 @@ const Home = () => {
             <ChatHeader selectedRoom={selectedRoom} />
 
             {/* Messages Area */}
-            <MessageList isTyping={isTyping} />
+            <MessageList />
 
             {/* Input Area */}
             <ChatInput />

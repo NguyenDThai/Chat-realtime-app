@@ -1,14 +1,24 @@
+import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
+import { createChatListApi } from "@/src/api/chat.list.api";
 import { getAllUserApi } from "@/src/api/user.api";
 import type { UserType } from "@/types/user.type";
 import { Camera, Search, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { toast } from "react-toastify";
 
-const CreateChatRoom = ({ onClose }) => {
+const CreateChatRoom = ({
+  onClose,
+  fetchChatList,
+}: {
+  onClose: () => void;
+  fetchChatList: () => void;
+}) => {
   const [roomName, setRoomName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const [usersList, setUsersList] = useState<UserType[]>([]);
 
@@ -28,6 +38,7 @@ const CreateChatRoom = ({ onClose }) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setSelectedAvatar(reader.result as string); // Lưu chuỗi Base64 vào state selectedAvatar
@@ -36,7 +47,7 @@ const CreateChatRoom = ({ onClose }) => {
     }
   };
 
-  const handleToggleUser = (user) => {
+  const handleToggleUser = (user: UserType) => {
     if (selectedUsers.find((u) => u._id === user._id)) {
       setSelectedUsers(selectedUsers.filter((u) => u._id !== user._id));
     } else {
@@ -57,6 +68,43 @@ const CreateChatRoom = ({ onClose }) => {
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!roomName.trim()) {
+      toast.warn("Vui lòng nhập tên phòng chat");
+      return;
+    }
+
+    if (selectedUsers.length < 2) {
+      toast.warn("Vui lòng chọn ít nhất 2 người");
+      return;
+    }
+
+    try {
+      let avatarUrl = "";
+
+      if (imageFile) {
+        avatarUrl = await uploadToCloudinary(imageFile);
+      }
+
+      const newRoom = await createChatListApi({
+        type: "group",
+        name: roomName.trim(),
+        members: selectedUsers.map((u) => u._id),
+        avatar: avatarUrl,
+      });
+
+      if (newRoom) {
+        fetchChatList();
+        handleClose();
+        toast.success("Tạo phòng chat thành công!");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Không thể tạo phòng chat, vui lòng thử lại!");
+    }
+  };
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in">
@@ -83,7 +131,11 @@ const CreateChatRoom = ({ onClose }) => {
 
         {/* Form Content */}
         <div className="p-6 overflow-y-auto custom-scrollbar flex-1">
-          <form className="space-y-6">
+          <form
+            id="create-room-form"
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
             {/* Ảnh đại diện nhóm */}
             <div className="flex flex-col items-center space-y-2">
               <label className="block text-sm font-semibold text-white self-start">
@@ -281,12 +333,17 @@ const CreateChatRoom = ({ onClose }) => {
         <div className="p-6 border-t border-white/20 bg-gradient-to-t from-emerald-900/30 to-transparent">
           <div className="flex items-center space-x-3">
             <button
+              type="button"
               onClick={handleClose}
               className="flex-1 px-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white font-semibold hover:bg-white/20 transition-all duration-200"
             >
               Hủy
             </button>
-            <button className="flex-1 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl text-white font-semibold hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-500/30">
+            <button
+              type="submit"
+              form="create-room-form"
+              className="flex-1 px-4 py-2 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl text-white font-semibold hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-500/30"
+            >
               Tạo phòng
             </button>
           </div>

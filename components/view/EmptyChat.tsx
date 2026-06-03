@@ -25,10 +25,7 @@ const EmptyChat = () => {
         <p className="text-emerald-200 mb-6">
           Hãy chọn hoặc tạo một phòng chat để bắt đầu trò chuyện
         </p>
-        <button
-          // onClick={createNewRoom}
-          className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-semibold hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-500/30 inline-flex items-center space-x-2"
-        >
+        <button className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-semibold hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-500/30 inline-flex items-center space-x-2">
           <svg
             className="w-5 h-5"
             fill="none"
