@@ -5,12 +5,15 @@ import { router } from "./routes";
 import "./index.css";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "@/context/AuthContext";
+import { ConfirmProvider } from "@/context/ConfirmContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
-      <ToastContainer position="bottom-right" />
+      <ConfirmProvider>
+        <RouterProvider router={router} />
+        <ToastContainer position="bottom-right" />
+      </ConfirmProvider>
     </AuthProvider>
   </StrictMode>,
 );

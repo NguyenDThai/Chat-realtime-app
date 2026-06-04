@@ -101,7 +101,6 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
         avatar: selectedAvatar,
         members: selectedUsers.map((u) => u._id),
       });
-      console.log("🚀 ~ handleSubmit ~ updatedRoom:", updatedRoom);
 
       if (updatedRoom) {
         fetchChatList();

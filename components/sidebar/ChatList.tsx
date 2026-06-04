@@ -4,6 +4,8 @@ import ChatAvatar from "@/components/share/ChatAvatar";
 import { Edit, Ellipsis, Trash2, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import UpdateChatRoom from "@/components/modal/UpdateChatRoom";
+import { deleteChatListApi } from "@/src/api/chat.list.api";
+import { useConfirm } from "@/hooks/useConfirm";
 
 const ChatList = ({
   filteredRooms,
@@ -17,6 +19,7 @@ const ChatList = ({
   fetchChatList: () => Promise<void>;
 }) => {
   const { user } = useAuth();
+  const confirm = useConfirm();
   const [activeMenuRoomId, setActiveMenuRoomId] = useState<string | null>(null);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [roomToUpdate, setRoomToUpdate] = useState<ChatListType | null>(null);
@@ -40,6 +43,27 @@ const ChatList = ({
 
     const partner = room.members.find((member) => member._id !== user?._id);
     return partner ? partner.name : "Người dùng ẩn danh";
+  };
+
+  const handleDeleteRoom = async (id: string) => {
+    const isConfirm = await confirm({
+      title: "Xóa cuộc trò chuyện",
+      message: "Bạn có chắc chắn muốn xóa cuộc trò chuyện này?",
+      confirmText: "Xóa",
+      cancelText: "Hủy",
+      type: "danger",
+    });
+
+    if (!isConfirm) return;
+    try {
+      const res = await deleteChatListApi(id);
+      if (res) {
+        fetchChatList();
+        setActiveMenuRoomId(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -128,15 +152,7 @@ const ChatList = ({
               )}
               <button
                 type="button"
-                onClick={() => {
-                  setActiveMenuRoomId(null);
-                  if (
-                    confirm("Bạn có chắc chắn muốn xóa cuộc hội thoại này?")
-                  ) {
-                    // TODO: Gọi API xóa cuộc trò chuyện
-                    console.log("Xóa phòng chat:", room._id);
-                  }
-                }}
+                onClick={() => handleDeleteRoom(room._id)}
                 className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-500/20 rounded-lg text-left transition-colors cursor-pointer border-none"
               >
                 <Trash2 className="w-4 h-4 flex-shrink-0" />

@@ -45,3 +45,12 @@ export const updateChatListApi = async (
     console.log(error);
   }
 };
+
+export const deleteChatListApi = async (id: string) => {
+  try {
+    const res = await axiosApi.delete(`/conversation/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
