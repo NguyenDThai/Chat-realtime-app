@@ -6,13 +6,18 @@ import { useEffect, useState } from "react";
 import UpdateChatRoom from "@/components/modal/UpdateChatRoom";
 import { deleteChatListApi } from "@/src/api/chat.list.api";
 import { useConfirm } from "@/hooks/useConfirm";
+import type { UserType } from "@/types/user.type";
 
 const ChatList = ({
   filteredRooms,
+  filteredUser,
+  searchTerm,
   selectedRoom,
   setSelectedRoom,
   fetchChatList,
 }: {
+  searchTerm: string;
+  filteredUser: UserType[];
   filteredRooms: ChatListType[];
   selectedRoom: ChatListType | null;
   setSelectedRoom: (room: ChatListType) => void;
@@ -68,6 +73,38 @@ const ChatList = ({
 
   return (
     <div className="flex-1 overflow-y-auto custom-scrollbar">
+      {searchTerm && filteredUser.length > 0 && (
+        <div className="mt-1">
+          {/* Tiêu đề phân chia phần */}
+          <div className="px-4 py-2 text-sm font-bold text-emerald-400 uppercase tracking-wider">
+            Thành viên
+          </div>
+          {filteredUser.map((u) => (
+            <div
+              key={u._id}
+              className="flex items-center space-x-3 p-4 hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-white/10"
+            >
+              {/* Avatar */}
+              <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/20 bg-emerald-800 flex items-center justify-center text-white font-bold uppercase">
+                {u.avatar ? (
+                  <img
+                    src={u.avatar}
+                    alt={u.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  u.name.charAt(0)
+                )}
+              </div>
+              {/* Thông tin */}
+              <div className="flex-1 min-w-0">
+                <h3 className="text-white font-semibold truncate">{u.name}</h3>
+                <p className="text-xs text-white/50 truncate">{u.email}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       {filteredRooms.map((room) => (
         <div
           key={room._id}
@@ -162,6 +199,16 @@ const ChatList = ({
           )}
         </div>
       ))}
+
+      {/* Hiển thị text thông báo nếu tìm kiếm không ra kết quả */}
+
+      {searchTerm &&
+        filteredRooms.length === 0 &&
+        filteredUser.length === 0 && (
+          <div className="text-center text-white/50 py-8">
+            <p className="text-sm">Không tìm thấy cuộc trò chuyện nào</p>
+          </div>
+        )}
 
       {openEditModal && roomToUpdate && (
         <UpdateChatRoom

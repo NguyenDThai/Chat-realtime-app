@@ -8,15 +8,25 @@ import ChatInput from "@/components/view/ChatInput";
 import MessageList from "@/components/view/MessageList";
 import ChatHeader from "@/components/view/ChatHeader";
 import EmptyChat from "@/components/view/EmptyChat";
-import { Search } from "lucide-react";
 import RoomDetailSidebar from "@/components/sidebar/RoomDetailSidebar";
+import type { UserType } from "@/types/user.type";
+import { getAllUserApi } from "@/src/api/user.api";
+import { useAuth } from "@/hooks/useAuth";
+import SearchBox from "@/components/sidebar/SearchBox";
 
 const Home = () => {
+  const { user } = useAuth();
   const [rooms, setRooms] = useState<ChatListType[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<ChatListType | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [showDetailSidebar, setShowDetailSidebar] = useState(false);
+  const [allUser, setAllUser] = useState<UserType[]>([]);
 
+  const [searchTab, setSearchTab] = useState<
+    "all" | "members" | "messages" | "files" | "unread"
+  >("all");
+
+  // Lấy danh sách các phòng chat
   const fetchChatList = async () => {
     try {
       const res = await getChatListApi();
@@ -26,13 +36,62 @@ const Home = () => {
     }
   };
 
+  // Lấy tất cả user trong hệ thống để search
+  const fetchAllUser = async () => {
+    try {
+      const res = await getAllUserApi();
+      setAllUser(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!searchTerm) {
+      setSearchTab("all");
+    }
+  }, [searchTerm]);
+
   useEffect(() => {
     fetchChatList();
+    fetchAllUser();
   }, []);
 
+  // Lọc room
   const filteredRooms = rooms.filter((room) =>
     room.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+
+  // Lọc user
+  const filteredUser = allUser.filter((u) => {
+    if (u._id === user._id) return false;
+
+    // Kiểm tra xem tên có khớp với từ khóa tìm kiếm không
+    const matchesSearch = u.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    // Kiểm tra xem đã có phòng chat 1-1 với user này chưa
+    const alreadyHasRoom = rooms.some(
+      (r) => r.type === "single" && r.members.some((m) => m._id === u._id),
+    );
+    return matchesSearch && !alreadyHasRoom;
+  });
+
+  // Lọc theo activeTab
+  const displayRooms = filteredRooms.filter((room) => {
+    if (searchTab) {
+      if (searchTab === "members") {
+        return room.type === "single";
+      }
+
+      // Nếu đang chọn tab "Tin nhắn" hoặc "File" -> Ẩn toàn bộ danh sách phòng chat (chờ logic search tin nhắn/file sau này)
+      if (searchTab === "messages" || searchTab === "files") {
+        return false;
+      }
+    }
+    return true;
+  });
 
   return (
     <div className="relative flex min-h-screen overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900">
@@ -44,25 +103,74 @@ const Home = () => {
       {/* Sidebar - Danh sách phòng chat */}
       <div className="relative w-80 bg-emerald-900/40 border-r border-white/20 flex flex-col">
         {/* Sidebar Header */}
-        <div className="p-6 border-b border-white/20">
+        <div className="p-6 pb-0 ">
           <Header fetchChatList={fetchChatList} />
 
-          {/* Search Box */}
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Tìm kiếm phòng chat..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 pl-10 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/50 transition-all duration-200 text-white placeholder-white/50 text-sm"
-            />
-            <Search className="absolute left-3 top-2.5 w-4 h-4 text-white/50" />
-          </div>
+          {/* Search box */}
+          <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          {/* Active tab search */}
+          {searchTerm ? (
+            <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
+              {[
+                { id: "all", label: "Tất cả" },
+                { id: "members", label: "Thành viên" },
+                { id: "messages", label: "Tin nhắn" },
+                { id: "files", label: "File" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() =>
+                    setSearchTab(
+                      tab.id as "all" | "members" | "messages" | "files",
+                    )
+                  }
+                  className={`relative pb-2 text-[13px] font-medium cursor-pointer transition-all duration-200 hover:text-white ${
+                    searchTab === tab.id ? "text-emerald-400 font-semibold" : ""
+                  }`}
+                >
+                  {tab.label}
+                  {/* Đường line gạch dưới di chuyển mượt mà */}
+                  {searchTab === tab.id && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-400 rounded-full" />
+                  )}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
+              {[
+                { id: "all", label: "Tất cả" },
+                { id: "unread", label: "Chưa đọc" },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setSearchTab(tab.id as "all" | "unread")}
+                  className={`relative pb-2 font-medium cursor-pointer transition-all duration-200 hover:text-white ${
+                    searchTab === tab.id ? "text-emerald-400 font-semibold" : ""
+                  }`}
+                >
+                  {tab.label}
+                  {/* Đường line gạch dưới di chuyển mượt mà */}
+                  {searchTab === tab.id && (
+                    <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-400 rounded-full" />
+                  )}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Danh sách phòng chat */}
         <ChatList
-          filteredRooms={filteredRooms}
+          filteredRooms={displayRooms}
+          filteredUser={
+            searchTerm && (searchTab === "all" || searchTab === "members")
+              ? filteredUser
+              : []
+          }
+          searchTerm={searchTerm}
           selectedRoom={selectedRoom}
           setSelectedRoom={setSelectedRoom}
           fetchChatList={fetchChatList}
