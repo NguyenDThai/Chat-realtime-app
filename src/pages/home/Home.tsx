@@ -58,9 +58,17 @@ const Home = () => {
   }, []);
 
   // Lọc room
-  const filteredRooms = rooms.filter((room) =>
-    room.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredRooms = rooms.filter((room) => {
+    if (room.type === "group") {
+      return room.name.toLowerCase().includes(searchTerm.toLowerCase());
+    }
+
+    // Nếu là chat 1-1, tìm kiếm theo tên của đối phương trong cuộc trò chuyện
+    const partner = room.members.find((member) => member._id !== user?._id);
+    return partner
+      ? partner.name.toLowerCase().includes(searchTerm.toLowerCase())
+      : false;
+  });
 
   // Lọc user
   const filteredUser = allUser.filter((u) => {
@@ -171,6 +179,7 @@ const Home = () => {
               : []
           }
           searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
           selectedRoom={selectedRoom}
           setSelectedRoom={setSelectedRoom}
           fetchChatList={fetchChatList}

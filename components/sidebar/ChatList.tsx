@@ -4,7 +4,7 @@ import ChatAvatar from "@/components/share/ChatAvatar";
 import { Edit, Ellipsis, Trash2, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import UpdateChatRoom from "@/components/modal/UpdateChatRoom";
-import { deleteChatListApi } from "@/src/api/chat.list.api";
+import { createChatListApi, deleteChatListApi } from "@/src/api/chat.list.api";
 import { useConfirm } from "@/hooks/useConfirm";
 import type { UserType } from "@/types/user.type";
 
@@ -12,11 +12,13 @@ const ChatList = ({
   filteredRooms,
   filteredUser,
   searchTerm,
+  setSearchTerm,
   selectedRoom,
   setSelectedRoom,
   fetchChatList,
 }: {
   searchTerm: string;
+  setSearchTerm: (value: string) => void;
   filteredUser: UserType[];
   filteredRooms: ChatListType[];
   selectedRoom: ChatListType | null;
@@ -71,6 +73,23 @@ const ChatList = ({
     }
   };
 
+  const handleSelectedUser = async (id: string) => {
+    try {
+      const newRoom = await createChatListApi({
+        type: "single",
+        members: [id],
+      });
+
+      if (newRoom) {
+        setSelectedRoom(newRoom);
+        setSearchTerm("");
+        fetchChatList();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex-1 overflow-y-auto custom-scrollbar">
       {searchTerm && filteredUser.length > 0 && (
@@ -82,6 +101,7 @@ const ChatList = ({
           {filteredUser.map((u) => (
             <div
               key={u._id}
+              onClick={() => handleSelectedUser(u._id)}
               className="flex items-center space-x-3 p-4 hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-white/10"
             >
               {/* Avatar */}
