@@ -153,9 +153,9 @@ const ChatList = ({
                 </h3>
                 <span className="text-xs text-white/50">{room.time}</span>
               </div>
-              <p className="text-sm text-white/60 truncate">
+              {/* <p className="text-sm text-white/60 truncate">
                 {room.lastMessage}
-              </p>
+              </p> */}
             </div>
           </div>
 

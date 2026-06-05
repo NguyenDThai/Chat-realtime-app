@@ -1,76 +1,110 @@
-import React, { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { useSocket } from "@/hooks/useSocket";
+import { getMessage } from "@/src/api/message.api";
+import type { ChatListType } from "@/types/list.chat.type";
+import { useEffect, useRef, useState } from "react";
 
-interface MessageType {
-  id: string;
-  sender: "user" | "bot" | string;
-  senderName?: string;
-  text: string;
-  time: string;
-}
+const MessageList = ({ selectedRoom }: { selectedRoom: ChatListType }) => {
+  const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const { user } = useAuth();
+  const socket = useSocket();
 
-const MessageList = () => {
-  const [messages] = useState<MessageType[]>([
-    {
-      id: "1",
-      sender: "bot",
-      senderName: "Bot Hỗ Trợ",
-      text: "Xin chào! Đây là tin nhắn mẫu để hiển thị giao diện.",
-      time: "10:00 AM",
-    },
-    {
-      id: "2",
-      sender: "user",
-      text: "Chào bạn! Mình muốn test thử giao diện khung chat này.",
-      time: "10:01 AM",
-    },
-  ]);
+  // Hàm scroll xuống cuối tin nhắn
+  const handleScrollBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    handleScrollBottom();
+  }, [messages]);
+
+  const fetchMessage = async () => {
+    try {
+      const res = await getMessage(selectedRoom._id);
+      setMessages(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedRoom) {
+      fetchMessage();
+      socket.emit("join_room", selectedRoom._id);
+    }
+  }, [selectedRoom]);
+
+  // Lắng nghe tin nhắn mới từ socket
+
+  useEffect(() => {
+    const handleReceiveMessage = (newMessage: any) => {
+      if (selectedRoom && newMessage.conversationId === selectedRoom._id) {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    };
+
+    socket.on("new_message", handleReceiveMessage);
+
+    return () => {
+      socket.off("new_message", handleReceiveMessage);
+    };
+  }, [socket, selectedRoom]);
 
   return (
     <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
-      {messages.map((message) => (
-        <div
-          key={message.id}
-          className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"} animate-fade-in`}
-        >
-          {message.sender === "bot" && (
-            <div className="flex-shrink-0 mr-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-lg flex items-center justify-center">
-                <svg
-                  className="w-4 h-4 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                  />
-                </svg>
-              </div>
-            </div>
-          )}
+      {messages.map((message) => {
+        const isMe = message.sender._id === user._id;
+        return (
           <div
-            className={`max-w-[70%] ${message.sender === "user" ? "order-1" : ""}`}
+            key={message._id}
+            className={`flex ${isMe ? "justify-end" : "justify-start"} animate-fade-in`}
           >
-            <div
-              className={`rounded-2xl p-3 ${
-                message.sender === "user"
-                  ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-tr-none"
-                  : "bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-tl-none"
-              }`}
-            >
-              <p className="text-sm">{message.text}</p>
+            {!isMe && (
+              <div className="flex-shrink-0 mr-3">
+                <div className="w-8 h-8 rounded-full overflow-hidden bg-emerald-800 flex items-center justify-center text-white text-xs font-bold uppercase border border-white/20">
+                  {message.sender.avatar ? (
+                    <img
+                      src={message.sender.avatar}
+                      alt={message.sender.name}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    message.sender.name.charAt(0)
+                  )}
+                </div>
+              </div>
+            )}
+            <div className={`max-w-[70%] ${isMe ? "order-1" : ""}`}>
+              {!isMe && (
+                <p className="text-[10px] text-white/50 mb-1 ml-1">
+                  {message.sender.name}
+                </p>
+              )}
+              <div
+                className={`rounded-2xl p-3 ${
+                  isMe
+                    ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-tr-none"
+                    : "bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-tl-none"
+                }`}
+              >
+                <p className="text-sm">{message.content}</p>
+              </div>
+              <p
+                className={`text-[10px] text-white/40 mt-1 ${
+                  isMe ? "text-right" : "text-left"
+                }`}
+              >
+                {new Date(message.createdAt).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
             </div>
-            <p
-              className={`text-xs text-white/50 mt-1 ${message.sender === "user" ? "text-right" : "text-left"}`}
-            >
-              {message.time}
-            </p>
           </div>
-        </div>
-      ))}
+        );
+      })}
+      <div ref={messagesEndRef} />
     </div>
   );
 };

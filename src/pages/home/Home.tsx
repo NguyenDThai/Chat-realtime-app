@@ -102,7 +102,7 @@ const Home = () => {
   });
 
   return (
-    <div className="relative flex min-h-screen overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900">
+    <div className="relative flex h-screen overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900">
       {/* Hiệu ứng bong bóng nền */}
       <div className="absolute w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-slow top-20 -left-48"></div>
       <div className="absolute w-96 h-96 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delayed bottom-20 -right-48"></div>
@@ -201,10 +201,10 @@ const Home = () => {
               />
 
               {/* Messages Area */}
-              <MessageList />
+              <MessageList selectedRoom={selectedRoom} />
 
               {/* Input Area */}
-              <ChatInput />
+              <ChatInput selectedRoom={selectedRoom} />
             </div>
 
             {/* Side bar thong tin chi tiet room */}

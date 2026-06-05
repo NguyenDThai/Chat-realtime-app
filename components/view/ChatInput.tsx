@@ -1,16 +1,24 @@
+import { createMessage } from "@/src/api/message.api";
+import type { ChatListType } from "@/types/list.chat.type";
 import React, { useState } from "react";
 
-const ChatInput = () => {
+const ChatInput = ({ selectedRoom }: { selectedRoom: ChatListType | null }) => {
   const [text, setText] = useState("");
 
-  const handleSendMessage = (e: React.FormEvent) => {
+  const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;
 
-    // TODO: Gửi tin nhắn qua API hoặc Socket.io tại đây
-    console.log("Gửi tin nhắn:", text);
+    try {
+      await createMessage({
+        conversationId: selectedRoom._id,
+        content: text.trim(),
+      });
 
-    setText("");
+      setText("");
+    } catch (error) {
+      console.error("Failed to send message", error);
+    }
   };
 
   return (
@@ -19,7 +27,10 @@ const ChatInput = () => {
         onSubmit={handleSendMessage}
         className="flex items-center space-x-3"
       >
-        <button type="button" className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200">
+        <button
+          type="button"
+          className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200"
+        >
           <svg
             className="w-6 h-6 text-white/70"
             fill="none"

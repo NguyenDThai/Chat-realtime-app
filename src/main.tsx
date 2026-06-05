@@ -6,13 +6,16 @@ import "./index.css";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "@/context/AuthContext";
 import { ConfirmProvider } from "@/context/ConfirmContext";
+import { SocketProvider } from "@/context/SocketContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AuthProvider>
       <ConfirmProvider>
-        <RouterProvider router={router} />
-        <ToastContainer position="bottom-right" />
+        <SocketProvider>
+          <RouterProvider router={router} />
+          <ToastContainer position="bottom-right" />
+        </SocketProvider>
       </ConfirmProvider>
     </AuthProvider>
   </StrictMode>,
