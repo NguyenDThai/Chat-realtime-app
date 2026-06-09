@@ -6,7 +6,13 @@ export interface ChatListType {
   avatar?: string;
   type: "single" | "group";
   members: UserType[];
-  lastMessage: string;
+  lastMessage?: {
+    _id: string;
+    content: string;
+    serder: string;
+    createdAt: string;
+  };
+  lastMessageAt?: string;
   time: string;
   isOnline: boolean;
   createdBy: UserType;

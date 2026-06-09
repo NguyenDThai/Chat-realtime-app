@@ -13,9 +13,11 @@ import type { UserType } from "@/types/user.type";
 import { getAllUserApi } from "@/src/api/user.api";
 import { useAuth } from "@/hooks/useAuth";
 import SearchBox from "@/components/sidebar/SearchBox";
+import { useSocket } from "@/hooks/useSocket";
 
 const Home = () => {
   const { user } = useAuth();
+  const socket = useSocket();
   const [rooms, setRooms] = useState<ChatListType[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<ChatListType | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,6 +33,12 @@ const Home = () => {
     try {
       const res = await getChatListApi();
       setRooms(res);
+
+      if (res && res.length > 0) {
+        res.forEach((room: ChatListType) => {
+          socket.emit("join_room", room._id);
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -45,6 +53,51 @@ const Home = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const handleReceiveMessage = (newMessage) => {
+      setRooms((prevRooms) => {
+        const updatedRoom = prevRooms.map((room) => {
+          if (room._id === newMessage.conversationId) {
+            return {
+              ...room,
+              lastMessage: newMessage,
+              lastMessageAt: newMessage.createdAt,
+            };
+          }
+          return room;
+        });
+
+        // 2. Sắp xếp lại danh sách, đưa phòn có tin nhắn mới lên đầu side bar
+        return [...updatedRoom].sort(
+          (a, b) =>
+            new Date(b.lastMessageAt).getTime() -
+            new Date(a.lastMessageAt).getTime(),
+        );
+      });
+    };
+
+    socket.on("new_message", handleReceiveMessage);
+
+    return () => {
+      socket.off("new_message", handleReceiveMessage);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    const handleConversationDelete = (deleteId: string) => {
+      if (selectedRoom?._id === deleteId) {
+        setSelectedRoom(null);
+      }
+      fetchChatList();
+    };
+
+    socket.on("coversation_delete", handleConversationDelete);
+
+    return () => {
+      socket.off("coversation_delete", handleConversationDelete);
+    };
+  }, [socket, selectedRoom]);
 
   useEffect(() => {
     if (!searchTerm) {
