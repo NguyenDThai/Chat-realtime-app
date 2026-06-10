@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import type { ChatListType } from "@/types/list.chat.type";
 import ChatAvatar from "@/components/share/ChatAvatar";
-import { Edit, Ellipsis, Trash2, UserPlus } from "lucide-react";
+import { Edit, Ellipsis, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import UpdateChatRoom from "@/components/modal/UpdateChatRoom";
 import { createChatListApi, deleteChatListApi } from "@/src/api/chat.list.api";
@@ -187,19 +187,6 @@ const ChatList = ({
                       type="button"
                       onClick={() => {
                         setActiveMenuRoomId(null);
-                        // TODO: Gọi hàm mở modal thêm thành viên nhóm
-                        console.log("Thêm thành viên cho nhóm:", room.name);
-                      }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-white/90 hover:text-white hover:bg-white/10 rounded-lg text-left transition-colors cursor-pointer border-none"
-                    >
-                      <UserPlus className="w-4 h-4 text-emerald-400 flex-shrink-0" />
-                      <span>Thêm thành viên</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setActiveMenuRoomId(null);
                         setOpenEditModal(true);
                         setRoomToUpdate(room);
                       }}
@@ -225,7 +212,6 @@ const ChatList = ({
       })}
 
       {/* Hiển thị text thông báo nếu tìm kiếm không ra kết quả */}
-
       {searchTerm &&
         filteredRooms.length === 0 &&
         filteredUser.length === 0 && (

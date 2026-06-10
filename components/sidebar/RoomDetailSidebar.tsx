@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/src/store";
+import { useData } from "@/hooks/useData";
+import AddMemberModal from "@/components/modal/AddMemberModal";
 
 interface RoomDetailSidebarProps {
   onClose: () => void;
@@ -25,6 +27,9 @@ interface RoomDetailSidebarProps {
 const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
   const { user } = useAuth();
   const { selectedRoom: room } = useSelector((state: RootState) => state.chat);
+  console.log("🚀 ~ RoomDetailSidebar ~ room:", room);
+  const { fetchChatList } = useData();
+  const [openAddMemberModal, setOpenAddMemberModal] = useState(false);
 
   const [activeTab, setActiveTab] = useState<"media" | "file" | "link">("file");
   const [isMemberExpanded, setIsMemberExpanded] = useState(false);
@@ -84,7 +89,10 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
           <span>Tắt TB</span>
         </button>
         {room.type === "group" && (
-          <button className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 hover:text-white transition-all cursor-pointer text-xs gap-1.5 border border-white/5">
+          <button
+            onClick={() => setOpenAddMemberModal(true)}
+            className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 hover:text-white transition-all cursor-pointer text-xs gap-1.5 border border-white/5"
+          >
             <UserPlus className="w-4 h-4 text-cyan-400" />
             <span>Thêm</span>
           </button>
@@ -121,7 +129,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
 
             {isMemberExpanded ? (
               // DẠNG MỞ RỘNG: Hiển thị danh sách dọc cuộn được (Vertical List)
-              <div className="space-y-1.5 max-h-56 overflow-y-auto custom-scrollbar pr-1 animate-fade-in">
+              <div className="space-y-1.5 max-h-60 overflow-y-auto custom-scrollbar pr-1 animate-fade-in">
                 {room.members.map((member) => (
                   <div
                     key={member._id}
@@ -265,6 +273,12 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
             )}
           </div>
         </div>
+        {openAddMemberModal && (
+          <AddMemberModal
+            onClose={() => setOpenAddMemberModal(false)}
+            fetchChatList={fetchChatList}
+          />
+        )}
       </div>
     </div>
   );

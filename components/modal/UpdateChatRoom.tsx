@@ -1,7 +1,6 @@
 import { useState, useEffect, type FC } from "react";
 import type { ChatListType } from "@/types/list.chat.type";
 import type { UserType } from "@/types/user.type";
-
 import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
 import { Camera, Search, Trash2, X } from "lucide-react";
 import { createPortal } from "react-dom";
