@@ -1,5 +1,4 @@
 import { useState, type FC } from "react";
-import type { ChatListType } from "@/types/list.chat.type";
 import { useAuth } from "@/hooks/useAuth";
 import ChatAvatar from "@/components/share/ChatAvatar";
 import {
@@ -16,14 +15,17 @@ import {
   Crown,
   ChevronUp,
 } from "lucide-react";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/src/store";
 
 interface RoomDetailSidebarProps {
-  room: ChatListType;
   onClose: () => void;
 }
 
-const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ room, onClose }) => {
+const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
   const { user } = useAuth();
+  const { selectedRoom: room } = useSelector((state: RootState) => state.chat);
+
   const [activeTab, setActiveTab] = useState<"media" | "file" | "link">("file");
   const [isMemberExpanded, setIsMemberExpanded] = useState(false);
 

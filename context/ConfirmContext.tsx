@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import { createContext, useRef, useState } from "react";
 

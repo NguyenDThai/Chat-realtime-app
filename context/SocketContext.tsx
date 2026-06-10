@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { socket } from "@/config/socket";
 import { useAuth } from "@/hooks/useAuth";
 import { createContext, useEffect } from "react";

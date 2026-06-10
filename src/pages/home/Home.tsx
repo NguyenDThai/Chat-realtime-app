@@ -1,114 +1,35 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ChatList from "@/components/sidebar/ChatList";
 import Header from "@/components/sidebar/Header";
 import Footer from "@/components/sidebar/Footer";
-import type { ChatListType } from "@/types/list.chat.type";
-import { getChatListApi } from "@/src/api/chat.list.api";
 import ChatInput from "@/components/view/ChatInput";
 import MessageList from "@/components/view/MessageList";
 import ChatHeader from "@/components/view/ChatHeader";
 import EmptyChat from "@/components/view/EmptyChat";
 import RoomDetailSidebar from "@/components/sidebar/RoomDetailSidebar";
-import type { UserType } from "@/types/user.type";
-import { getAllUserApi } from "@/src/api/user.api";
 import { useAuth } from "@/hooks/useAuth";
 import SearchBox from "@/components/sidebar/SearchBox";
-import { useSocket } from "@/hooks/useSocket";
+import { useSelector } from "react-redux";
+import type { RootState } from "@/src/store";
 
 const Home = () => {
   const { user } = useAuth();
-  const socket = useSocket();
-  const [rooms, setRooms] = useState<ChatListType[]>([]);
-  const [selectedRoom, setSelectedRoom] = useState<ChatListType | null>(null);
+  const { rooms, selectedRoom, allUser } = useSelector(
+    (state: RootState) => state.chat,
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [showDetailSidebar, setShowDetailSidebar] = useState(false);
-  const [allUser, setAllUser] = useState<UserType[]>([]);
 
   const [searchTab, setSearchTab] = useState<
     "all" | "members" | "messages" | "files" | "unread"
   >("all");
 
-  // Lấy danh sách các phòng chat
-  const fetchChatList = async () => {
-    try {
-      const res = await getChatListApi();
-      setRooms(res);
-
-      if (res && res.length > 0) {
-        res.forEach((room: ChatListType) => {
-          socket.emit("join_room", room._id);
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // Lấy tất cả user trong hệ thống để search
-  const fetchAllUser = async () => {
-    try {
-      const res = await getAllUserApi();
-      setAllUser(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    const handleReceiveMessage = (newMessage) => {
-      setRooms((prevRooms) => {
-        const updatedRoom = prevRooms.map((room) => {
-          if (room._id === newMessage.conversationId) {
-            return {
-              ...room,
-              lastMessage: newMessage,
-              lastMessageAt: newMessage.createdAt,
-            };
-          }
-          return room;
-        });
-
-        // 2. Sắp xếp lại danh sách, đưa phòn có tin nhắn mới lên đầu side bar
-        return [...updatedRoom].sort(
-          (a, b) =>
-            new Date(b.lastMessageAt).getTime() -
-            new Date(a.lastMessageAt).getTime(),
-        );
-      });
-    };
-
-    socket.on("new_message", handleReceiveMessage);
-
-    return () => {
-      socket.off("new_message", handleReceiveMessage);
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    const handleConversationDelete = (deleteId: string) => {
-      if (selectedRoom?._id === deleteId) {
-        setSelectedRoom(null);
-      }
-      fetchChatList();
-    };
-
-    socket.on("coversation_delete", handleConversationDelete);
-
-    return () => {
-      socket.off("coversation_delete", handleConversationDelete);
-    };
-  }, [socket, selectedRoom]);
-
-  useEffect(() => {
-    if (!searchTerm) {
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    if (!value) {
       setSearchTab("all");
     }
-  }, [searchTerm]);
-
-  useEffect(() => {
-    fetchChatList();
-    fetchAllUser();
-  }, []);
+  };
 
   // Lọc room
   const filteredRooms = rooms.filter((room) => {
@@ -165,10 +86,13 @@ const Home = () => {
       <div className="relative w-80 bg-emerald-900/40 border-r border-white/20 flex flex-col">
         {/* Sidebar Header */}
         <div className="p-6 pb-0 ">
-          <Header fetchChatList={fetchChatList} />
+          <Header />
 
           {/* Search box */}
-          <SearchBox searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <SearchBox
+            searchTerm={searchTerm}
+            setSearchTerm={handleSearchChange}
+          />
           {/* Active tab search */}
           {searchTerm ? (
             <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
@@ -233,9 +157,6 @@ const Home = () => {
           }
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}
-          selectedRoom={selectedRoom}
-          setSelectedRoom={setSelectedRoom}
-          fetchChatList={fetchChatList}
         />
 
         {/* User Info Footer */}
@@ -248,24 +169,18 @@ const Home = () => {
           <div className="flex flex-1 overflow-hidden">
             {/* Chat Header */}
             <div className="flex-1 flex flex-col overflow-hidden">
-              <ChatHeader
-                selectedRoom={selectedRoom}
-                setShowDetailSidebar={setShowDetailSidebar}
-              />
+              <ChatHeader setShowDetailSidebar={setShowDetailSidebar} />
 
               {/* Messages Area */}
-              <MessageList selectedRoom={selectedRoom} />
+              <MessageList />
 
               {/* Input Area */}
-              <ChatInput selectedRoom={selectedRoom} />
+              <ChatInput />
             </div>
 
             {/* Side bar thong tin chi tiet room */}
             {showDetailSidebar && (
-              <RoomDetailSidebar
-                room={selectedRoom}
-                onClose={() => setShowDetailSidebar(false)}
-              />
+              <RoomDetailSidebar onClose={() => setShowDetailSidebar(false)} />
             )}
           </div>
         ) : (

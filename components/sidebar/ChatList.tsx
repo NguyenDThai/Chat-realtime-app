@@ -7,26 +7,27 @@ import UpdateChatRoom from "@/components/modal/UpdateChatRoom";
 import { createChatListApi, deleteChatListApi } from "@/src/api/chat.list.api";
 import { useConfirm } from "@/hooks/useConfirm";
 import type { UserType } from "@/types/user.type";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedRoom } from "@/src/store/slides/chatSlide";
+import type { RootState } from "@/src/store";
+import { useData } from "@/hooks/useData";
 
 const ChatList = ({
   filteredRooms,
   filteredUser,
   searchTerm,
   setSearchTerm,
-  selectedRoom,
-  setSelectedRoom,
-  fetchChatList,
 }: {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
   filteredUser: UserType[];
   filteredRooms: ChatListType[];
-  selectedRoom: ChatListType | null;
-  setSelectedRoom: (room: ChatListType) => void;
-  fetchChatList: () => Promise<void>;
 }) => {
   const { user } = useAuth();
+  const { fetchChatList } = useData();
   const confirm = useConfirm();
+  const dispatch = useDispatch();
+  const { selectedRoom } = useSelector((state: RootState) => state.chat);
   const [activeMenuRoomId, setActiveMenuRoomId] = useState<string | null>(null);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [roomToUpdate, setRoomToUpdate] = useState<ChatListType | null>(null);
@@ -67,7 +68,7 @@ const ChatList = ({
       if (res) {
         fetchChatList();
         setActiveMenuRoomId(null);
-        setSelectedRoom(null);
+        dispatch(setSelectedRoom(null));
       }
     } catch (error) {
       console.log(error);
@@ -82,7 +83,7 @@ const ChatList = ({
       });
 
       if (newRoom) {
-        setSelectedRoom(newRoom);
+        dispatch(setSelectedRoom(newRoom));
         setSearchTerm("");
         fetchChatList();
       }
@@ -130,7 +131,7 @@ const ChatList = ({
         return (
           <div
             key={room._id}
-            onClick={() => setSelectedRoom(room)}
+            onClick={() => dispatch(setSelectedRoom(room))}
             className={`group relative p-4 hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-white/10 ${
               selectedRoom?._id === room._id
                 ? "bg-white/20 border-l-4 border-l-emerald-400"

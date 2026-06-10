@@ -1,3 +1,4 @@
+import { useData } from "@/hooks/useData";
 import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
 import { createChatListApi } from "@/src/api/chat.list.api";
 import { getAllUserApi } from "@/src/api/user.api";
@@ -7,13 +8,8 @@ import React, { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 
-const CreateChatRoom = ({
-  onClose,
-  fetchChatList,
-}: {
-  onClose: () => void;
-  fetchChatList: () => void;
-}) => {
+const CreateChatRoom = ({ onClose }: { onClose: () => void }) => {
+  const { fetchChatList } = useData();
   const [roomName, setRoomName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState("");
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);

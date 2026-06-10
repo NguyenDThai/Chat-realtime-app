@@ -1,16 +1,17 @@
 import ChatAvatar from "@/components/share/ChatAvatar";
 import { useAuth } from "@/hooks/useAuth";
+import type { RootState } from "@/src/store";
 import type { ChatListType } from "@/types/list.chat.type";
 import { EllipsisVertical } from "lucide-react";
+import { useSelector } from "react-redux";
 
 const ChatHeader = ({
-  selectedRoom,
   setShowDetailSidebar,
 }: {
-  selectedRoom: ChatListType;
   setShowDetailSidebar: (show: boolean) => void;
 }) => {
   const { user } = useAuth();
+  const { selectedRoom } = useSelector((state: RootState) => state.chat);
 
   const getRoomName = (room: ChatListType) => {
     if (room.type === "group") {

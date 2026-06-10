@@ -1,9 +1,11 @@
 import { createMessage } from "@/src/api/message.api";
-import type { ChatListType } from "@/types/list.chat.type";
+import type { RootState } from "@/src/store";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
-const ChatInput = ({ selectedRoom }: { selectedRoom: ChatListType | null }) => {
+const ChatInput = () => {
   const [text, setText] = useState("");
+  const { selectedRoom } = useSelector((state: RootState) => state.chat);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();

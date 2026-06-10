@@ -1,0 +1,96 @@
+import type { ChatListType } from "@/types/list.chat.type";
+import type { MessageType } from "@/types/message.type";
+import type { UserType } from "@/types/user.type";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+interface ChatState {
+  allUser: UserType[];
+  rooms: ChatListType[];
+  selectedRoom: ChatListType | null;
+  message: MessageType[];
+}
+
+const initialState: ChatState = {
+  allUser: [],
+  rooms: [],
+  selectedRoom: null,
+  message: [],
+};
+
+export const chatSlide = createSlice({
+  name: "chat",
+  initialState,
+  reducers: {
+    setAllUser: (state, action: PayloadAction<UserType[]>) => {
+      state.allUser = action.payload;
+    },
+
+    setRooms: (state, action: PayloadAction<ChatListType[]>) => {
+      state.rooms = action.payload;
+    },
+
+    // set danh sách tin nhắn vào store
+    setMessage: (state, action: PayloadAction<MessageType[]>) => {
+      state.message = action.payload;
+    },
+
+    // Set phòng đang chọn
+    setSelectedRoom: (state, action: PayloadAction<ChatListType | null>) => {
+      state.selectedRoom = action.payload;
+    },
+
+    // Cập nhật khi nhận tin nhắn mới từ Socket
+    receiveNewMessage: (state, action: PayloadAction<MessageType>) => {
+      const newMessage = action.payload;
+      const updateRoom = state.rooms.map((room) => {
+        if (room._id === newMessage.conversationId) {
+          return {
+            ...room,
+            lastMessage: newMessage,
+            lastMessageAt: newMessage.createdAt,
+          };
+        }
+        return room;
+      });
+      // Sắp xếp đưa phòng có tin nhắn mới nhất lên đầu
+      state.rooms = [...updateRoom].sort(
+        (a, b) =>
+          new Date(b.lastMessageAt).getTime() -
+          new Date(a.lastMessageAt).getTime(),
+      );
+
+      if (
+        state.selectedRoom &&
+        state.selectedRoom._id === newMessage.conversationId
+      ) {
+        state.message.push(newMessage);
+      }
+    },
+
+    // Xóa phòng chat khỏi danh sách chat
+
+    handleRoomDeleted: (state, action: PayloadAction<string>) => {
+      const deleteId = action.payload;
+      if (state.selectedRoom?._id === deleteId) {
+        state.selectedRoom = null;
+      }
+    },
+
+    clearChatState: (state) => {
+      state.rooms = [];
+      state.selectedRoom = null;
+      state.message = [];
+    },
+  },
+});
+
+export const {
+  setAllUser,
+  setRooms,
+  setSelectedRoom,
+  receiveNewMessage,
+  handleRoomDeleted,
+  clearChatState,
+  setMessage,
+} = chatSlide.actions;
+
+export default chatSlide.reducer;

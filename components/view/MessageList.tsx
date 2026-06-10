@@ -1,13 +1,18 @@
 import { useAuth } from "@/hooks/useAuth";
+import { useData } from "@/hooks/useData";
 import { useSocket } from "@/hooks/useSocket";
-import { getMessage } from "@/src/api/message.api";
-import type { ChatListType } from "@/types/list.chat.type";
-import { useEffect, useRef, useState } from "react";
+import type { RootState } from "@/src/store";
+import { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
-const MessageList = ({ selectedRoom }: { selectedRoom: ChatListType }) => {
-  const [messages, setMessages] = useState([]);
+const MessageList = () => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const { selectedRoom, message } = useSelector(
+    (state: RootState) => state.chat,
+  );
+
   const { user } = useAuth();
+  const { fetchMessage } = useData();
   const socket = useSocket();
 
   // Hàm scroll xuống cuối tin nhắn
@@ -17,43 +22,18 @@ const MessageList = ({ selectedRoom }: { selectedRoom: ChatListType }) => {
 
   useEffect(() => {
     handleScrollBottom();
-  }, [messages]);
-
-  const fetchMessage = async () => {
-    try {
-      const res = await getMessage(selectedRoom._id);
-      setMessages(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  }, [message]);
 
   useEffect(() => {
     if (selectedRoom) {
       fetchMessage();
       socket.emit("join_room", selectedRoom._id);
     }
-  }, [selectedRoom]);
-
-  // Lắng nghe tin nhắn mới từ socket
-
-  useEffect(() => {
-    const handleReceiveMessage = (newMessage: any) => {
-      if (selectedRoom && newMessage.conversationId === selectedRoom._id) {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-      }
-    };
-
-    socket.on("new_message", handleReceiveMessage);
-
-    return () => {
-      socket.off("new_message", handleReceiveMessage);
-    };
-  }, [socket, selectedRoom]);
+  }, [selectedRoom, fetchMessage, socket]);
 
   return (
     <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
-      {messages.map((message) => {
+      {message.map((message) => {
         const isMe = message.sender._id === user._id;
         return (
           <div

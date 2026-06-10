@@ -1,3 +1,4 @@
+import type { MessageType } from "@/types/message.type";
 import type { UserType } from "@/types/user.type";
 
 export interface ChatListType {
@@ -6,12 +7,7 @@ export interface ChatListType {
   avatar?: string;
   type: "single" | "group";
   members: UserType[];
-  lastMessage?: {
-    _id: string;
-    content: string;
-    serder: string;
-    createdAt: string;
-  };
+  lastMessage?: MessageType;
   lastMessageAt?: string;
   time: string;
   isOnline: boolean;
