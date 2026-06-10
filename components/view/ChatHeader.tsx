@@ -13,6 +13,8 @@ const ChatHeader = ({
   const { user } = useAuth();
   const { selectedRoom } = useSelector((state: RootState) => state.chat);
 
+  if (!selectedRoom) return null;
+
   const getRoomName = (room: ChatListType) => {
     if (room.type === "group") {
       return room.name || "Nhóm chưa đặt tên";

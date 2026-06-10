@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 const CreateChatRoom = ({ onClose }: { onClose: () => void }) => {
   const { fetchChatList } = useData();
   const [roomName, setRoomName] = useState("");
-  const [selectedAvatar, setSelectedAvatar] = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState<string | null>(null);
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);

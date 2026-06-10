@@ -34,7 +34,7 @@ const MessageList = () => {
   return (
     <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
       {message.map((message) => {
-        const isMe = message.sender._id === user._id;
+        const isMe = message.sender._id === user?._id;
         return (
           <div
             key={message._id}

@@ -2,7 +2,6 @@ import { useState, useEffect, type FC } from "react";
 import type { UserType } from "@/types/user.type";
 import { Search, X, Check } from "lucide-react";
 import { createPortal } from "react-dom";
-import { useAuth } from "@/hooks/useAuth";
 import { updateChatListApi } from "@/src/api/chat.list.api";
 import { getAllUserApi } from "@/src/api/user.api";
 import { toast } from "react-toastify";
@@ -21,7 +20,6 @@ const AddMemberModal: FC<AddMemberModalProps> = ({
 }) => {
   const dispatch = useDispatch();
   const { selectedRoom: room } = useSelector((state: RootState) => state.chat);
-  const { user: currentUser } = useAuth();
   const [usersList, setUsersList] = useState<UserType[]>([]);
   const [selectedUserIds, setSelectedUserIds] = useState<string[]>(() =>
     room ? room.members.map((m) => m._id) : [],
@@ -93,8 +91,6 @@ const AddMemberModal: FC<AddMemberModalProps> = ({
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-
-  const isAdmin = currentUser?._id === room.createdBy._id;
 
   return createPortal(
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/50 animate-fade-in">

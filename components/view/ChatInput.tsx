@@ -7,6 +7,8 @@ const ChatInput = () => {
   const [text, setText] = useState("");
   const { selectedRoom } = useSelector((state: RootState) => state.chat);
 
+  if (!selectedRoom) return null;
+
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) return;

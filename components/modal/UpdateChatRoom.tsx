@@ -62,7 +62,8 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
         const url = await uploadToCloudinary(file);
         setSelectedAvatar(url); // Lưu URL chính thức từ Cloudinary
       } catch (error) {
-        toast.error("Tải ảnh lên thất bại!", error);
+        console.error(error);
+        toast.error("Tải ảnh lên thất bại!");
       } finally {
         setIsUploading(false);
       }
@@ -99,7 +100,8 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
         toast.success("Cập nhật phòng chat thành công!");
       }
     } catch (error) {
-      toast.error("Cập nhật thất bại, vui lòng thử lại!", error);
+      console.error(error);
+      toast.error("Cập nhật thất bại, vui lòng thử lại!");
     }
   };
 

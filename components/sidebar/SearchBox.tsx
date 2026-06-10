@@ -1,5 +1,4 @@
 import { Search, X } from "lucide-react";
-import React from "react";
 
 const SearchBox = ({
   searchTerm,

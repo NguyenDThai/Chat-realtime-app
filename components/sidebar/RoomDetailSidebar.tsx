@@ -27,12 +27,13 @@ interface RoomDetailSidebarProps {
 const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
   const { user } = useAuth();
   const { selectedRoom: room } = useSelector((state: RootState) => state.chat);
-  console.log("🚀 ~ RoomDetailSidebar ~ room:", room);
   const { fetchChatList } = useData();
   const [openAddMemberModal, setOpenAddMemberModal] = useState(false);
 
   const [activeTab, setActiveTab] = useState<"media" | "file" | "link">("file");
   const [isMemberExpanded, setIsMemberExpanded] = useState(false);
+
+  if (!room) return null;
 
   const getInitals = (name: string) => {
     if (name === "Bạn") return "B";

@@ -46,7 +46,7 @@ const Home = () => {
 
   // Lọc user
   const filteredUser = allUser.filter((u) => {
-    if (u._id === user._id) return false;
+    if (u._id === user?._id) return false;
 
     // Kiểm tra xem tên có khớp với từ khóa tìm kiếm không
     const matchesSearch = u.name

@@ -51,12 +51,11 @@ export const chatSlide = createSlice({
         }
         return room;
       });
-      // Sắp xếp đưa phòng có tin nhắn mới nhất lên đầu
-      state.rooms = [...updateRoom].sort(
-        (a, b) =>
-          new Date(b.lastMessageAt).getTime() -
-          new Date(a.lastMessageAt).getTime(),
-      );
+      state.rooms = [...updateRoom].sort((a, b) => {
+        const dateA = a.lastMessageAt ? new Date(a.lastMessageAt).getTime() : 0;
+        const dateB = b.lastMessageAt ? new Date(b.lastMessageAt).getTime() : 0;
+        return dateB - dateA;
+      });
 
       if (
         state.selectedRoom &&

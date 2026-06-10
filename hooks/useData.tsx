@@ -39,6 +39,7 @@ export const useData = () => {
   }, [dispatch]);
 
   const fetchMessage = useCallback(async () => {
+    if (!selectedRoom) return;
     try {
       const res = await getMessage(selectedRoom._id);
       dispatch(setMessage(res));
