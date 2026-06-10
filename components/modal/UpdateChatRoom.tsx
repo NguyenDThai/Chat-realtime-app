@@ -1,12 +1,14 @@
 import { useState, useEffect, type FC } from "react";
 import type { ChatListType } from "@/types/list.chat.type";
 import type { UserType } from "@/types/user.type";
-import { getAllUserApi } from "@/src/api/user.api";
+
 import { uploadToCloudinary } from "@/lib/uploadToCloudinary";
-import { Camera, Search, X } from "lucide-react";
+import { Camera, Search, Trash2, X } from "lucide-react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 import { updateChatListApi } from "@/src/api/chat.list.api";
+import { useAuth } from "@/hooks/useAuth";
+import { useConfirm } from "@/hooks/useConfirm";
 
 interface UpdateChatRoomProps {
   room: ChatListType;
@@ -25,16 +27,14 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [usersList, setUsersList] = useState<UserType[]>([]);
   // Điền sẵn danh sách thành viên cũ (loại trừ tài khoản của chính mình)
   const [selectedUsers, setSelectedUsers] = useState<UserType[]>([]);
+  const { user: currentUser } = useAuth();
+  const confirm = useConfirm();
 
   useEffect(() => {
     const fetchAllUser = async () => {
       try {
-        const data = await getAllUserApi();
-        setUsersList(data);
-
         // Lấy danh sách thành viên từ room đang sửa (loại trừ người dùng hiện tại đang đăng nhập)
         const currentMembers = room.members.filter(
           (m) => m._id !== room.createdBy._id,
@@ -67,14 +67,6 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
       } finally {
         setIsUploading(false);
       }
-    }
-  };
-
-  const handleToggleUser = (user: UserType) => {
-    if (selectedUsers.find((u) => u._id === user._id)) {
-      setSelectedUsers(selectedUsers.filter((u) => u._id !== user._id));
-    } else {
-      setSelectedUsers([...selectedUsers, user]);
     }
   };
 
@@ -112,7 +104,34 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
     }
   };
 
-  const filteredUsers = usersList?.filter(
+  const handleRemoveUser = async (userToRemove: UserType) => {
+    const isAdmin = currentUser?._id === room.createdBy._id;
+    if (!isAdmin) {
+      toast.error("Bạn không có quyền xóa thành viên!");
+      return;
+    }
+    if (userToRemove._id === room.createdBy._id) {
+      toast.error("Không thể xóa trưởng nhóm!");
+      return;
+    }
+
+    if (selectedUsers.length <= 2) {
+      toast.error("Không thể xóa thành viên, phải còn ít nhất 2 thành viên!");
+      return;
+    }
+    // Hộp thoại dailog custom
+    const isConfirmed = await confirm({
+      title: "Xóa thành viên",
+      message: `Bạn có chắc muốn xóa thành viên "${userToRemove.name}" khỏi nhóm không?`,
+      confirmText: "Xóa",
+      cancelText: "Hủy",
+      type: "danger",
+    });
+    if (!isConfirmed) return;
+    setSelectedUsers(selectedUsers.filter((u) => u._id !== userToRemove._id));
+  };
+
+  const filteredUsers = selectedUsers?.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -218,23 +237,44 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
             </div>
 
             <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
-              {filteredUsers.map((user) => (
-                <button
-                  key={user._id}
-                  type="button"
-                  onClick={() => handleToggleUser(user)}
-                  className={`w-full p-3 rounded-xl flex items-center justify-between border ${
-                    selectedUsers.find((u) => u._id === user._id)
-                      ? "bg-emerald-500/20 border-emerald-400/50"
-                      : "bg-white/5 border-white/10"
-                  }`}
+              {filteredUsers.map((member) => (
+                <div
+                  key={member._id}
+                  className="w-full p-3 rounded-xl flex items-center justify-between border bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-200"
                 >
-                  <span className="text-white text-sm">{user.name}</span>
-                  <div
-                    className={`w-5 h-5 rounded border ${selectedUsers.find((u) => u._id === user._id) ? "bg-emerald-500" : ""}`}
-                  ></div>
-                </button>
+                  <div className="flex items-center space-x-3">
+                    {/* Avatar thành viên */}
+                    <div className="w-8 h-8 rounded-full bg-emerald-800 flex items-center justify-center text-white text-xs font-bold uppercase border border-white/20">
+                      {member.avatar ? (
+                        <img
+                          src={member.avatar}
+                          alt={member.name}
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        member.name.charAt(0)
+                      )}
+                    </div>
+                    {/* Tên thành viên */}
+                    <span className="text-white text-sm font-medium">
+                      {member.name}
+                    </span>
+                  </div>
+                  {/* Nút xóa thành viên */}
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveUser(member)}
+                    className="p-2 hover:bg-red-500/20 rounded-lg text-white/60 hover:text-red-400 transition-all duration-200 cursor-pointer"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
               ))}
+              {filteredUsers.length === 0 && (
+                <p className="text-center text-white/40 text-xs py-4">
+                  Không tìm thấy thành viên nào
+                </p>
+              )}
             </div>
           </div>
         </div>

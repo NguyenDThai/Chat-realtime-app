@@ -9,7 +9,6 @@ import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // File này sử dụng để call api và lấy dữ liệu đưa và store global
-
 export const useData = () => {
   const { selectedRoom } = useSelector((state: RootState) => state.chat);
   const dispatch = useDispatch();
