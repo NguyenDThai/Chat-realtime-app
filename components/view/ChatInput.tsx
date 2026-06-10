@@ -73,20 +73,6 @@ const ChatInput = () => {
           </svg>
         </button>
       </form>
-      <div className="flex justify-center space-x-4 mt-3">
-        <button className="text-xs text-white/50 hover:text-white/80 transition-colors">
-          🔥 Phổ biến
-        </button>
-        <button className="text-xs text-white/50 hover:text-white/80 transition-colors">
-          💬 Tư vấn
-        </button>
-        <button className="text-xs text-white/50 hover:text-white/80 transition-colors">
-          🎉 Sự kiện
-        </button>
-        <button className="text-xs text-white/50 hover:text-white/80 transition-colors">
-          📞 Hỗ trợ
-        </button>
-      </div>
     </div>
   );
 };
