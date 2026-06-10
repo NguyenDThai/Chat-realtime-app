@@ -2,7 +2,7 @@ import { useState } from "react";
 import { loginApi } from "@/src/api/auth.api";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 const Login = () => {
@@ -141,12 +141,12 @@ const Login = () => {
 
           <p className="text-center text-sm text-white/60 mt-4">
             Chưa có tài khoản?{" "}
-            <a
-              href="#"
+            <Link
+              to="/register"
               className="text-emerald-300 hover:text-white font-semibold hover:underline transition-colors"
             >
               Đăng ký ngay
-            </a>
+            </Link>
           </p>
         </form>
 

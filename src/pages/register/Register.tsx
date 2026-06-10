@@ -2,6 +2,7 @@ import { useState } from "react";
 import { registerApi } from "@/src/api/auth.api";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -172,12 +173,12 @@ const Register = () => {
 
           <p className="text-center text-sm text-white/60 mt-4">
             Đã có tài khoản?{" "}
-            <a
-              href="#"
+            <Link
+              to="/login"
               className="text-emerald-300 hover:text-white font-semibold hover:underline transition-colors"
             >
               Đăng nhập ngay
-            </a>
+            </Link>
           </p>
         </form>
 
