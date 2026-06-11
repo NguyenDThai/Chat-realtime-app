@@ -1,3 +1,4 @@
+import MessageContent from "@/components/view/MessageContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useData } from "@/hooks/useData";
 import { useSocket } from "@/hooks/useSocket";
@@ -68,7 +69,7 @@ const MessageList = () => {
                     : "bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-tl-none"
                 }`}
               >
-                <p className="text-sm">{message.content}</p>
+                <MessageContent content={message.content} isMe={isMe} />
               </div>
               <p
                 className={`text-[10px] text-white/40 mt-1 ${

@@ -2,9 +2,10 @@ import { useState } from "react";
 import { registerApi } from "@/src/api/auth.api";
 import { toast } from "react-toastify";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,6 +25,7 @@ const Register = () => {
     try {
       await registerApi(formData);
       toast.success("Đăng ký thành công");
+      navigate("/login");
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data.message);
