@@ -24,5 +24,14 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "components", "hooks", "lib", "types", "config", "context"]
+  "include": [
+    "src",
+    "components",
+    "hooks",
+    "lib",
+    "types",
+    "config",
+    "context",
+    "utils"
+  ]
 }

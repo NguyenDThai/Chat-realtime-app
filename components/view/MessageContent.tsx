@@ -11,11 +11,11 @@ const MessageContent = ({
   const maxLength = 500;
 
   if (content.length <= maxLength) {
-    return <p className="text-sm break-words whitespace-pre-wrap">{content}</p>;
+    return <p className="text-sm break-all whitespace-pre-wrap">{content}</p>;
   }
   return (
-    <div>
-      <p className="text-sm break-words whitespace-pre-wrap">
+    <div className="py-3">
+      <p className="text-sm break-all whitespace-pre-wrap">
         {isExpanded ? content : `${content.slice(0, maxLength)}...`}
       </p>
       <button
