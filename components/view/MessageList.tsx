@@ -1,15 +1,21 @@
+import ReactionDetailModal from "@/components/modal/ReactionDetailModal";
 import MessageContent from "@/components/view/MessageContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useData } from "@/hooks/useData";
 import { useSocket } from "@/hooks/useSocket";
+import { reactToMessage } from "@/src/api/message.api";
 import type { RootState } from "@/src/store";
+import type { ReactionType } from "@/types/message.type";
 import { formatDataSeparator } from "@/utils/formatDateSeparator";
 import { Reply, ThumbsUp } from "lucide-react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 const MessageList = () => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [selectedReaction, setSelectedReaction] = useState<
+    ReactionType[] | null
+  >(null);
   const { selectedRoom, message } = useSelector(
     (state: RootState) => state.chat,
   );
@@ -21,6 +27,14 @@ const MessageList = () => {
   // Hàm scroll xuống cuối tin nhắn
   const handleScrollBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleActionMessage = async (messageId: string, emoji: string) => {
+    try {
+      await reactToMessage(messageId, emoji);
+    } catch (error) {
+      console.error("Error reacting to message:", error);
+    }
   };
 
   useEffect(() => {
@@ -43,8 +57,13 @@ const MessageList = () => {
           !prevMessage ||
           new Date(msg.createdAt).toDateString() !==
             new Date(prevMessage.createdAt).toDateString();
+        const myReaction = msg.reactions?.find(
+          (r) =>
+            (typeof r.user === "string" ? r.user : r.user._id) === user?._id,
+        );
         return (
           <React.Fragment key={msg._id}>
+            {/* Tag ngày tháng */}
             {showDateSeparator && (
               <div className="flex justify-center my-4">
                 <span className="text-[11px] bg-white/5 text-white/50 px-3 py-1 rounded-full border border-white/10 backdrop-blur-sm select-none">
@@ -91,29 +110,69 @@ const MessageList = () => {
                     }`}
                   >
                     <MessageContent content={msg.content} isMe={isMe} />
-
+                    {/* Hiển thị danh sách reaction đã thả khi không hover */}
+                    {msg.reactions && msg.reactions.length > 0 && (
+                      <div
+                        className={`absolute z-10 -bottom-3.5 flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-emerald-950 border border-white/20 shadow-md text-[10px] select-none cursor-pointer`}
+                        style={{
+                          left: isMe ? "-16px" : "auto",
+                          right: !isMe ? "-16px" : "auto",
+                        }}
+                        onClick={() =>
+                          setSelectedReaction(msg.reactions || null)
+                        }
+                      >
+                        {Array.from(new Set(msg.reactions.map((r) => r.emoji)))
+                          .slice(0, 3)
+                          .map((emoji) => (
+                            <span key={emoji} className="text-xs">
+                              {emoji}
+                            </span>
+                          ))}
+                        {msg.reactions.length > 0 && (
+                          <span className="text-[10px] text-white/80 font-medium ml-1">
+                            {msg.reactions.length}
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <div
-                      className="group/reactions absolute z-10 -bottom-4 group-hover:flex hidden items-center justify-center p-1.5 rounded-full bg-emerald-800 hover:bg-emerald-700 border border-white/20 shadow-md text-white/90 cursor-pointer transition-all duration-150"
+                      className="group/reactions absolute z-10 -bottom-4 group-hover:flex hidden items-center justify-center w-8 h-8 rounded-full bg-emerald-800 hover:bg-emerald-700 border border-white/20 shadow-md text-white/90 cursor-pointer transition-all duration-150"
                       style={{
-                        left: isMe ? "12px" : "auto",
-                        right: !isMe ? "12px" : "auto",
+                        left: isMe ? "auto" : "-16px",
+                        right: isMe ? "-16px" : "auto",
                       }}
                     >
-                      <ThumbsUp size={18} />
+                      {myReaction ? (
+                        <span
+                          className="text-[15px] select-none flex items-center justify-center"
+                          onClick={() =>
+                            handleActionMessage(msg._id, myReaction.emoji)
+                          }
+                        >
+                          {myReaction.emoji}
+                        </span>
+                      ) : (
+                        <ThumbsUp
+                          size={18}
+                          onClick={() => handleActionMessage(msg._id, "👍")}
+                        />
+                      )}
                       {/* Bảng chọn Emoji hiển thị khi hover vào nút Like */}
                       <div
-                        className={`absolute bottom-full mb-1 ${isMe ? "right-0" : "left-0"} hidden group-hover/reactions:flex items-center gap-3 px-3 py-2 rounded-full bg-emerald-950/95 border border-white/20 backdrop-blur-md shadow-2xl animate-fade-in z-50 before:absolute before:h-3 before:w-full before:top-full before:left-0 before:content-['']`}
+                        className={`absolute bottom-full mb-1.5 ${isMe ? "right-4" : "left-4"} hidden group-hover/reactions:flex items-center gap-3 px-3 py-2 rounded-full bg-emerald-955/95 border border-white/25 backdrop-blur-md shadow-2xl animate-fade-in z-50 before:absolute before:h-3 before:w-full before:top-full before:left-0 before:content-['']`}
                       >
                         {["👍", "❤️", "😆", "😮", "😢", "😡"].map((emoji) => (
                           <span
                             key={emoji}
+                            onClick={() => handleActionMessage(msg._id, emoji)}
                             className="hover:scale-135 active:scale-95 transition-transform duration-100 text-xl cursor-pointer select-none px-0.5"
                           >
                             {emoji}
                           </span>
                         ))}
                       </div>
-                    </div>
+                    </div>{" "}
                   </div>
 
                   {/* Action message */}
@@ -138,6 +197,14 @@ const MessageList = () => {
           </React.Fragment>
         );
       })}
+
+      <ReactionDetailModal
+        isOpen={!!selectedReaction}
+        isClose={() => {
+          setSelectedReaction(null);
+        }}
+        reactions={selectedReaction}
+      />
       <div ref={messagesEndRef} />
     </div>
   );

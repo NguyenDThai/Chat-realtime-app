@@ -6,8 +6,9 @@ import {
   clearChatState,
   handleRoomDeleted,
   receiveNewMessage,
+  updateMessageAction,
 } from "@/src/store/slides/chatSlide";
-import type { MessageType } from "@/types/message.type";
+import type { MessageType, ReactionType } from "@/types/message.type";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -53,12 +54,22 @@ export const useChat = () => {
       fetchChatList();
     };
 
+    // handle action message
+    const handleActionMessage = (data: {
+      messageId: string;
+      reactions: ReactionType[];
+    }) => {
+      dispatch(updateMessageAction(data));
+    };
+
     socket.on("new_message", handleReceiveMessage);
     socket.on("coversation_delete", handleConversationDelete);
+    socket.on("action_message", handleActionMessage);
 
     return () => {
       socket.off("new_message", handleReceiveMessage);
       socket.off("coversation_delete", handleConversationDelete);
+      socket.off("action_message", handleActionMessage);
     };
   }, [socket, dispatch, fetchChatList]);
 };

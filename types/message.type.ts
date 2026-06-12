@@ -1,5 +1,11 @@
 import type { UserType } from "@/types/user.type";
 
+export interface ReactionType {
+  user: UserType;
+  emoji: string;
+  _id?: string;
+}
+
 export interface ReadByType {
   user: string;
   _id: string;
@@ -18,4 +24,5 @@ export interface MessageType {
   createdAt: string;
   updatedAt: string;
   _v?: string;
+  reactions?: ReactionType[];
 }

@@ -33,6 +33,23 @@ export const chatSlide = createSlice({
       state.message = action.payload;
     },
 
+    updateMessageAction: (
+      state,
+      action: PayloadAction<{
+        messageId: string;
+        reactions: {
+          user: string;
+          emoji: string;
+        }[];
+      }>,
+    ) => {
+      const { messageId, reactions } = action.payload;
+      const msg = state.message.find((m) => m._id === messageId);
+      if (msg) {
+        msg.reactions = reactions;
+      }
+    },
+
     // Set phòng đang chọn
     setSelectedRoom: (state, action: PayloadAction<ChatListType | null>) => {
       state.selectedRoom = action.payload;
@@ -66,7 +83,6 @@ export const chatSlide = createSlice({
     },
 
     // Xóa phòng chat khỏi danh sách chat
-
     handleRoomDeleted: (state, action: PayloadAction<string>) => {
       const deleteId = action.payload;
       if (state.selectedRoom?._id === deleteId) {
@@ -90,6 +106,7 @@ export const {
   handleRoomDeleted,
   clearChatState,
   setMessage,
+  updateMessageAction,
 } = chatSlide.actions;
 
 export default chatSlide.reducer;

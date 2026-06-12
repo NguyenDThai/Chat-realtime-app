@@ -22,3 +22,13 @@ export const getMessage = async (conversationId: string) => {
     throw error;
   }
 };
+
+export const reactToMessage = async (messageId: string, emoji: string) => {
+  try {
+    const res = await axiosApi.post(`/message/${messageId}/action`, { emoji });
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi thêm reaction:", error);
+    throw error;
+  }
+};
