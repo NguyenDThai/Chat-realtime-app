@@ -1,5 +1,5 @@
 import type { ChatListType } from "@/types/list.chat.type";
-import type { MessageType } from "@/types/message.type";
+import type { MessageType, ReactionType } from "@/types/message.type";
 import type { UserType } from "@/types/user.type";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 interface ChatState {
@@ -37,10 +37,7 @@ export const chatSlide = createSlice({
       state,
       action: PayloadAction<{
         messageId: string;
-        reactions: {
-          user: string;
-          emoji: string;
-        }[];
+        reactions: ReactionType[];
       }>,
     ) => {
       const { messageId, reactions } = action.payload;

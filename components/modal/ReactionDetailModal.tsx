@@ -1,7 +1,7 @@
 import type { ReactionType } from "@/types/message.type";
 import type { UserType } from "@/types/user.type";
 import { X } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface ReactionDetailType {
   isOpen: boolean;

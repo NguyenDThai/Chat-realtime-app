@@ -203,7 +203,7 @@ const MessageList = () => {
         isClose={() => {
           setSelectedReaction(null);
         }}
-        reactions={selectedReaction}
+        reactions={selectedReaction || []}
       />
       <div ref={messagesEndRef} />
     </div>
