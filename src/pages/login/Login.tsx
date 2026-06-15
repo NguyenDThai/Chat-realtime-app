@@ -28,7 +28,7 @@ const Login = () => {
     try {
       const res = await loginApi(formData);
       toast.success("Đăng nhập thành công");
-      login(res.token, res.user);
+      login(res.accessToken, res.user);
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
