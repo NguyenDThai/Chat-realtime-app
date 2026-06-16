@@ -9,6 +9,7 @@ import EmptyChat from "@/components/view/EmptyChat";
 import RoomDetailSidebar from "@/components/sidebar/RoomDetailSidebar";
 import { useAuth } from "@/hooks/useAuth";
 import SearchBox from "@/components/sidebar/SearchBox";
+import NavigateSidebar from "@/components/sidebar/NavigateSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/src/store";
 import { Reply, X } from "lucide-react";
@@ -84,6 +85,9 @@ const Home = () => {
       <div className="absolute w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-slow top-20 -left-48"></div>
       <div className="absolute w-96 h-96 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delayed bottom-20 -right-48"></div>
       <div className="absolute w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-fast top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+      {/* Navigate Sidebar */}
+      <NavigateSidebar />
 
       {/* Sidebar - Danh sách phòng chat */}
       <div className="relative w-80 bg-emerald-900/40 border-r border-white/20 flex flex-col">

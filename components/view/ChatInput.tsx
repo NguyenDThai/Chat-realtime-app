@@ -32,7 +32,7 @@ const ChatInput = () => {
   };
 
   return (
-    <div className="p-4 border-t border-white/20 bg-gradient-to-t from-emerald-900/30 to-transparent">
+    <div className="p-4 border-t border-white/20 bg-emerald-900/40">
       <form
         onSubmit={handleSendMessage}
         className="flex items-center space-x-3"

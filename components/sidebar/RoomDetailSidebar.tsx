@@ -58,7 +58,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
   const isMe = (userId: string) => userId === user?._id;
 
   return (
-    <div className="w-80 bg-emerald-950/80 border-l border-white/20 flex flex-col h-full animate-fade-in relative z-20">
+    <div className="w-80 bg-emerald-900/40 border-l border-white/20 flex flex-col h-full animate-fade-in relative z-20">
       {/* Nút đóng Sidebar */}
       <button
         onClick={onClose}
