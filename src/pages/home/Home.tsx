@@ -175,7 +175,7 @@ const Home = () => {
               <ChatHeader setShowDetailSidebar={setShowDetailSidebar} />
 
               {/* Messages Area */}
-              <MessageList />
+              <MessageList key={selectedRoom._id} />
               {/* Reply preview */}
               {replyingMessage && (
                 <div className="mb-2 mx-6 rounded-lg border-l-4 border-emerald-500">

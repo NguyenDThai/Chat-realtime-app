@@ -14,9 +14,18 @@ export const createMessage = async (data: {
   }
 };
 
-export const getMessage = async (conversationId: string) => {
+export const getMessage = async (
+  conversationId: string,
+  cursor?: string,
+  limit: number = 20,
+) => {
   try {
-    const res = await axiosApi.get(`/message/${conversationId}`);
+    const res = await axiosApi.get(`/message/${conversationId}`, {
+      params: {
+        cursor,
+        limit,
+      },
+    });
     return res.data;
   } catch (error) {
     console.error("Lỗi lấy tin nhắn:", error);

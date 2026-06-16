@@ -95,6 +95,15 @@ export const chatSlide = createSlice({
       }
     },
 
+    // Thêm tin nhắn cũ vào đầu mảng khi phân trang lên trên
+    prependMessages: (state, action: PayloadAction<MessageType[]>) => {
+      const existingIds = new Set(state.message.map((m) => m._id));
+      const uniqueNewMessages = action.payload.filter(
+        (m) => !existingIds.has(m._id),
+      );
+      state.message = [...uniqueNewMessages, ...state.message];
+    },
+
     clearChatState: (state) => {
       state.rooms = [];
       state.selectedRoom = null;
@@ -113,6 +122,7 @@ export const {
   setMessage,
   updateMessageAction,
   setReplyMessage,
+  prependMessages,
 } = chatSlide.actions;
 
 export default chatSlide.reducer;

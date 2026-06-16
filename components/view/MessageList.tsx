@@ -3,13 +3,13 @@ import MessageContent from "@/components/view/MessageContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useData } from "@/hooks/useData";
 import { useSocket } from "@/hooks/useSocket";
-import { reactToMessage } from "@/src/api/message.api";
+import { getMessage, reactToMessage } from "@/src/api/message.api";
 import type { RootState } from "@/src/store";
-import { setReplyMessage } from "@/src/store/slides/chatSlide";
+import { prependMessages, setReplyMessage } from "@/src/store/slides/chatSlide";
 import type { ReactionType } from "@/types/message.type";
 import { formatDataSeparator } from "@/utils/formatDateSeparator";
-import { CornerDownRight, Reply, ThumbsUp } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { CornerDownRight, Loader2, Reply, ThumbsUp } from "lucide-react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const MessageList = () => {
@@ -17,6 +17,14 @@ const MessageList = () => {
   const [selectedReaction, setSelectedReaction] = useState<
     ReactionType[] | null
   >(null);
+  // Để biết còn tin nhắn để load tiếp không
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  // trạng thái đang call api để lấy tin nhắn cũ
+  const [isLoadingOlder, setIsLoadingOlder] = useState<boolean>(false);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  // Để lưu lại chiều cao scroll trước khi load tin nhắn cũ
+  const prevScrollHeightRef = useRef<number>(0);
+  const isPrependingRef = useRef<boolean>(false);
   const { selectedRoom, message } = useSelector(
     (state: RootState) => state.chat,
   );
@@ -36,6 +44,38 @@ const MessageList = () => {
       await reactToMessage(messageId, emoji);
     } catch (error) {
       console.error("Error reacting to message:", error);
+    }
+  };
+
+  // Hàm load tin nhắn cũ
+  const loadOlderMessages = async () => {
+    if (isLoadingOlder || !hasMore || !selectedRoom || message.length === 0)
+      return;
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      prevScrollHeightRef.current = container.scrollHeight;
+    }
+    setIsLoadingOlder(true);
+
+    try {
+      const oldestMessage = message[0];
+      const cursor = oldestMessage.createdAt;
+
+      const newMessage = await getMessage(selectedRoom._id, cursor, 20);
+
+      if (newMessage.length < 20) {
+        setHasMore(false);
+      }
+
+      if (newMessage.length > 0) {
+        isPrependingRef.current = true;
+        dispatch(prependMessages(newMessage));
+      }
+    } catch (error) {
+      console.error("Error loading older messages:", error);
+    } finally {
+      setIsLoadingOlder(false);
     }
   };
 
@@ -59,8 +99,26 @@ const MessageList = () => {
     }
   };
 
-  useEffect(() => {
-    handleScrollBottom();
+  const handleScroll = () => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    // Khi cuộn sát lên top (scrollTop === 0) hoặc cách top 1 khoảng nhỏ (e.g. <= 50px)
+    if (container.scrollTop <= 50 && !isLoadingOlder && hasMore) {
+      loadOlderMessages();
+    }
+  };
+
+  useLayoutEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    if (isPrependingRef.current) {
+      const scrollDiff = container.scrollHeight - prevScrollHeightRef.current;
+      container.scrollTop = container.scrollTop + scrollDiff;
+      isPrependingRef.current = false;
+    } else {
+      handleScrollBottom();
+    }
   }, [message]);
 
   useEffect(() => {
@@ -71,7 +129,16 @@ const MessageList = () => {
   }, [selectedRoom, fetchMessage, socket]);
 
   return (
-    <div className="flex-1 py-6 space-y-4 px-6 overflow-y-auto overflow-x-hidden custom-scrollbar">
+    <div
+      ref={scrollContainerRef}
+      onScroll={handleScroll}
+      className="flex-1 py-6 space-y-4 px-6 overflow-y-auto overflow-x-hidden custom-scrollbar"
+    >
+      {isLoadingOlder && (
+        <div className="flex justify-center py-4">
+          <Loader2 className="animate-spin text-white/50" size={24} />
+        </div>
+      )}
       {message.map((msg, index) => {
         const isMe = msg.sender._id === user?._id;
         const prevMessage = message[index - 1];
