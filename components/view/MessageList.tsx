@@ -133,7 +133,9 @@ const MessageList = () => {
 
                 {msg.replyTo && (
                   <div
-                    onClick={() => handleScrollToOriginal(msg.replyTo._id)}
+                    onClick={() =>
+                      msg.replyTo && handleScrollToOriginal(msg.replyTo._id)
+                    }
                     className={`mb-2 px-3 py-1.5 bg-black/20 rounded-lg border-l-[3px] border-emerald-400 text-xs flex flex-col min-w-0 select-none cursor-pointer ${isMe ? "ml-auto" : "mr-auto"}`}
                   >
                     <div className="flex items-center gap-1 font-semibold text-emerald-300 text-[10px] mb-0.5">
