@@ -9,6 +9,7 @@ interface ChatState {
   selectedRoom: ChatListType | null;
   message: MessageType[];
   replyingMessage: MessageType | null;
+  onlineUsers: string[];
 }
 
 const initialState: ChatState = {
@@ -17,6 +18,7 @@ const initialState: ChatState = {
   selectedRoom: null,
   message: [],
   replyingMessage: null,
+  onlineUsers: [],
 };
 
 export const chatSlide = createSlice({
@@ -104,6 +106,11 @@ export const chatSlide = createSlice({
       state.message = [...uniqueNewMessages, ...state.message];
     },
 
+    // Cập nhật danh sách user online
+    setOnlineUsers: (state, action: PayloadAction<string[]>) => {
+      state.onlineUsers = action.payload;
+    },
+
     clearChatState: (state) => {
       state.rooms = [];
       state.selectedRoom = null;
@@ -123,6 +130,7 @@ export const {
   updateMessageAction,
   setReplyMessage,
   prependMessages,
+  setOnlineUsers,
 } = chatSlide.actions;
 
 export default chatSlide.reducer;

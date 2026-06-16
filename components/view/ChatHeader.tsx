@@ -11,15 +11,28 @@ const ChatHeader = ({
   setShowDetailSidebar: (show: boolean) => void;
 }) => {
   const { user } = useAuth();
-  const { selectedRoom } = useSelector((state: RootState) => state.chat);
+  const { selectedRoom, onlineUsers } = useSelector(
+    (state: RootState) => state.chat,
+  );
 
   if (!selectedRoom) return null;
+
+  // Hiển thị trạng thái online
+  const partner =
+    selectedRoom.type === "single"
+      ? selectedRoom.members.find((m) => m._id !== user?._id)
+      : null;
+
+  const isOnline = partner ? onlineUsers.includes(partner._id) : false;
+
+  // ***********
 
   const getRoomName = (room: ChatListType) => {
     if (room.type === "group") {
       return room.name || "Nhóm chưa đặt tên";
     }
 
+    // Hiển thị tên của người chat
     const partner = room.members.find((member) => member._id !== user?._id);
     return partner ? partner.name : "Người dùng ẩn danh";
   };
@@ -44,7 +57,9 @@ const ChatHeader = ({
             <p className="text-emerald-200 text-xs">
               {selectedRoom.type === "group"
                 ? `${selectedRoom.members.length} thành viên`
-                : "online"}
+                : isOnline
+                  ? "Đang hoạt động"
+                  : "Không hoạt động"}
             </p>
           </div>
         </div>

@@ -26,7 +26,9 @@ interface RoomDetailSidebarProps {
 
 const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
   const { user } = useAuth();
-  const { selectedRoom: room } = useSelector((state: RootState) => state.chat);
+  const { selectedRoom: room, onlineUsers } = useSelector(
+    (state: RootState) => state.chat,
+  );
   const { fetchChatList } = useData();
   const [openAddMemberModal, setOpenAddMemberModal] = useState(false);
 
@@ -34,6 +36,9 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
   const [isMemberExpanded, setIsMemberExpanded] = useState(false);
 
   if (!room) return null;
+
+  const partner = room.members.find((m) => m._id !== user?._id);
+  const isOnline = partner ? onlineUsers.includes(partner._id) : false;
 
   const getInitals = (name: string) => {
     if (name === "Bạn") return "B";
@@ -66,14 +71,14 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
       <div className="p-6 flex flex-col items-center border-b border-white/10 mt-6">
         <ChatAvatar room={room} currentUserId={user?._id} />
         <h3 className="text-white font-bold text-lg mt-3 flex items-center gap-1.5">
-          {room.type === "group"
-            ? room.name
-            : room.members.find((m) => m._id !== user?._id)?.name}
+          {room.type === "group" ? room.name : partner?.name}
         </h3>
         <p className="text-emerald-200/60 text-xs mt-1">
           {room.type === "group"
             ? `${room.members.length} thành viên`
-            : "online"}
+            : isOnline
+              ? "Đang hoạt động"
+              : "Không hoạt động"}
         </p>
       </div>
 
@@ -137,16 +142,22 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
                     className="flex items-center justify-between p-2 bg-white/5 hover:bg-white/10 rounded-xl border border-white/5"
                   >
                     <div className="flex items-center space-x-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-white text-xs overflow-hidden">
-                        {member.avatar ? (
-                          <img
-                            src={member.avatar}
-                            alt={member.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          getInitals(member.name)
-                        )}
+                      <div className="relative w-8 h-8 ">
+                        <div className="h-full w-full rounded-lg bg-emerald-500 flex items-center justify-center font-bold text-white text-xs overflow-hidden">
+                          {member.avatar ? (
+                            <img
+                              src={member.avatar}
+                              alt={member.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            getInitals(member.name)
+                          )}
+                          {isMe(member._id) ||
+                            (onlineUsers.includes(member._id) && (
+                              <div className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-green-500" />
+                            ))}
+                        </div>
                       </div>
                       <div className="text-left">
                         <p className="text-white text-xs font-medium flex items-center gap-1">

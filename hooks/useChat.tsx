@@ -7,6 +7,7 @@ import {
   handleRoomDeleted,
   receiveNewMessage,
   updateMessageAction,
+  setOnlineUsers,
 } from "@/src/store/slides/chatSlide";
 import type { MessageType, ReactionType } from "@/types/message.type";
 import { useEffect, useRef } from "react";
@@ -62,14 +63,21 @@ export const useChat = () => {
       dispatch(updateMessageAction(data));
     };
 
+    // handler lắng nghe sự kiện online
+    const handleUserOnline = (onlineUserId: string[]) => {
+      dispatch(setOnlineUsers(onlineUserId));
+    };
+
     socket.on("new_message", handleReceiveMessage);
     socket.on("coversation_delete", handleConversationDelete);
     socket.on("action_message", handleActionMessage);
+    socket.on("user_online", handleUserOnline);
 
     return () => {
       socket.off("new_message", handleReceiveMessage);
       socket.off("coversation_delete", handleConversationDelete);
       socket.off("action_message", handleActionMessage);
+      socket.off("user_online", handleUserOnline);
     };
   }, [socket, dispatch, fetchChatList]);
 };

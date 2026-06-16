@@ -12,6 +12,7 @@ export const SocketProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (user) {
+      socket.auth = { userId: user._id };
       // Tu dong ket noi socket
       socket.connect();
       console.warn("Socket connected globally for user:", user.name);
