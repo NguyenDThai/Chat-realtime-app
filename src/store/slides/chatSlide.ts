@@ -2,11 +2,13 @@ import type { ChatListType } from "@/types/list.chat.type";
 import type { MessageType, ReactionType } from "@/types/message.type";
 import type { UserType } from "@/types/user.type";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+
 interface ChatState {
   allUser: UserType[];
   rooms: ChatListType[];
   selectedRoom: ChatListType | null;
   message: MessageType[];
+  replyingMessage: MessageType | null;
 }
 
 const initialState: ChatState = {
@@ -14,6 +16,7 @@ const initialState: ChatState = {
   rooms: [],
   selectedRoom: null,
   message: [],
+  replyingMessage: null,
 };
 
 export const chatSlide = createSlice({
@@ -50,6 +53,11 @@ export const chatSlide = createSlice({
     // Set phòng đang chọn
     setSelectedRoom: (state, action: PayloadAction<ChatListType | null>) => {
       state.selectedRoom = action.payload;
+      state.replyingMessage = null;
+    },
+
+    setReplyMessage: (state, action: PayloadAction<MessageType | null>) => {
+      state.replyingMessage = action.payload;
     },
 
     // Cập nhật khi nhận tin nhắn mới từ Socket
@@ -104,6 +112,7 @@ export const {
   clearChatState,
   setMessage,
   updateMessageAction,
+  setReplyMessage,
 } = chatSlide.actions;
 
 export default chatSlide.reducer;

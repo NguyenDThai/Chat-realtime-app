@@ -9,17 +9,20 @@ import EmptyChat from "@/components/view/EmptyChat";
 import RoomDetailSidebar from "@/components/sidebar/RoomDetailSidebar";
 import { useAuth } from "@/hooks/useAuth";
 import SearchBox from "@/components/sidebar/SearchBox";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/src/store";
+import { Reply, X } from "lucide-react";
+import { setReplyMessage } from "@/src/store/slides/chatSlide";
 
 const Home = () => {
   const { user } = useAuth();
-  const { rooms, selectedRoom, allUser } = useSelector(
+  const { rooms, selectedRoom, allUser, replyingMessage } = useSelector(
     (state: RootState) => state.chat,
   );
+
+  const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [showDetailSidebar, setShowDetailSidebar] = useState(false);
-
   const [searchTab, setSearchTab] = useState<
     "all" | "members" | "messages" | "files" | "unread"
   >("all");
@@ -173,7 +176,32 @@ const Home = () => {
 
               {/* Messages Area */}
               <MessageList />
-
+              {/* Reply preview */}
+              {replyingMessage && (
+                <div className="mb-2 mx-6 rounded-lg border-l-4 border-emerald-500">
+                  <div className="flex items-center justify-between bg-white/5 px-3 py-2 ">
+                    <div className="flex items-center gap-3">
+                      <div className="text-white/80">
+                        <Reply size={16} />
+                      </div>
+                      <span className="text-xs text-emerald-400 font-medium">
+                        Đang trả lời
+                      </span>
+                    </div>
+                    <button
+                      onClick={() => dispatch(setReplyMessage(null))}
+                      className="text-white/50 hover:text-white transition-colors"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                  <div className="bg-white/5 px-3 py-2 ">
+                    <p className="text-xs text-white/80 mb-1 line-clamp-2">
+                      {replyingMessage?.content}
+                    </p>
+                  </div>
+                </div>
+              )}
               {/* Input Area */}
               <ChatInput />
             </div>

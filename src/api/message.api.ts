@@ -3,6 +3,7 @@ import axiosApi from "@/config/axios";
 export const createMessage = async (data: {
   conversationId: string;
   content: string;
+  replyTo?: string;
 }) => {
   try {
     const res = await axiosApi.post("/message", data);

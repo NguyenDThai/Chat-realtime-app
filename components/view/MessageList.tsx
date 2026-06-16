@@ -5,11 +5,12 @@ import { useData } from "@/hooks/useData";
 import { useSocket } from "@/hooks/useSocket";
 import { reactToMessage } from "@/src/api/message.api";
 import type { RootState } from "@/src/store";
+import { setReplyMessage } from "@/src/store/slides/chatSlide";
 import type { ReactionType } from "@/types/message.type";
 import { formatDataSeparator } from "@/utils/formatDateSeparator";
-import { Reply, ThumbsUp } from "lucide-react";
+import { CornerDownRight, Reply, ThumbsUp } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const MessageList = () => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -23,6 +24,7 @@ const MessageList = () => {
   const { user } = useAuth();
   const { fetchMessage } = useData();
   const socket = useSocket();
+  const dispatch = useDispatch();
 
   // Hàm scroll xuống cuối tin nhắn
   const handleScrollBottom = () => {
@@ -34,6 +36,26 @@ const MessageList = () => {
       await reactToMessage(messageId, emoji);
     } catch (error) {
       console.error("Error reacting to message:", error);
+    }
+  };
+
+  // Hàm cuộn tới tin nhắn góc khi click vào field reply
+  const handleScrollToOriginal = (messageId: string) => {
+    const element = document.getElementById(`msg-${messageId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+      element.classList.add(
+        "bg-emerald-500/20",
+        "shadow-[0_0_15px_rgba(16,185,129,0.3)]",
+      );
+
+      setTimeout(() => {
+        element.classList.remove(
+          "bg-emerald-500/20",
+          "shadow-[0_0_15px_rgba(16,185,129,0.3)]",
+        );
+      }, 1000);
     }
   };
 
@@ -49,7 +71,7 @@ const MessageList = () => {
   }, [selectedRoom, fetchMessage, socket]);
 
   return (
-    <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-4 custom-scrollbar">
+    <div className="flex-1 py-6 space-y-4 px-6 overflow-y-auto overflow-x-hidden custom-scrollbar">
       {message.map((msg, index) => {
         const isMe = msg.sender._id === user?._id;
         const prevMessage = message[index - 1];
@@ -72,11 +94,18 @@ const MessageList = () => {
               </div>
             )}
             <div
-              className={`flex items-center ${isMe ? "justify-end" : "justify-start"} animate-fade-in group`}
+              id={`msg-${msg._id}`}
+              className={`flex items-center ${isMe ? "justify-end" : "justify-start"} animate-fade-in group rounded-2xl transition-all duration-300 p-1`}
             >
               {/* Action message */}
               {isMe && (
-                <button className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0">
+                <button
+                  onClick={() => {
+                    dispatch(setReplyMessage(msg));
+                    handleScrollBottom();
+                  }}
+                  className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                >
                   <Reply size={18} />
                 </button>
               )}
@@ -101,7 +130,27 @@ const MessageList = () => {
                     {msg.sender.name}
                   </p>
                 )}
-                <div className="flex min-w-0 items-center">
+
+                {msg.replyTo && (
+                  <div
+                    onClick={() => handleScrollToOriginal(msg.replyTo._id)}
+                    className={`mb-2 px-3 py-1.5 bg-black/20 rounded-lg border-l-[3px] border-emerald-400 text-xs flex flex-col min-w-0 select-none cursor-pointer ${isMe ? "ml-auto" : "mr-auto"}`}
+                  >
+                    <div className="flex items-center gap-1 font-semibold text-emerald-300 text-[10px] mb-0.5">
+                      <span className="text-[12px] font-bold">
+                        <CornerDownRight size={12} />
+                      </span>
+                      <span>{msg.replyTo.sender?.name || "Người dùng"}</span>
+                    </div>
+                    <span className="text-white/50 text-[11px] leading-relaxed truncate max-w-[280px]">
+                      {msg.replyTo.content}
+                    </span>
+                  </div>
+                )}
+
+                <div
+                  className={`flex min-w-0 items-center ${isMe ? "ml-auto justify-end" : "mr-auto justify-start"}`}
+                >
                   <div
                     className={`relative rounded-2xl p-3 min-w-0 ${
                       isMe
@@ -177,11 +226,15 @@ const MessageList = () => {
 
                   {/* Action message */}
                   {!isMe && (
-                    <button className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0">
+                    <button
+                      onClick={() => dispatch(setReplyMessage(msg))}
+                      className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                    >
                       <Reply size={16} />
                     </button>
                   )}
                 </div>
+
                 <p
                   className={`text-[10px] text-white/40 mt-4 ${
                     isMe ? "text-right" : "text-left"

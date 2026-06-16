@@ -18,7 +18,15 @@ export interface MessageType {
   sender: UserType;
   content: string;
   readBy: ReadByType[];
-  replyTo: string | null;
+  replyTo: {
+    _id: string;
+    content: string;
+    sender: {
+      _id: string;
+      name: string;
+      avatar?: string;
+    };
+  } | null;
   isRecalled: boolean;
   deletedBy: string[];
   createdAt: string;

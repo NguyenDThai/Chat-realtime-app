@@ -1,11 +1,15 @@
 import { createMessage } from "@/src/api/message.api";
 import type { RootState } from "@/src/store";
+import { setReplyMessage } from "@/src/store/slides/chatSlide";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const ChatInput = () => {
   const [text, setText] = useState("");
-  const { selectedRoom } = useSelector((state: RootState) => state.chat);
+  const { selectedRoom, replyingMessage } = useSelector(
+    (state: RootState) => state.chat,
+  );
+  const dispatch = useDispatch();
 
   if (!selectedRoom) return null;
 
@@ -17,9 +21,11 @@ const ChatInput = () => {
       await createMessage({
         conversationId: selectedRoom._id,
         content: text.trim(),
+        replyTo: replyingMessage?._id,
       });
 
       setText("");
+      dispatch(setReplyMessage(null));
     } catch (error) {
       console.error("Failed to send message", error);
     }
