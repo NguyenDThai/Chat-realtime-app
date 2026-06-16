@@ -31,6 +31,15 @@ export const chatSlide = createSlice({
 
     setRooms: (state, action: PayloadAction<ChatListType[]>) => {
       state.rooms = action.payload;
+
+      if (state.selectedRoom) {
+        const updatedSelectRoom = action.payload.find(
+          (room) => room._id === state.selectedRoom?._id,
+        );
+        if (updatedSelectRoom) {
+          state.selectedRoom = updatedSelectRoom;
+        }
+      }
     },
 
     // set danh sách tin nhắn vào store

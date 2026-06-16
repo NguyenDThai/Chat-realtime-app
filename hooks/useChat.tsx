@@ -9,6 +9,7 @@ import {
   updateMessageAction,
   setOnlineUsers,
 } from "@/src/store/slides/chatSlide";
+import type { ChatListType } from "@/types/list.chat.type";
 import type { MessageType, ReactionType } from "@/types/message.type";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,6 +51,12 @@ export const useChat = () => {
       }
     };
 
+    const handleNewConversation = (newConversation: ChatListType) => {
+      console.warn(newConversation);
+
+      fetchChatList();
+    };
+
     const handleConversationDelete = (deleteId: string) => {
       dispatch(handleRoomDeleted(deleteId));
       fetchChatList();
@@ -69,12 +76,14 @@ export const useChat = () => {
     };
 
     socket.on("new_message", handleReceiveMessage);
+    socket.on("new_conversation", handleNewConversation);
     socket.on("coversation_delete", handleConversationDelete);
     socket.on("action_message", handleActionMessage);
     socket.on("user_online", handleUserOnline);
 
     return () => {
       socket.off("new_message", handleReceiveMessage);
+      socket.off("new_conversation", handleNewConversation);
       socket.off("coversation_delete", handleConversationDelete);
       socket.off("action_message", handleActionMessage);
       socket.off("user_online", handleUserOnline);
