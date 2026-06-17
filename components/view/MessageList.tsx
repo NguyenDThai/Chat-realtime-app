@@ -132,7 +132,7 @@ const MessageList = () => {
     <div
       ref={scrollContainerRef}
       onScroll={handleScroll}
-      className="flex-1 py-6 bg-emerald-600/10 space-y-4 px-6 overflow-y-auto overflow-x-hidden custom-scrollbar"
+      className="flex-1 py-6 bg-emerald-700/5 space-y-4 px-6 overflow-y-auto overflow-x-hidden custom-scrollbar"
     >
       {isLoadingOlder && (
         <div className="flex justify-center py-4">

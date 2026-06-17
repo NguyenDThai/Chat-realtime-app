@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatList from "@/components/sidebar/ChatList";
 import Header from "@/components/sidebar/Header";
 import Footer from "@/components/sidebar/Footer";
@@ -13,7 +13,9 @@ import NavigateSidebar from "@/components/sidebar/NavigateSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/src/store";
 import { Reply, X } from "lucide-react";
-import { setReplyMessage } from "@/src/store/slides/chatSlide";
+import { markRoomRead, setReplyMessage } from "@/src/store/slides/chatSlide";
+import type { ChatListType } from "@/types/list.chat.type";
+import { markMessageAsReadApi } from "@/src/api/message.api";
 
 const Home = () => {
   const { user } = useAuth();
@@ -34,6 +36,25 @@ const Home = () => {
       setSearchTab("all");
     }
   };
+
+  const isRoomUnread = (room: ChatListType) => {
+    return (room.unreadCount || 0) > 0;
+  };
+
+  const unreadCount = rooms.reduce(
+    (acc, room) => acc + (room.unreadCount || 0),
+    0,
+  );
+
+  useEffect(() => {
+    if (selectedRoom && user) {
+      dispatch(markRoomRead({ roomId: selectedRoom._id }));
+
+      markMessageAsReadApi(selectedRoom._id).catch((e) => {
+        console.error("Lỗi khi đồng bộ trạng thái đã đọc lên Server:", e);
+      });
+    }
+  }, [selectedRoom?._id, selectedRoom?.lastMessage?._id, user?._id, dispatch]);
 
   // Lọc room
   const filteredRooms = rooms.filter((room) => {
@@ -69,6 +90,10 @@ const Home = () => {
     if (searchTab) {
       if (searchTab === "members") {
         return room.type === "single";
+      }
+
+      if (searchTab === "unread") {
+        return isRoomUnread(room);
       }
 
       // Nếu đang chọn tab "Tin nhắn" hoặc "File" -> Ẩn toàn bộ danh sách phòng chat (chờ logic search tin nhắn/file sau này)
@@ -133,7 +158,10 @@ const Home = () => {
             <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
               {[
                 { id: "all", label: "Tất cả" },
-                { id: "unread", label: "Chưa đọc" },
+                {
+                  id: "unread",
+                  label: `Chưa đọc ${unreadCount > 0 ? `(${unreadCount})` : ""}`,
+                },
               ].map((tab) => (
                 <button
                   key={tab.id}

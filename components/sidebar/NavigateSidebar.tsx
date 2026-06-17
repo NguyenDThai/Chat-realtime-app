@@ -24,7 +24,7 @@ const NavigateSidebar = () => {
   ];
 
   return (
-    <div className="w-[72px] h-screen bg-emerald-600/10 flex flex-col justify-between items-center py-6 border-r border-white/10 z-10 shrink-0">
+    <div className="w-[72px] h-screen bg-emerald-700/5 flex flex-col justify-between items-center py-6 border-r border-white/10 z-10 shrink-0">
       {/* Top Menu Items */}
       <div className="flex flex-col items-center w-full gap-4">
         {menuItems.map((item) => {

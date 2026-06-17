@@ -42,3 +42,13 @@ export const reactToMessage = async (messageId: string, emoji: string) => {
     throw error;
   }
 };
+
+export const markMessageAsReadApi = async (conversationId: string) => {
+  try {
+    const res = await axiosApi.put(`/message/read/${conversationId}`);
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi đánh dấu đã đọc", error);
+    throw error;
+  }
+};

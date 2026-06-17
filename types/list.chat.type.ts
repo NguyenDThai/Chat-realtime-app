@@ -12,4 +12,5 @@ export interface ChatListType {
   time: string;
   isOnline: boolean;
   createdBy: UserType;
+  unreadCount?: number;
 }

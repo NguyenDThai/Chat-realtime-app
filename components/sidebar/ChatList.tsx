@@ -146,6 +146,11 @@ const ChatList = ({
                   currentUserId={user?._id}
                   className={`w-12 h-12 ${selectedRoom?._id === room._id ? "shadow-lg shadow-emerald-500/30" : ""}`}
                 />
+                {room.unreadCount && room.unreadCount > 0 ? (
+                  <div className="absolute top-0 right-0 text-white bg-red-500 rounded-full px-1.5 py-0.5 text-xs">
+                    {room.unreadCount > 9 ? "9+" : room.unreadCount}
+                  </div>
+                ) : null}
               </div>
 
               {/* Thông tin phòng */}

@@ -76,10 +76,12 @@ export const chatSlide = createSlice({
       const newMessage = action.payload;
       const updateRoom = state.rooms.map((room) => {
         if (room._id === newMessage.conversationId) {
+          const isCurrentRoom = state.selectedRoom?._id === room._id;
           return {
             ...room,
             lastMessage: newMessage,
             lastMessageAt: newMessage.createdAt,
+            unreadCount: isCurrentRoom ? 0 : (room.unreadCount || 0) + 1,
           };
         }
         return room;
@@ -95,6 +97,20 @@ export const chatSlide = createSlice({
         state.selectedRoom._id === newMessage.conversationId
       ) {
         state.message.push(newMessage);
+      }
+    },
+
+    markRoomRead: (state, action: PayloadAction<{ roomId: string }>) => {
+      const { roomId } = action.payload;
+
+      const room = state.rooms.find((r) => r._id === roomId);
+
+      if (room) {
+        room.unreadCount = 0;
+      }
+
+      if (state.selectedRoom && state.selectedRoom._id === roomId) {
+        state.selectedRoom.unreadCount = 0;
       }
     },
 
@@ -140,6 +156,7 @@ export const {
   setReplyMessage,
   prependMessages,
   setOnlineUsers,
+  markRoomRead,
 } = chatSlide.actions;
 
 export default chatSlide.reducer;
