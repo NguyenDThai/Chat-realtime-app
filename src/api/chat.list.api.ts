@@ -54,3 +54,12 @@ export const deleteChatListApi = async (id: string) => {
     console.log(error);
   }
 };
+
+export const leaveChatApi = async (id: string) => {
+  try {
+    const res = await axiosApi.post(`/conversation/${id}/leave`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

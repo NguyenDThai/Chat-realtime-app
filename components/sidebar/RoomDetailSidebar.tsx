@@ -14,11 +14,17 @@ import {
   Download,
   Crown,
   ChevronUp,
+  ArrowLeftFromLine,
+  Trash,
 } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/src/store";
 import { useData } from "@/hooks/useData";
 import AddMemberModal from "@/components/modal/AddMemberModal";
+import { useConfirm } from "@/hooks/useConfirm";
+import { leaveChatApi } from "@/src/api/chat.list.api";
+import { setSelectedRoom } from "@/src/store/slides/chatSlide";
+import { toast } from "react-toastify";
 
 interface RoomDetailSidebarProps {
   onClose: () => void;
@@ -26,6 +32,8 @@ interface RoomDetailSidebarProps {
 
 const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
   const { user } = useAuth();
+  const confirm = useConfirm();
+  const dispatch = useDispatch();
   const { selectedRoom: room, onlineUsers } = useSelector(
     (state: RootState) => state.chat,
   );
@@ -56,6 +64,29 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
 
   // Tìm thành viên là bản thân (Bạn)
   const isMe = (userId: string) => userId === user?._id;
+
+  const handleLeaveRoom = async () => {
+    const isConfirm = await confirm({
+      title: "Rời nhóm",
+      message: "Bạn có chắc chắn muốn rời khỏi nhóm này không?",
+      confirmText: "Rời nhóm",
+      cancelText: "Hủy",
+      type: "danger",
+    });
+
+    if (!isConfirm) return;
+
+    try {
+      const res = await leaveChatApi(room._id);
+      if (res) {
+        fetchChatList();
+        dispatch(setSelectedRoom(null));
+        toast.success(`Bạn đã rời nhóm ${room.name}`);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="w-80 bg-emerald-900/40 border-l border-white/20 flex flex-col h-full animate-fade-in relative z-20">
@@ -285,6 +316,23 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
             )}
           </div>
         </div>
+        {room.type === "group" ? (
+          <button
+            onClick={handleLeaveRoom}
+            type="button"
+            className="w-full flex items-center justify-center p-3 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all"
+          >
+            <span className="flex items-center gap-2 text-red-400">
+              <ArrowLeftFromLine className="w-4 h-4" /> Rời nhóm
+            </span>
+          </button>
+        ) : (
+          <button className="w-full flex items-center justify-center p-3 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all">
+            <span className="flex items-center gap-2 text-red-400">
+              <Trash className="w-4 h-4" /> Xóa lịch sử trò chuyện
+            </span>
+          </button>
+        )}
         {openAddMemberModal && (
           <AddMemberModal
             onClose={() => setOpenAddMemberModal(false)}
