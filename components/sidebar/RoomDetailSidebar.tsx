@@ -22,9 +22,10 @@ import type { RootState } from "@/src/store";
 import { useData } from "@/hooks/useData";
 import AddMemberModal from "@/components/modal/AddMemberModal";
 import { useConfirm } from "@/hooks/useConfirm";
-import { leaveChatApi } from "@/src/api/chat.list.api";
+import { deleteChatListApi, leaveChatApi } from "@/src/api/chat.list.api";
 import { setSelectedRoom } from "@/src/store/slides/chatSlide";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 interface RoomDetailSidebarProps {
   onClose: () => void;
@@ -85,6 +86,32 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const handleDeleteHistory = async () => {
+    const isConfirm = await confirm({
+      title: "Xóa lịch sử trò chuyện",
+      message: "Bạn có chắc chắn muốn xóa cuộc trò chuyện không?",
+      confirmText: "Xóa",
+      cancelText: "Hủy",
+      type: "danger",
+    });
+
+    if (!isConfirm) return;
+    try {
+      const res = await deleteChatListApi(room._id);
+
+      if (res) {
+        fetchChatList();
+        dispatch(setSelectedRoom(null));
+        onClose();
+        toast.success("Đã xóa cuộc trò chuyện thành công!");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error.response?.data?.error);
+      }
     }
   };
 
@@ -317,17 +344,30 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
           </div>
         </div>
         {room.type === "group" ? (
+          <>
+            <button
+              onClick={handleDeleteHistory}
+              className="w-full flex items-center justify-center p-3 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all"
+            >
+              <span className="flex items-center gap-2 text-red-400">
+                <Trash className="w-4 h-4" /> Xóa lịch sử trò chuyện
+              </span>
+            </button>
+            <button
+              onClick={handleLeaveRoom}
+              type="button"
+              className="w-full flex items-center justify-center p-3 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all"
+            >
+              <span className="flex items-center gap-2 text-red-400">
+                <ArrowLeftFromLine className="w-4 h-4" /> Rời nhóm
+              </span>
+            </button>
+          </>
+        ) : (
           <button
-            onClick={handleLeaveRoom}
-            type="button"
+            onClick={handleDeleteHistory}
             className="w-full flex items-center justify-center p-3 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all"
           >
-            <span className="flex items-center gap-2 text-red-400">
-              <ArrowLeftFromLine className="w-4 h-4" /> Rời nhóm
-            </span>
-          </button>
-        ) : (
-          <button className="w-full flex items-center justify-center p-3 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all">
             <span className="flex items-center gap-2 text-red-400">
               <Trash className="w-4 h-4" /> Xóa lịch sử trò chuyện
             </span>

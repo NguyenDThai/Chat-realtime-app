@@ -52,6 +52,7 @@ export const deleteChatListApi = async (id: string) => {
     return res.data;
   } catch (error) {
     console.log(error);
+    throw error;
   }
 };
 
