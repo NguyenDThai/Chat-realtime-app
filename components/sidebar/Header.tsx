@@ -1,5 +1,5 @@
 import CreateChatRoom from "@/components/modal/CreateChatRoom";
-import { MessageSquareMore, Plus } from "lucide-react";
+import { MessageSquareMore, UserPlus } from "lucide-react";
 import { useState } from "react";
 
 const Header = () => {
@@ -20,7 +20,7 @@ const Header = () => {
         onClick={() => setShowModal(true)}
         className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200 cursor-pointer"
       >
-        <Plus className="text-white w-5 h-5" />
+        <UserPlus className="w-5 h-5 text-white" />
       </button>
 
       {showModal && <CreateChatRoom onClose={() => setShowModal(false)} />}

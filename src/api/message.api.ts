@@ -52,3 +52,13 @@ export const markMessageAsReadApi = async (conversationId: string) => {
     throw error;
   }
 };
+
+export const recallMessageApi = async (messageId: string) => {
+  try {
+    const res = await axiosApi.post(`/message/${messageId}/recall`);
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi thu hồi tin nhắn: ", error);
+    throw error;
+  }
+};

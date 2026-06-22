@@ -114,6 +114,35 @@ export const chatSlide = createSlice({
       }
     },
 
+    // Recall message
+    recallMessage: (state, action: PayloadAction<string>) => {
+      const messageId = action.payload;
+      // Cập nhật trong danh sách tin nhắn đang hiển thị
+      const msg = state.message.find((m) => m._id === messageId);
+
+      if (msg) {
+        msg.isRecalled = true;
+        msg.content = "Tin nhắn đã được thu hồi";
+        msg.reactions = [];
+      }
+
+      // Cập nhật tin nhắn hiển thị cuối cùng ở sidebar
+      state.rooms = state.rooms.map((room) => {
+        if (room.lastMessage?._id === messageId) {
+          return {
+            ...room,
+            lastMessage: {
+              ...room.lastMessage,
+              isRecalled: true,
+              content: "Tin nhắn đã được thu hồi",
+              reactions: [],
+            },
+          };
+        }
+        return room;
+      });
+    },
+
     // Xóa phòng chat khỏi danh sách chat
     handleRoomDeleted: (state, action: PayloadAction<string>) => {
       const deleteId = action.payload;
@@ -157,6 +186,7 @@ export const {
   prependMessages,
   setOnlineUsers,
   markRoomRead,
+  recallMessage,
 } = chatSlide.actions;
 
 export default chatSlide.reducer;

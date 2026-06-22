@@ -8,6 +8,7 @@ import {
   receiveNewMessage,
   updateMessageAction,
   setOnlineUsers,
+  recallMessage,
 } from "@/src/store/slides/chatSlide";
 import type { ChatListType } from "@/types/list.chat.type";
 import type { MessageType, ReactionType } from "@/types/message.type";
@@ -62,6 +63,10 @@ export const useChat = () => {
       fetchChatList();
     };
 
+    const handleRecallMessage = (data: { messageId: string }) => {
+      dispatch(recallMessage(data.messageId));
+    };
+
     // handle action message
     const handleActionMessage = (data: {
       messageId: string;
@@ -78,6 +83,7 @@ export const useChat = () => {
     socket.on("new_message", handleReceiveMessage);
     socket.on("new_conversation", handleNewConversation);
     socket.on("coversation_delete", handleConversationDelete);
+    socket.on("message_recalled", handleRecallMessage);
     socket.on("action_message", handleActionMessage);
     socket.on("user_online", handleUserOnline);
 
@@ -85,6 +91,7 @@ export const useChat = () => {
       socket.off("new_message", handleReceiveMessage);
       socket.off("new_conversation", handleNewConversation);
       socket.off("coversation_delete", handleConversationDelete);
+      socket.off("message_recalled", handleRecallMessage);
       socket.off("action_message", handleActionMessage);
       socket.off("user_online", handleUserOnline);
     };

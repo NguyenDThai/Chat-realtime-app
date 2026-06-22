@@ -3,14 +3,30 @@ import MessageContent from "@/components/view/MessageContent";
 import { useAuth } from "@/hooks/useAuth";
 import { useData } from "@/hooks/useData";
 import { useSocket } from "@/hooks/useSocket";
-import { getMessage, reactToMessage } from "@/src/api/message.api";
+import {
+  getMessage,
+  reactToMessage,
+  recallMessageApi,
+} from "@/src/api/message.api";
 import type { RootState } from "@/src/store";
-import { prependMessages, setReplyMessage } from "@/src/store/slides/chatSlide";
+import {
+  prependMessages,
+  recallMessage,
+  setReplyMessage,
+} from "@/src/store/slides/chatSlide";
 import type { ReactionType } from "@/types/message.type";
 import { formatDataSeparator } from "@/utils/formatDateSeparator";
-import { CornerDownRight, Loader2, Reply, ThumbsUp } from "lucide-react";
+import axios from "axios";
+import {
+  CornerDownRight,
+  Loader2,
+  Reply,
+  RotateCcw,
+  ThumbsUp,
+} from "lucide-react";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const MessageList = () => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -39,11 +55,27 @@ const MessageList = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Call api action message
   const handleActionMessage = async (messageId: string, emoji: string) => {
     try {
       await reactToMessage(messageId, emoji);
     } catch (error) {
       console.error("Error reacting to message:", error);
+    }
+  };
+
+  const handleRecallMessage = async (messageId: string) => {
+    try {
+      const res = await recallMessageApi(messageId);
+      if (res) {
+        dispatch(recallMessage(messageId));
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error?.response?.data?.message || "Không thể thu hồi tin nhắn",
+        );
+      }
     }
   };
 
@@ -165,16 +197,25 @@ const MessageList = () => {
               className={`flex items-center ${isMe ? "justify-end" : "justify-start"} animate-fade-in group rounded-2xl transition-all duration-300 p-1`}
             >
               {/* Action message */}
-              {isMe && (
-                <button
-                  onClick={() => {
-                    dispatch(setReplyMessage(msg));
-                    handleScrollBottom();
-                  }}
-                  className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
-                >
-                  <Reply size={18} />
-                </button>
+              {isMe && !msg.isRecalled && (
+                <div className="flex items-center">
+                  <button
+                    onClick={() => {
+                      dispatch(setReplyMessage(msg));
+                      handleScrollBottom();
+                    }}
+                    className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                  >
+                    <Reply size={18} />
+                  </button>
+
+                  <button
+                    onClick={() => handleRecallMessage(msg._id)}
+                    className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                  >
+                    <RotateCcw size={18} />
+                  </button>
+                </div>
               )}
               {!isMe && (
                 <div className="flex-shrink-0 mr-3">
@@ -227,70 +268,85 @@ const MessageList = () => {
                         : "bg-white/10 border border-white/20 text-white rounded-tl-none"
                     }`}
                   >
-                    <MessageContent content={msg.content} isMe={isMe} />
+                    {msg.isRecalled ? (
+                      <p className="text-sm italic text-white select-none">
+                        Tin nhắn đã bị thu hồi
+                      </p>
+                    ) : (
+                      <MessageContent content={msg.content} isMe={isMe} />
+                    )}
                     {/* Hiển thị danh sách reaction đã thả khi không hover */}
-                    {msg.reactions && msg.reactions.length > 0 && (
+                    {!msg.isRecalled &&
+                      msg.reactions &&
+                      msg.reactions.length > 0 && (
+                        <div
+                          className={`absolute z-10 -bottom-3.5 flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-emerald-950 border border-white/20 shadow-md text-[10px] select-none cursor-pointer`}
+                          style={{
+                            left: isMe ? "-16px" : "auto",
+                            right: !isMe ? "-16px" : "auto",
+                          }}
+                          onClick={() =>
+                            setSelectedReaction(msg.reactions || null)
+                          }
+                        >
+                          {Array.from(
+                            new Set(msg.reactions.map((r) => r.emoji)),
+                          )
+                            .slice(0, 3)
+                            .map((emoji) => (
+                              <span key={emoji} className="text-xs">
+                                {emoji}
+                              </span>
+                            ))}
+                          {msg.reactions.length > 0 && (
+                            <span className="text-[10px] text-white/80 font-medium ml-1">
+                              {msg.reactions.length}
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                    {!msg.isRecalled && (
                       <div
-                        className={`absolute z-10 -bottom-3.5 flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-emerald-950 border border-white/20 shadow-md text-[10px] select-none cursor-pointer`}
+                        className="group/reactions absolute z-10 -bottom-4 group-hover:flex hidden items-center justify-center w-8 h-8 rounded-full bg-emerald-800 hover:bg-emerald-700 border border-white/20 shadow-md text-white/90 cursor-pointer transition-all duration-150"
                         style={{
-                          left: isMe ? "-16px" : "auto",
-                          right: !isMe ? "-16px" : "auto",
+                          left: isMe ? "auto" : "-16px",
+                          right: isMe ? "-16px" : "auto",
                         }}
-                        onClick={() =>
-                          setSelectedReaction(msg.reactions || null)
-                        }
                       >
-                        {Array.from(new Set(msg.reactions.map((r) => r.emoji)))
-                          .slice(0, 3)
-                          .map((emoji) => (
-                            <span key={emoji} className="text-xs">
+                        {myReaction ? (
+                          <span
+                            className="text-[15px] select-none flex items-center justify-center"
+                            onClick={() =>
+                              handleActionMessage(msg._id, myReaction.emoji)
+                            }
+                          >
+                            {myReaction.emoji}
+                          </span>
+                        ) : (
+                          <ThumbsUp
+                            size={18}
+                            onClick={() => handleActionMessage(msg._id, "👍")}
+                          />
+                        )}
+                        {/* Bảng chọn Emoji hiển thị khi hover vào nút Like */}
+                        <div
+                          className={`absolute bottom-full mb-1.5 ${isMe ? "right-4" : "left-4"} hidden group-hover/reactions:flex items-center gap-3 px-3 py-2 rounded-full bg-emerald-955/95 border border-white/25 backdrop-blur-md shadow-2xl animate-fade-in z-50 before:absolute before:h-3 before:w-full before:top-full before:left-0 before:content-['']`}
+                        >
+                          {["👍", "❤️", "😆", "😮", "😢", "😡"].map((emoji) => (
+                            <span
+                              key={emoji}
+                              onClick={() =>
+                                handleActionMessage(msg._id, emoji)
+                              }
+                              className="hover:scale-135 active:scale-95 transition-transform duration-100 text-xl cursor-pointer select-none px-0.5"
+                            >
                               {emoji}
                             </span>
                           ))}
-                        {msg.reactions.length > 0 && (
-                          <span className="text-[10px] text-white/80 font-medium ml-1">
-                            {msg.reactions.length}
-                          </span>
-                        )}
+                        </div>
                       </div>
                     )}
-                    <div
-                      className="group/reactions absolute z-10 -bottom-4 group-hover:flex hidden items-center justify-center w-8 h-8 rounded-full bg-emerald-800 hover:bg-emerald-700 border border-white/20 shadow-md text-white/90 cursor-pointer transition-all duration-150"
-                      style={{
-                        left: isMe ? "auto" : "-16px",
-                        right: isMe ? "-16px" : "auto",
-                      }}
-                    >
-                      {myReaction ? (
-                        <span
-                          className="text-[15px] select-none flex items-center justify-center"
-                          onClick={() =>
-                            handleActionMessage(msg._id, myReaction.emoji)
-                          }
-                        >
-                          {myReaction.emoji}
-                        </span>
-                      ) : (
-                        <ThumbsUp
-                          size={18}
-                          onClick={() => handleActionMessage(msg._id, "👍")}
-                        />
-                      )}
-                      {/* Bảng chọn Emoji hiển thị khi hover vào nút Like */}
-                      <div
-                        className={`absolute bottom-full mb-1.5 ${isMe ? "right-4" : "left-4"} hidden group-hover/reactions:flex items-center gap-3 px-3 py-2 rounded-full bg-emerald-955/95 border border-white/25 backdrop-blur-md shadow-2xl animate-fade-in z-50 before:absolute before:h-3 before:w-full before:top-full before:left-0 before:content-['']`}
-                      >
-                        {["👍", "❤️", "😆", "😮", "😢", "😡"].map((emoji) => (
-                          <span
-                            key={emoji}
-                            onClick={() => handleActionMessage(msg._id, emoji)}
-                            className="hover:scale-135 active:scale-95 transition-transform duration-100 text-xl cursor-pointer select-none px-0.5"
-                          >
-                            {emoji}
-                          </span>
-                        ))}
-                      </div>
-                    </div>{" "}
                   </div>
 
                   {/* Action message */}
