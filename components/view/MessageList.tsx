@@ -4,12 +4,14 @@ import { useAuth } from "@/hooks/useAuth";
 import { useData } from "@/hooks/useData";
 import { useSocket } from "@/hooks/useSocket";
 import {
+  deleteMessageApi,
   getMessage,
   reactToMessage,
   recallMessageApi,
 } from "@/src/api/message.api";
 import type { RootState } from "@/src/store";
 import {
+  deleteMessage,
   prependMessages,
   recallMessage,
   setReplyMessage,
@@ -23,6 +25,7 @@ import {
   Reply,
   RotateCcw,
   ThumbsUp,
+  Trash,
 } from "lucide-react";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -75,6 +78,19 @@ const MessageList = () => {
         toast.error(
           error?.response?.data?.message || "Không thể thu hồi tin nhắn",
         );
+      }
+    }
+  };
+
+  const handlDeleteMessage = async (messageId: string) => {
+    try {
+      const res = await deleteMessageApi(messageId);
+      if (res) {
+        dispatch(deleteMessage(messageId));
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        toast.error(error?.response?.data?.message || "Không thể xóa tin nhắn");
       }
     }
   };
@@ -215,6 +231,12 @@ const MessageList = () => {
                   >
                     <RotateCcw size={18} />
                   </button>
+                  <button
+                    onClick={() => handlDeleteMessage(msg._id)}
+                    className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                  >
+                    <Trash size={18} />
+                  </button>
                 </div>
               )}
               {!isMe && (
@@ -350,13 +372,21 @@ const MessageList = () => {
                   </div>
 
                   {/* Action message */}
-                  {!isMe && (
-                    <button
-                      onClick={() => dispatch(setReplyMessage(msg))}
-                      className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
-                    >
-                      <Reply size={16} />
-                    </button>
+                  {!isMe && !msg.isRecalled && (
+                    <div className="flex items-center">
+                      <button
+                        onClick={() => dispatch(setReplyMessage(msg))}
+                        className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                      >
+                        <Reply size={16} />
+                      </button>
+                      <button
+                        onClick={() => handlDeleteMessage(msg._id)}
+                        className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                      >
+                        <Trash size={16} />
+                      </button>
+                    </div>
                   )}
                 </div>
 

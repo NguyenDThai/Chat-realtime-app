@@ -62,3 +62,13 @@ export const recallMessageApi = async (messageId: string) => {
     throw error;
   }
 };
+
+export const deleteMessageApi = async (messageId: string) => {
+  try {
+    const res = await axiosApi.delete(`/message/${messageId}`);
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi xóa tin nhắn: ", error);
+    throw error;
+  }
+};

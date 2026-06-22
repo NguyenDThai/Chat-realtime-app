@@ -143,6 +143,11 @@ export const chatSlide = createSlice({
       });
     },
 
+    // Delete message
+    deleteMessage: (state, action: PayloadAction<string>) => {
+      state.message = state.message.filter((m) => m._id !== action.payload);
+    },
+
     // Xóa phòng chat khỏi danh sách chat
     handleRoomDeleted: (state, action: PayloadAction<string>) => {
       const deleteId = action.payload;
@@ -187,6 +192,7 @@ export const {
   setOnlineUsers,
   markRoomRead,
   recallMessage,
+  deleteMessage,
 } = chatSlide.actions;
 
 export default chatSlide.reducer;
