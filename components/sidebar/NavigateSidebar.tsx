@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   MessageSquare,
   Users,
@@ -9,13 +8,17 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
-const NavigateSidebar = () => {
+interface NavigateSidebarProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
+
+const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState("chat");
 
   const menuItems = [
     { id: "chat", icon: MessageSquare, label: "Chat" },
-    { id: "users", icon: Users, label: "Contacts" },
+    { id: "contact", icon: Users, label: "Contacts" },
   ];
 
   const actionItems = [
