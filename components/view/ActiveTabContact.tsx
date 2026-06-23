@@ -1,8 +1,10 @@
+import ChatAvatar from "@/components/share/ChatAvatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useData } from "@/hooks/useData";
 import { createChatListApi } from "@/src/api/chat.list.api";
 import type { RootState } from "@/src/store";
 import { setSelectedRoom } from "@/src/store/slides/chatSlide";
+import type { ChatListType } from "@/types/list.chat.type";
 import {
   ChevronDown,
   MessageSquare,
@@ -73,17 +75,17 @@ const ActiveTabContact = ({
       : b.name.localeCompare(a.name, "vi");
   });
 
-  const groupdMembers: { [key: string]: typeof ortherUsers } = {};
+  const groupMembers: { [key: string]: typeof ortherUsers } = {};
   sortedUsers.forEach((u) => {
     const firstLetter = u.name.trim().charAt(0).toUpperCase();
 
-    if (!groupdMembers[firstLetter]) {
-      groupdMembers[firstLetter] = [];
+    if (!groupMembers[firstLetter]) {
+      groupMembers[firstLetter] = [];
     }
-    groupdMembers[firstLetter].push(u);
+    groupMembers[firstLetter].push(u);
   });
 
-  const sortedLetters = Object.keys(groupdMembers).sort((a, b) => {
+  const sortedLetters = Object.keys(groupMembers).sort((a, b) => {
     return sortOrder === "asc" ? a.localeCompare(b) : b.localeCompare(a);
   });
 
@@ -156,24 +158,20 @@ const ActiveTabContact = ({
 
                   {/* Các thành viên thuộc chữ cái */}
                   <div className="grid gap-2">
-                    {groupdMembers[letter].map((u) => (
+                    {groupMembers[letter].map((u) => (
                       <div
                         key={u._id}
                         className="flex items-center justify-between p-3 hover:bg-white/10 rounded-xl  transition-all duration-200"
                       >
                         <div className="flex items-center gap-3">
                           {/* Avatar */}
-                          <div className="w-10 h-10 rounded-full overflow-hidden bg-emerald-800 border border-white/20 flex items-center justify-center text-white font-bold uppercase select-none">
-                            {u.avatar ? (
-                              <img
-                                src={u.avatar}
-                                alt={u.name}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              u.name.charAt(0)
-                            )}
-                          </div>
+                          <ChatAvatar
+                            room={
+                              { type: "single", members: [u] } as ChatListType
+                            }
+                            currentUserId={user?._id}
+                            setActiveTab={setActiveTab}
+                          />
                           {/* Tên */}
                           <div>
                             <h4 className="text-white text-[16px] font-normal">
@@ -214,17 +212,7 @@ const ActiveTabContact = ({
                 >
                   <div className="flex items-center gap-3">
                     {/* Group avatar */}
-                    <div className="w-10 h-10 rounded-full overflow-hidden bg-emerald-800 border border-white/20 flex items-center justify-center text-white font-bold uppercase select-none">
-                      {room.avatar ? (
-                        <img
-                          src={room.avatar}
-                          alt={room.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        room.name.charAt(0)
-                      )}
-                    </div>
+                    <ChatAvatar room={room} currentUserId={user?._id} />
                     {/* Group name */}
                     <div>
                       <h4 className="text-white text-[16px] font-normal">
