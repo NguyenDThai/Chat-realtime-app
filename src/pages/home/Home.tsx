@@ -18,6 +18,7 @@ import type { ChatListType } from "@/types/list.chat.type";
 import { markMessageAsReadApi } from "@/src/api/message.api";
 import ActiveTabContactSidebar from "@/components/sidebar/ActiveTabContactSidebar";
 import ActiveTabContact from "@/components/view/ActiveTabContact";
+import ActiveTabSetting from "@/components/view/ActiveTabSetting";
 
 const Home = () => {
   const { user } = useAuth();
@@ -120,102 +121,104 @@ const Home = () => {
       {/* Navigate Sidebar */}
       <NavigateSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Sidebar - Danh sách phòng chat */}
-      <div className="relative w-80 bg-emerald-900/40 border-r border-white/20 flex flex-col">
-        {/* Sidebar Header */}
-        {activeTab === "chat" ? (
-          <div className="flex flex-col h-full">
-            <div className="p-6 pb-0 ">
-              <Header />
+      {activeTab !== "settings" && (
+        <div className="relative w-80 bg-emerald-900/40 border-r border-white/20 flex flex-col">
+          {/* Sidebar - Danh sách phòng chat */}
+          {/* Sidebar Header */}
+          {activeTab === "chat" ? (
+            <div className="flex flex-col h-full">
+              <div className="p-6 pb-0 ">
+                <Header />
 
-              {/* Search box */}
-              <SearchBox
+                {/* Search box */}
+                <SearchBox
+                  searchTerm={searchTerm}
+                  setSearchTerm={handleSearchChange}
+                />
+                {/* Active tab search */}
+                {searchTerm ? (
+                  <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
+                    {[
+                      { id: "all", label: "Tất cả" },
+                      { id: "members", label: "Thành viên" },
+                      { id: "messages", label: "Tin nhắn" },
+                      { id: "files", label: "File" },
+                    ].map((tab) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() =>
+                          setSearchTab(
+                            tab.id as "all" | "members" | "messages" | "files",
+                          )
+                        }
+                        className={`relative pb-2 text-[13px] font-medium cursor-pointer transition-all duration-200 hover:text-white ${
+                          searchTab === tab.id
+                            ? "text-emerald-400 font-semibold"
+                            : ""
+                        }`}
+                      >
+                        {tab.label}
+                        {/* Đường line gạch dưới di chuyển mượt mà */}
+                        {searchTab === tab.id && (
+                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-400 rounded-full" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
+                    {[
+                      { id: "all", label: "Tất cả" },
+                      {
+                        id: "unread",
+                        label: `Chưa đọc ${unreadCount > 0 ? `(${unreadCount})` : ""}`,
+                      },
+                    ].map((tab) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setSearchTab(tab.id as "all" | "unread")}
+                        className={`relative pb-2 font-medium cursor-pointer transition-all duration-200 hover:text-white ${
+                          searchTab === tab.id
+                            ? "text-emerald-400 font-semibold"
+                            : ""
+                        }`}
+                      >
+                        {tab.label}
+                        {/* Đường line gạch dưới di chuyển mượt mà */}
+                        {searchTab === tab.id && (
+                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-400 rounded-full" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Danh sách phòng chat */}
+              <ChatList
+                filteredRooms={displayRooms}
+                filteredUser={
+                  searchTerm && (searchTab === "all" || searchTab === "members")
+                    ? filteredUser
+                    : []
+                }
                 searchTerm={searchTerm}
-                setSearchTerm={handleSearchChange}
+                setSearchTerm={setSearchTerm}
               />
-              {/* Active tab search */}
-              {searchTerm ? (
-                <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
-                  {[
-                    { id: "all", label: "Tất cả" },
-                    { id: "members", label: "Thành viên" },
-                    { id: "messages", label: "Tin nhắn" },
-                    { id: "files", label: "File" },
-                  ].map((tab) => (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      onClick={() =>
-                        setSearchTab(
-                          tab.id as "all" | "members" | "messages" | "files",
-                        )
-                      }
-                      className={`relative pb-2 text-[13px] font-medium cursor-pointer transition-all duration-200 hover:text-white ${
-                        searchTab === tab.id
-                          ? "text-emerald-400 font-semibold"
-                          : ""
-                      }`}
-                    >
-                      {tab.label}
-                      {/* Đường line gạch dưới di chuyển mượt mà */}
-                      {searchTab === tab.id && (
-                        <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-400 rounded-full" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
-                  {[
-                    { id: "all", label: "Tất cả" },
-                    {
-                      id: "unread",
-                      label: `Chưa đọc ${unreadCount > 0 ? `(${unreadCount})` : ""}`,
-                    },
-                  ].map((tab) => (
-                    <button
-                      key={tab.id}
-                      type="button"
-                      onClick={() => setSearchTab(tab.id as "all" | "unread")}
-                      className={`relative pb-2 font-medium cursor-pointer transition-all duration-200 hover:text-white ${
-                        searchTab === tab.id
-                          ? "text-emerald-400 font-semibold"
-                          : ""
-                      }`}
-                    >
-                      {tab.label}
-                      {/* Đường line gạch dưới di chuyển mượt mà */}
-                      {searchTab === tab.id && (
-                        <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-400 rounded-full" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
+
+              {/* User Info Footer */}
+              <Footer />
             </div>
-
-            {/* Danh sách phòng chat */}
-            <ChatList
-              filteredRooms={displayRooms}
-              filteredUser={
-                searchTerm && (searchTab === "all" || searchTab === "members")
-                  ? filteredUser
-                  : []
-              }
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
+          ) : (
+            <ActiveTabContactSidebar
+              contactSubTab={contactSubTab}
+              setContactSubTab={setContactSubTab}
             />
-
-            {/* User Info Footer */}
-            <Footer />
-          </div>
-        ) : (
-          <ActiveTabContactSidebar
-            contactSubTab={contactSubTab}
-            setContactSubTab={setContactSubTab}
-          />
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col relative">
@@ -271,11 +274,13 @@ const Home = () => {
               <EmptyChat />
             )}
           </>
-        ) : (
+        ) : activeTab === "contact" ? (
           <ActiveTabContact
             contactSubTab={contactSubTab}
             setActiveTab={setActiveTab}
           />
+        ) : (
+          <ActiveTabSetting />
         )}
       </div>
     </div>
