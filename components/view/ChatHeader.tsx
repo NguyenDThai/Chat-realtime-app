@@ -38,7 +38,7 @@ const ChatHeader = ({
   };
 
   return (
-    <div className="bg-emerald-900/40 p-4 border-b border-white/20">
+    <div className="bg-white dark:bg-[#1A1A1A] p-4 border-b border-white dark:border-zinc-800">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           {/* Image user and group */}
@@ -51,10 +51,10 @@ const ChatHeader = ({
           </div>
 
           <div>
-            <h2 className="text-white font-bold text-lg">
+            <h2 className="text-slate-800 dark:text-white font-bold text-lg">
               {getRoomName(selectedRoom)}
             </h2>
-            <p className="text-emerald-200 text-xs">
+            <p className="text-emerald-600 dark:text-emerald-200 text-xs">
               {selectedRoom.type === "group"
                 ? `${selectedRoom.members.length} thành viên`
                 : isOnline
@@ -64,9 +64,9 @@ const ChatHeader = ({
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <button className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200">
+          <button className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl transition-all duration-200">
             <svg
-              className="w-5 h-5 text-white/70"
+              className="w-5 h-5 text-slate-600 dark:text-white/70"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -79,9 +79,9 @@ const ChatHeader = ({
               />
             </svg>
           </button>
-          <button className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200">
+          <button className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl transition-all duration-200">
             <svg
-              className="w-5 h-5 text-white/70"
+              className="w-5 h-5 text-slate-600 dark:text-white/70"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -96,9 +96,9 @@ const ChatHeader = ({
           </button>
           <button
             onClick={() => setShowDetailSidebar(true)}
-            className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200"
+            className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl transition-all duration-200"
           >
-            <EllipsisVertical className="w-5 h-5 text-white/70" />
+            <EllipsisVertical className="w-5 h-5 text-slate-600 dark:text-white/70" />
           </button>
         </div>
       </div>

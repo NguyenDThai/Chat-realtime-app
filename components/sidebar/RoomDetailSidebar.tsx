@@ -116,22 +116,22 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="w-80 bg-emerald-900/40 border-l border-white/20 flex flex-col h-full animate-fade-in relative z-20">
+    <div className="w-80 bg-white dark:bg-[#1A1A1A] border-l border-slate-200 dark:border-zinc-800 flex flex-col h-full animate-fade-in relative z-20">
       {/* Nút đóng Sidebar */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 p-1.5 hover:bg-white/10 rounded-lg text-white/70 hover:text-white transition-all cursor-pointer"
+        className="absolute top-4 right-4 p-1.5 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg text-slate-500 hover:text-slate-800 dark:text-white/70 dark:hover:text-white transition-all cursor-pointer"
       >
         <X className="w-5 h-5" />
       </button>
 
       {/* Header - Thông tin cơ bản */}
-      <div className="p-6 flex flex-col items-center border-b border-white/10 mt-6">
+      <div className="p-6 flex flex-col items-center border-b border-slate-200 dark:border-zinc-800 mt-6">
         <ChatAvatar room={room} currentUserId={user?._id} />
-        <h3 className="text-white font-bold text-lg mt-3 flex items-center gap-1.5">
+        <h3 className="text-slate-800 dark:text-white font-bold text-lg mt-3 flex items-center gap-1.5">
           {room.type === "group" ? room.name : partner?.name}
         </h3>
-        <p className="text-emerald-200/60 text-xs mt-1">
+        <p className="text-emerald-600 dark:text-emerald-200/60 text-xs mt-1">
           {room.type === "group"
             ? `${room.members.length} thành viên`
             : isOnline
@@ -142,20 +142,20 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
 
       {/* Hành động nhanh */}
       <div
-        className={`p-4 grid ${room.type === "group" ? "grid-cols-3" : "grid-cols-2"} gap-2 border-b border-white/10 text-center`}
+        className={`p-4 grid ${room.type === "group" ? "grid-cols-3" : "grid-cols-2"} gap-2 border-b border-slate-200 dark:border-zinc-800 text-center`}
       >
-        <button className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 hover:text-white transition-all cursor-pointer text-xs gap-1.5 border border-white/5">
+        <button className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-900 dark:text-white/80 dark:hover:text-white transition-all cursor-pointer text-xs gap-1.5 border border-slate-200 dark:border-white/5">
           <Pin className="w-4 h-4 text-emerald-400" />
           <span>Ghim</span>
         </button>
-        <button className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 hover:text-white transition-all cursor-pointer text-xs gap-1.5 border border-white/5">
+        <button className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-900 dark:text-white/80 dark:hover:text-white transition-all cursor-pointer text-xs gap-1.5 border border-slate-200 dark:border-white/5">
           <BellOff className="w-4 h-4 text-yellow-400" />
           <span>Tắt TB</span>
         </button>
         {room.type === "group" && (
           <button
             onClick={() => setOpenAddMemberModal(true)}
-            className="flex flex-col items-center justify-center p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 hover:text-white transition-all cursor-pointer text-xs gap-1.5 border border-white/5"
+            className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 text-slate-700 hover:text-slate-900 dark:text-white/80 dark:hover:text-white transition-all cursor-pointer text-xs gap-1.5 border border-slate-200 dark:border-white/5"
           >
             <UserPlus className="w-4 h-4 text-cyan-400" />
             <span>Thêm</span>
@@ -167,7 +167,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
       <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-5">
         {/* Mục quản lý nhóm (Chỉ cho Group và Admin) */}
         {room.type === "group" && isAdmin && (
-          <button className="w-full flex items-center justify-between p-3 bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all border border-white/5">
+          <button className="w-full flex items-center justify-between p-3 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl text-slate-800 dark:text-white text-sm font-medium transition-all border border-slate-200 dark:border-white/5">
             <span className="flex items-center gap-2">
               <Settings className="w-4 h-4 text-emerald-400" /> Quản lý nhóm
             </span>
@@ -181,7 +181,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
             <button
               type="button"
               onClick={() => setIsMemberExpanded(!isMemberExpanded)}
-              className="w-full flex items-center justify-between text-white/70 hover:text-white text-xs font-semibold px-1 py-1 transition-colors cursor-pointer"
+              className="w-full flex items-center justify-between text-slate-500 hover:text-slate-800 dark:text-white/70 dark:hover:text-white text-xs font-semibold px-1 py-1 transition-colors cursor-pointer"
             >
               <span>Thành viên ({room.members.length})</span>
               {isMemberExpanded ? (
@@ -197,7 +197,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
                 {room.members.map((member) => (
                   <div
                     key={member._id}
-                    className="flex items-center justify-between p-2 bg-white/5 hover:bg-white/10 rounded-xl border border-white/5"
+                    className="flex items-center justify-between p-2 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl border border-slate-200 dark:border-white/5"
                   >
                     <div className="flex items-center space-x-2.5">
                       <div className="relative w-8 h-8 ">
@@ -218,13 +218,13 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
                         </div>
                       </div>
                       <div className="text-left">
-                        <p className="text-white text-xs font-medium flex items-center gap-1">
+                        <p className="text-slate-800 dark:text-white text-xs font-medium flex items-center gap-1">
                           {isMe(member._id) ? "Bạn" : member.name}
                           {room?.createdBy._id === member._id && (
                             <Crown className="w-3 h-3 text-yellow-400 fill-yellow-400" />
                           )}
                         </p>
-                        <p className="text-[10px] text-white/40">
+                        <p className="text-[10px] text-slate-500 dark:text-white/40">
                           {room?.createdBy._id === member._id
                             ? "Trưởng nhóm"
                             : "Thành viên"}
@@ -243,7 +243,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
                     <div
                       key={member._id}
                       title={displayName}
-                      className={`relative w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center font-bold text-white text-[10px] overflow-hidden border-2 border-emerald-950 shadow-md ${
+                      className={`relative w-8 h-8 rounded-full bg-linear-to-r from-emerald-500 to-teal-500 flex items-center justify-center font-bold text-white text-[10px] overflow-hidden border-2 border-white dark:border-emerald-950 shadow-md ${
                         index > 0 ? "-ml-2" : ""
                       }`}
                     >
@@ -262,7 +262,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
 
                 {/* Phần dư hiển thị +N */}
                 {room.members.length > 8 && (
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-white text-[10px] font-bold border-2 border-emerald-950 -ml-2 shadow-md backdrop-blur-sm">
+                  <div className="w-8 h-8 rounded-full bg-slate-200/50 dark:bg-white/10 flex items-center justify-center text-slate-700 dark:text-white text-[10px] font-bold border-2 border-white dark:border-emerald-950 -ml-2 shadow-md backdrop-blur-sm">
                     +{room.members.length - 8}
                   </div>
                 )}
@@ -273,25 +273,27 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
 
         {/* Tổng hợp tài liệu gửi */}
         <div className="space-y-3 pt-2">
-          <p className="text-white/70 text-xs font-semibold px-1">Tổng hợp</p>
+          <p className="text-slate-600 dark:text-white/70 text-xs font-semibold px-1">
+            Tổng hợp
+          </p>
 
           {/* Tab Selection */}
-          <div className="flex bg-black/25 p-1 rounded-xl border border-white/5 text-xs">
+          <div className="flex bg-slate-100 dark:bg-black/25 p-1 rounded-xl border border-slate-200 dark:border-white/5 text-xs">
             <button
               onClick={() => setActiveTab("media")}
-              className={`flex-1 py-1.5 rounded-lg font-medium transition-all ${activeTab === "media" ? "bg-emerald-500 text-white" : "text-white/60 hover:text-white"}`}
+              className={`flex-1 py-1.5 rounded-lg font-medium transition-all ${activeTab === "media" ? "bg-emerald-500 text-white" : "text-slate-500 hover:text-slate-800 dark:text-white/60 dark:hover:text-white"}`}
             >
               Ảnh/Video
             </button>
             <button
               onClick={() => setActiveTab("file")}
-              className={`flex-1 py-1.5 rounded-lg font-medium transition-all ${activeTab === "file" ? "bg-emerald-500 text-white" : "text-white/60 hover:text-white"}`}
+              className={`flex-1 py-1.5 rounded-lg font-medium transition-all ${activeTab === "file" ? "bg-emerald-500 text-white" : "text-slate-500 hover:text-slate-800 dark:text-white/60 dark:hover:text-white"}`}
             >
               File
             </button>
             <button
               onClick={() => setActiveTab("link")}
-              className={`flex-1 py-1.5 rounded-lg font-medium transition-all ${activeTab === "link" ? "bg-emerald-500 text-white" : "text-white/60 hover:text-white"}`}
+              className={`flex-1 py-1.5 rounded-lg font-medium transition-all ${activeTab === "link" ? "bg-emerald-500 text-white" : "text-slate-500 hover:text-slate-800 dark:text-white/60 dark:hover:text-white"}`}
             >
               Link
             </button>
@@ -300,19 +302,21 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
           {/* Nội dung các Tab */}
           <div className="space-y-2">
             {activeTab === "file" && (
-              <div className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex items-center justify-between transition-all">
+              <div className="p-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200 dark:border-white/5 rounded-xl flex items-center justify-between transition-all">
                 <div className="flex items-center space-x-2.5 min-w-0">
                   <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg">
                     <FileText className="w-4 h-4" />
                   </div>
                   <div className="text-left min-w-0">
-                    <p className="text-white text-xs font-medium truncate">
+                    <p className="text-slate-800 dark:text-white text-xs font-medium truncate">
                       design-spec-v2.pdf
                     </p>
-                    <p className="text-[10px] text-white/40">2.4 MB</p>
+                    <p className="text-[10px] text-slate-500 dark:text-white/40">
+                      2.4 MB
+                    </p>
                   </div>
                 </div>
-                <button className="p-1.5 hover:bg-white/10 rounded-lg text-white/60 hover:text-white transition-all">
+                <button className="p-1.5 hover:bg-slate-200 dark:hover:bg-white/10 rounded-lg text-slate-500 hover:text-slate-800 dark:text-white/60 dark:hover:text-white transition-all">
                   <Download className="w-4 h-4" />
                 </button>
               </div>
@@ -320,22 +324,22 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
 
             {activeTab === "media" && (
               <div className="grid grid-cols-3 gap-1">
-                <div className="aspect-square bg-white/5 hover:bg-white/10 border border-white/5 rounded-lg flex items-center justify-center text-white/30 cursor-pointer">
+                <div className="aspect-square bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200 dark:border-white/5 rounded-lg flex items-center justify-center text-slate-400 dark:text-white/30 cursor-pointer">
                   <Image className="w-5 h-5" />
                 </div>
               </div>
             )}
 
             {activeTab === "link" && (
-              <div className="p-2.5 bg-white/5 hover:bg-white/10 border border-white/5 rounded-xl flex items-center space-x-2.5 transition-all cursor-pointer">
+              <div className="p-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200 dark:border-white/5 rounded-xl flex items-center space-x-2.5 transition-all cursor-pointer">
                 <div className="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg">
                   <Link2 className="w-4 h-4" />
                 </div>
                 <div className="text-left min-w-0 flex-1">
-                  <p className="text-white text-xs font-medium truncate">
+                  <p className="text-slate-800 dark:text-white text-xs font-medium truncate">
                     Figma Design Specs
                   </p>
-                  <p className="text-[10px] text-emerald-400/70 truncate">
+                  <p className="text-[10px] text-emerald-600 dark:text-emerald-400/70 truncate">
                     figma.com/file/...
                   </p>
                 </div>
@@ -347,7 +351,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
           <>
             <button
               onClick={handleDeleteHistory}
-              className="w-full flex items-center justify-center p-3 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all"
+              className="w-full flex items-center justify-center p-3 cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl text-slate-800 dark:text-white text-sm font-medium transition-all"
             >
               <span className="flex items-center gap-2 text-red-400">
                 <Trash className="w-4 h-4" /> Xóa lịch sử trò chuyện
@@ -356,7 +360,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
             <button
               onClick={handleLeaveRoom}
               type="button"
-              className="w-full flex items-center justify-center p-3 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all"
+              className="w-full flex items-center justify-center p-3 cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl text-slate-800 dark:text-white text-sm font-medium transition-all"
             >
               <span className="flex items-center gap-2 text-red-400">
                 <ArrowLeftFromLine className="w-4 h-4" /> Rời nhóm
@@ -366,7 +370,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
         ) : (
           <button
             onClick={handleDeleteHistory}
-            className="w-full flex items-center justify-center p-3 cursor-pointer bg-white/5 hover:bg-white/10 rounded-xl text-white text-sm font-medium transition-all"
+            className="w-full flex items-center justify-center p-3 cursor-pointer bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 rounded-xl text-slate-800 dark:text-white text-sm font-medium transition-all"
           >
             <span className="flex items-center gap-2 text-red-400">
               <Trash className="w-4 h-4" /> Xóa lịch sử trò chuyện

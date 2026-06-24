@@ -112,17 +112,17 @@ const Home = () => {
   });
 
   return (
-    <div className="relative flex h-screen overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900">
+    <div className="relative flex h-screen overflow-hidden bg-white dark:bg-black text-slate-800 dark:text-white">
       {/* Hiệu ứng bong bóng nền */}
-      <div className="absolute w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-slow top-20 -left-48"></div>
-      <div className="absolute w-96 h-96 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delayed bottom-20 -right-48"></div>
-      <div className="absolute w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-fast top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.07] animate-float-slow top-20 -left-48"></div>
+      <div className="absolute w-96 h-96 bg-teal-400 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.07] animate-float-delayed bottom-20 -right-48"></div>
+      <div className="absolute w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.05] animate-float-fast top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
 
       {/* Navigate Sidebar */}
       <NavigateSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {activeTab !== "settings" && (
-        <div className="relative w-80 bg-emerald-900/40 border-r border-white/20 flex flex-col">
+        <div className="relative w-80 bg-white dark:bg-[#1A1A1A] border-r border-slate-200 dark:border-zinc-800 flex flex-col">
           {/* Sidebar - Danh sách phòng chat */}
           {/* Sidebar Header */}
           {activeTab === "chat" ? (
@@ -137,7 +137,7 @@ const Home = () => {
                 />
                 {/* Active tab search */}
                 {searchTerm ? (
-                  <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
+                  <div className="flex items-center gap-5 text-xs text-slate-500 dark:text-white/60 border-b border-slate-200 dark:border-white/10 mb-4 animate-fade-in transition-all">
                     {[
                       { id: "all", label: "Tất cả" },
                       { id: "members", label: "Thành viên" },
@@ -152,22 +152,22 @@ const Home = () => {
                             tab.id as "all" | "members" | "messages" | "files",
                           )
                         }
-                        className={`relative pb-2 text-[13px] font-medium cursor-pointer transition-all duration-200 hover:text-white ${
+                        className={`relative pb-2 text-[13px] font-medium cursor-pointer transition-all duration-200 hover:text-slate-800 dark:hover:text-white ${
                           searchTab === tab.id
-                            ? "text-emerald-400 font-semibold"
+                            ? "text-emerald-600 dark:text-emerald-400 font-semibold"
                             : ""
                         }`}
                       >
                         {tab.label}
                         {/* Đường line gạch dưới di chuyển mượt mà */}
                         {searchTab === tab.id && (
-                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-400 rounded-full" />
+                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-600 dark:bg-emerald-400 rounded-full" />
                         )}
                       </button>
                     ))}
                   </div>
                 ) : (
-                  <div className="flex items-center gap-5 text-xs text-white/60 border-b border-white/10 mb-4 animate-fade-in transition-all">
+                  <div className="flex items-center gap-5 text-xs text-slate-500 dark:text-white/60 border-b border-slate-200 dark:border-white/10 mb-4 animate-fade-in transition-all">
                     {[
                       { id: "all", label: "Tất cả" },
                       {
@@ -179,16 +179,16 @@ const Home = () => {
                         key={tab.id}
                         type="button"
                         onClick={() => setSearchTab(tab.id as "all" | "unread")}
-                        className={`relative pb-2 font-medium cursor-pointer transition-all duration-200 hover:text-white ${
+                        className={`relative pb-2 font-medium cursor-pointer transition-all duration-200 hover:text-slate-800 dark:hover:text-white ${
                           searchTab === tab.id
-                            ? "text-emerald-400 font-semibold"
+                            ? "text-emerald-600 dark:text-emerald-400 font-semibold"
                             : ""
                         }`}
                       >
                         {tab.label}
                         {/* Đường line gạch dưới di chuyển mượt mà */}
                         {searchTab === tab.id && (
-                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-400 rounded-full" />
+                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-600 dark:bg-emerald-400 rounded-full" />
                         )}
                       </button>
                     ))}
@@ -234,25 +234,25 @@ const Home = () => {
                   <MessageList key={selectedRoom._id} />
                   {/* Reply preview */}
                   {replyingMessage && (
-                    <div className="mb-2 mx-6 rounded-lg border-l-4 border-emerald-500">
-                      <div className="flex items-center justify-between bg-white/5 px-3 py-2 ">
+                    <div className="mb-2 mx-6 rounded-lg border-l-4 border-emerald-500 bg-slate-50 dark:bg-emerald-950/20">
+                      <div className="flex items-center justify-between bg-slate-100 dark:bg-white/5 px-3 py-2 ">
                         <div className="flex items-center gap-3">
-                          <div className="text-white/80">
+                          <div className="text-slate-700 dark:text-white/80">
                             <Reply size={16} />
                           </div>
-                          <span className="text-xs text-emerald-400 font-medium">
+                          <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
                             Đang trả lời
                           </span>
                         </div>
                         <button
                           onClick={() => dispatch(setReplyMessage(null))}
-                          className="text-white/50 hover:text-white transition-colors"
+                          className="text-slate-400 hover:text-slate-700 dark:text-white/50 dark:hover:text-white transition-colors"
                         >
                           <X size={14} />
                         </button>
                       </div>
-                      <div className="bg-white/5 px-3 py-2 ">
-                        <p className="text-xs text-white/80 mb-1 line-clamp-2">
+                      <div className="bg-slate-100/50 dark:bg-white/5 px-3 py-2 ">
+                        <p className="text-xs text-slate-600 dark:text-white/80 mb-1 line-clamp-2">
                           {replyingMessage?.content}
                         </p>
                       </div>

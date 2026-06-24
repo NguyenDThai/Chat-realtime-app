@@ -96,12 +96,12 @@ const ActiveTabContact = ({
   );
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-black/10">
+    <div className="flex-1 flex flex-col overflow-hidden bg-slate-50 dark:bg-[#1F1F1F]">
       {/* Header */}
-      <div className="h-16 border-b border-white/10 px-6 flex items-center justify-between bg-black/5 shrink-0">
+      <div className="h-16 border-b border-slate-200 dark:border-white/10 px-6 flex items-center justify-between bg-slate-100/50 dark:bg-black/5 shrink-0">
         <div className="flex items-center gap-3">
-          <User className="text-white w-4 h-4" />
-          <h2 className="text-[16px] font-normal text-white">
+          <User className="text-slate-600 dark:text-white w-4 h-4" />
+          <h2 className="text-[16px] font-normal text-slate-800 dark:text-white">
             {contactSubTab === "members"
               ? " Danh sách thành viên"
               : "Danh sách nhóm và cộng đồng"}
@@ -110,20 +110,20 @@ const ActiveTabContact = ({
       </div>
       {/* Body */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
-        <h3 className="text-white text-[16px] mb-2">
+        <h3 className="text-slate-700 dark:text-white text-[16px] mb-2">
           {contactSubTab === "members" && `Bạn bè (${ortherUsers.length})`}
         </h3>
 
         {/* Thanh tìm kiếm lọc */}
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <Search className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 text-white" />
+            <Search className="absolute top-1/2 -translate-y-1/2 left-3 w-4 h-4 text-slate-400 dark:text-white" />
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm bạn"
-              className="w-full bg-white/5 border border-white/10 rounded-[8px] py-2 pl-10 pr-4 text-white text-sm focus:outline-hidden focus:border-emerald-400 focus:bg-white/10 transition-all"
+              className="w-full bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[8px] py-2 pl-10 pr-4 text-slate-800 dark:text-white text-sm focus:outline-hidden focus:border-emerald-500 focus:bg-slate-100 dark:focus:bg-white/10 transition-all"
             />
           </div>
           {contactSubTab === "members" && (
@@ -132,14 +132,14 @@ const ActiveTabContact = ({
                 onClick={() =>
                   setSortOrder(sortOrder === "asc" ? "desc" : "asc")
                 }
-                className="flex items-center py-1.5 px-3 bg-white/5 border border-white/10 rounded-xl text-white text-xs font-semibold hover:bg-white/10 transition-all cursor-pointer"
+                className="flex items-center py-1.5 px-3 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-white text-xs font-semibold hover:bg-slate-200 dark:hover:bg-white/10 transition-all cursor-pointer"
               >
                 <span className="text-[16px] font-medium">
                   Tên ({sortOrder === "asc" ? "A-Z" : "Z-A"}){" "}
                 </span>
                 <ChevronDown className="w-4 h-4 ml-0.5" />
               </button>
-              <button className="flex items-center py-1.5 px-3 bg-white/5 border border-white/10 rounded-xl text-white text-xs font-semibold hover:bg-white/10 transition-all cursor-pointer">
+              <button className="flex items-center py-1.5 px-3 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-slate-700 dark:text-white text-xs font-semibold hover:bg-slate-200 dark:hover:bg-white/10 transition-all cursor-pointer">
                 <span className="text-[16px] font-medium">Tất cả</span>
                 <ChevronDown className="w-4 h-4 ml-0.5" />
               </button>
@@ -152,7 +152,7 @@ const ActiveTabContact = ({
             {sortedLetters.length > 0 ? (
               sortedLetters.map((letter) => (
                 <div key={letter} className="space-y-2">
-                  <div className="text-emerald-400 font-bold text-sm uppercase select-none">
+                  <div className="text-emerald-600 dark:text-emerald-400 font-bold text-sm uppercase select-none">
                     {letter}
                   </div>
 
@@ -161,7 +161,7 @@ const ActiveTabContact = ({
                     {groupMembers[letter].map((u) => (
                       <div
                         key={u._id}
-                        className="flex items-center justify-between p-3 hover:bg-white/10 rounded-xl  transition-all duration-200"
+                        className="flex items-center justify-between p-3 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl transition-all duration-200"
                       >
                         <div className="flex items-center gap-3">
                           {/* Avatar */}
@@ -174,21 +174,21 @@ const ActiveTabContact = ({
                           />
                           {/* Tên */}
                           <div>
-                            <h4 className="text-white text-[16px] font-normal">
+                            <h4 className="text-slate-800 dark:text-white text-[16px] font-normal">
                               {u.name}
                             </h4>
                           </div>
                         </div>
                         {/* Action */}
                         <div className="flex items-center gap-1">
-                          <button className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white transition-all cursor-pointer">
-                            <UserRoundCheck className="w-4 h-4 text-white" />
+                          <button className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg text-slate-500 dark:text-white/60 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer">
+                            <UserRoundCheck className="w-4 h-4 text-slate-600 dark:text-white" />
                           </button>
                           <button
                             onClick={() => handleCreateChat(u._id)}
-                            className="p-2 hover:bg-white/10 rounded-lg text-white/60 hover:text-white transition-all cursor-pointer"
+                            className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg text-slate-500 dark:text-white/60 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer"
                           >
-                            <MessageSquare className="w-4 h-4 text-white" />
+                            <MessageSquare className="w-4 h-4 text-slate-600 dark:text-white" />
                           </button>
                         </div>
                       </div>
@@ -197,7 +197,7 @@ const ActiveTabContact = ({
                 </div>
               ))
             ) : (
-              <p className="text-white/40 text-sm text-center py-8">
+              <p className="text-slate-500 dark:text-white/40 text-sm text-center py-8">
                 Không tìm thấy thành viên nào
               </p>
             )}
@@ -208,17 +208,17 @@ const ActiveTabContact = ({
               groupRooms.map((room) => (
                 <div
                   key={room._id}
-                  className="flex items-center justify-between p-3 hover:bg-white/10 rounded-xl transition-all duration-200"
+                  className="flex items-center justify-between p-3 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl transition-all duration-200"
                 >
                   <div className="flex items-center gap-3">
                     {/* Group avatar */}
                     <ChatAvatar room={room} currentUserId={user?._id} />
                     {/* Group name */}
                     <div>
-                      <h4 className="text-white text-[16px] font-normal">
+                      <h4 className="text-slate-800 dark:text-white text-[16px] font-normal">
                         {room.name}
                       </h4>
-                      <p className="text-white/40 text-[16px] font-normal">
+                      <p className="text-slate-500 dark:text-white/40 text-[16px] font-normal">
                         {room.members.length} thành viên
                       </p>
                     </div>
@@ -226,7 +226,7 @@ const ActiveTabContact = ({
                 </div>
               ))
             ) : (
-              <p className="text-white/40 text-sm text-center py-8">
+              <p className="text-slate-500 dark:text-white/40 text-sm text-center py-8">
                 Không tìm thấy nhóm nào
               </p>
             )}

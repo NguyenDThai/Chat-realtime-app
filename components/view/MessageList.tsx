@@ -180,7 +180,7 @@ const MessageList = () => {
     <div
       ref={scrollContainerRef}
       onScroll={handleScroll}
-      className="flex-1 py-6 bg-emerald-700/5 space-y-4 px-6 overflow-y-auto overflow-x-hidden custom-scrollbar"
+      className="flex-1 py-6 bg-[rgba(249,250,251,0.5)] dark:bg-[#1F1F1F] space-y-4 px-6 overflow-y-auto overflow-x-hidden custom-scrollbar"
     >
       {isLoadingOlder && (
         <div className="flex justify-center py-4">
@@ -203,7 +203,7 @@ const MessageList = () => {
             {/* Tag ngày tháng */}
             {showDateSeparator && (
               <div className="flex justify-center my-4">
-                <span className="text-[11px] bg-white/5 text-white/50 px-3 py-1 rounded-full border border-white/10 backdrop-blur-sm select-none">
+                <span className="text-[11px] bg-slate-200/50 dark:bg-white/5 text-slate-500 dark:text-white/50 px-3 py-1 rounded-full border border-slate-200 dark:border-white/10 backdrop-blur-sm select-none">
                   {formatDataSeparator(msg.createdAt)}
                 </span>
               </div>
@@ -220,28 +220,28 @@ const MessageList = () => {
                       dispatch(setReplyMessage(msg));
                       handleScrollBottom();
                     }}
-                    className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                    className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-white/60 hover:text-slate-800 dark:hover:text-white rounded-lg cursor-pointer shrink-0"
                   >
                     <Reply size={18} />
                   </button>
 
                   <button
                     onClick={() => handleRecallMessage(msg._id)}
-                    className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                    className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-white/60 hover:text-slate-800 dark:hover:text-white rounded-lg cursor-pointer shrink-0"
                   >
                     <RotateCcw size={18} />
                   </button>
                   <button
                     onClick={() => handlDeleteMessage(msg._id)}
-                    className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                    className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-white/60 hover:text-slate-800 dark:hover:text-white rounded-lg cursor-pointer shrink-0"
                   >
                     <Trash size={18} />
                   </button>
                 </div>
               )}
               {!isMe && (
-                <div className="flex-shrink-0 mr-3">
-                  <div className="w-8 h-8 rounded-full overflow-hidden bg-emerald-800 flex items-center justify-center text-white text-xs font-bold uppercase border border-white/20">
+                <div className="shrink-0 mr-3">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-emerald-600 dark:bg-emerald-800 flex items-center justify-center text-white text-xs font-bold uppercase border border-slate-200 dark:border-white/20">
                     {msg.sender.avatar ? (
                       <img
                         src={msg.sender.avatar}
@@ -256,7 +256,7 @@ const MessageList = () => {
               )}
               <div className={`max-w-[70%] min-w-0 ${isMe ? "order-1" : ""}`}>
                 {!isMe && (
-                  <p className="text-[10px] text-white/50 mb-1 ml-1">
+                  <p className="text-[10px] text-slate-500 dark:text-white/50 mb-1 ml-1">
                     {msg.sender.name}
                   </p>
                 )}
@@ -266,15 +266,15 @@ const MessageList = () => {
                     onClick={() =>
                       msg.replyTo && handleScrollToOriginal(msg.replyTo._id)
                     }
-                    className={`mb-2 px-3 py-1.5 bg-black/20 rounded-lg border-l-[3px] border-emerald-400 text-xs flex flex-col min-w-0 select-none cursor-pointer ${isMe ? "ml-auto" : "mr-auto"}`}
+                    className={`mb-2 px-3 py-1.5 bg-slate-100 dark:bg-black/20 rounded-lg border-l-[3px] border-emerald-500 dark:border-l-emerald-400 text-xs flex flex-col min-w-0 select-none cursor-pointer ${isMe ? "ml-auto" : "mr-auto"}`}
                   >
-                    <div className="flex items-center gap-1 font-semibold text-emerald-300 text-[10px] mb-0.5">
+                    <div className="flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-300 text-[10px] mb-0.5">
                       <span className="text-[12px] font-bold">
                         <CornerDownRight size={12} />
                       </span>
                       <span>{msg.replyTo.sender?.name || "Người dùng"}</span>
                     </div>
-                    <span className="text-white/50 text-[11px] leading-relaxed truncate max-w-[280px]">
+                    <span className="text-slate-500 dark:text-white/50 text-[11px] leading-relaxed truncate max-w-[280px]">
                       {msg.replyTo.content}
                     </span>
                   </div>
@@ -286,12 +286,12 @@ const MessageList = () => {
                   <div
                     className={`relative rounded-2xl p-3 min-w-0 ${
                       isMe
-                        ? "bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-tr-none"
-                        : "bg-white/10 border border-white/20 text-white rounded-tl-none"
+                        ? "bg-linear-to-r from-emerald-500 to-teal-500 text-white rounded-tr-none"
+                        : "dark:bg-[#4F4F4F] border border-slate-200 dark:border-white/20 text-slate-800 dark:text-white rounded-tl-none"
                     }`}
                   >
                     {msg.isRecalled ? (
-                      <p className="text-sm italic text-white select-none">
+                      <p className="text-sm italic text-slate-500 dark:text-white select-none">
                         Tin nhắn đã bị thu hồi
                       </p>
                     ) : (
@@ -302,7 +302,7 @@ const MessageList = () => {
                       msg.reactions &&
                       msg.reactions.length > 0 && (
                         <div
-                          className={`absolute z-10 -bottom-3.5 flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-emerald-950 border border-white/20 shadow-md text-[10px] select-none cursor-pointer`}
+                          className={`absolute z-10 -bottom-3.5 flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white dark:bg-emerald-950 border border-slate-200 dark:border-white/20 shadow-md text-[10px] select-none cursor-pointer`}
                           style={{
                             left: isMe ? "-16px" : "auto",
                             right: !isMe ? "-16px" : "auto",
@@ -321,7 +321,7 @@ const MessageList = () => {
                               </span>
                             ))}
                           {msg.reactions.length > 0 && (
-                            <span className="text-[10px] text-white/80 font-medium ml-1">
+                            <span className="text-[10px] text-slate-600 dark:text-white/80 font-medium ml-1">
                               {msg.reactions.length}
                             </span>
                           )}
@@ -330,7 +330,7 @@ const MessageList = () => {
 
                     {!msg.isRecalled && (
                       <div
-                        className="group/reactions absolute z-10 -bottom-4 group-hover:flex hidden items-center justify-center w-8 h-8 rounded-full bg-emerald-800 hover:bg-emerald-700 border border-white/20 shadow-md text-white/90 cursor-pointer transition-all duration-150"
+                        className="group/reactions absolute z-10 -bottom-4 group-hover:flex hidden items-center justify-center w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-emerald-800 dark:hover:bg-emerald-700 border border-slate-200 dark:border-white/20 text-slate-600 dark:text-white/90 cursor-pointer transition-all duration-150"
                         style={{
                           left: isMe ? "auto" : "-16px",
                           right: isMe ? "-16px" : "auto",
@@ -353,7 +353,7 @@ const MessageList = () => {
                         )}
                         {/* Bảng chọn Emoji hiển thị khi hover vào nút Like */}
                         <div
-                          className={`absolute bottom-full mb-1.5 ${isMe ? "right-4" : "left-4"} hidden group-hover/reactions:flex items-center gap-3 px-3 py-2 rounded-full bg-emerald-955/95 border border-white/25 backdrop-blur-md shadow-2xl animate-fade-in z-50 before:absolute before:h-3 before:w-full before:top-full before:left-0 before:content-['']`}
+                          className={`absolute bottom-full mb-1.5 ${isMe ? "right-4" : "left-4"} hidden group-hover/reactions:flex items-center gap-3 px-3 py-2 rounded-full bg-white dark:bg-emerald-950/95 border border-slate-200 dark:border-white/25 backdrop-blur-md shadow-2xl animate-fade-in z-50 before:absolute before:h-3 before:w-full before:top-full before:left-0 before:content-['']`}
                         >
                           {["👍", "❤️", "😆", "😮", "😢", "😡"].map((emoji) => (
                             <span
@@ -376,13 +376,13 @@ const MessageList = () => {
                     <div className="flex items-center">
                       <button
                         onClick={() => dispatch(setReplyMessage(msg))}
-                        className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                        className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-white/60 hover:text-slate-800 dark:hover:text-white rounded-lg cursor-pointer shrink-0"
                       >
                         <Reply size={16} />
                       </button>
                       <button
                         onClick={() => handlDeleteMessage(msg._id)}
-                        className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 text-white/60 hover:text-white rounded-lg cursor-pointer flex-shrink-0"
+                        className="mr-2 opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-500 dark:text-white/60 hover:text-slate-800 dark:hover:text-white rounded-lg cursor-pointer shrink-0"
                       >
                         <Trash size={16} />
                       </button>
@@ -391,7 +391,7 @@ const MessageList = () => {
                 </div>
 
                 <p
-                  className={`text-[10px] text-white/40 mt-4 ${
+                  className={`text-[10px] text-slate-400 dark:text-white/40 mt-4 ${
                     isMe ? "text-right" : "text-left"
                   }`}
                 >
