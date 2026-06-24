@@ -97,17 +97,17 @@ const ChatList = ({
       {searchTerm && filteredUser.length > 0 && (
         <div className="mt-1">
           {/* Tiêu đề phân chia phần */}
-          <div className="px-4 py-2 text-sm font-bold text-emerald-400 uppercase tracking-wider">
+          <div className="px-4 py-2 text-sm font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
             Thành viên
           </div>
           {filteredUser.map((u) => (
             <div
               key={u._id}
               onClick={() => handleSelectedUser(u._id)}
-              className="flex items-center space-x-3 p-4 hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-white/10"
+              className="flex items-center space-x-3 p-4 hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-slate-200 dark:border-white/10"
             >
               {/* Avatar */}
-              <div className="relative w-12 h-12 rounded-full overflow-hidden border border-white/20 bg-emerald-800 flex items-center justify-center text-white font-bold uppercase">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden border border-slate-200 dark:border-white/20 bg-emerald-600 dark:bg-emerald-800 flex items-center justify-center text-white font-bold uppercase">
                 {u.avatar ? (
                   <img
                     src={u.avatar}
@@ -120,8 +120,8 @@ const ChatList = ({
               </div>
               {/* Thông tin */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-white font-semibold truncate">{u.name}</h3>
-                <p className="text-xs text-white/50 truncate">{u.email}</p>
+                <h3 className="text-slate-800 dark:text-white font-semibold truncate">{u.name}</h3>
+                <p className="text-xs text-slate-500 dark:text-white/50 truncate">{u.email}</p>
               </div>
             </div>
           ))}
@@ -132,9 +132,9 @@ const ChatList = ({
           <div
             key={room._id}
             onClick={() => dispatch(setSelectedRoom(room))}
-            className={`group relative p-4 hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-white/10 ${
+            className={`group relative p-4 hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-slate-200 dark:border-white/10 ${
               selectedRoom?._id === room._id
-                ? "bg-white/20 border-l-4 border-l-emerald-400"
+                ? "bg-slate-200/50 dark:bg-white/20 border-l-4 border-l-emerald-500 dark:border-l-emerald-400"
                 : ""
             }`}
           >
@@ -156,12 +156,12 @@ const ChatList = ({
               {/* Thông tin phòng */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-white font-semibold truncate flex-1 max-w-[180px]">
+                  <h3 className="text-slate-800 dark:text-white font-semibold truncate flex-1 max-w-[180px]">
                     {getRoomName(room)}
                   </h3>
-                  <span className="text-xs text-white/50">{room.time}</span>
+                  <span className="text-xs text-slate-500 dark:text-white/50">{room.time}</span>
                 </div>
-                <p className="text-sm text-white/60 truncate">
+                <p className="text-sm text-slate-500 dark:text-white/60 truncate">
                   {room.lastMessage ? room.lastMessage.content : ""}
                 </p>
               </div>
@@ -176,7 +176,7 @@ const ChatList = ({
               }}
               className="absolute right-4 top-1/2 -translate-y-1/2 p-2"
             >
-              <Ellipsis className=" text-white/80 hidden group-hover:block transition-all duration-200" />
+              <Ellipsis className="text-slate-600 dark:text-white/80 hidden group-hover:block transition-all duration-200" />
             </div>
 
             {/* Dropdown menu */}
@@ -184,7 +184,7 @@ const ChatList = ({
             {activeMenuRoomId === room._id && (
               <div
                 onClick={(e) => e.stopPropagation()} // Chặn đóng menu khi click vào bên trong menu
-                className="absolute right-4 top-15 w-44 bg-emerald-950/95 border border-white/20 rounded-xl p-1 shadow-2xl z-50 animate-fade-in backdrop-blur-md"
+                className="absolute right-4 top-15 w-44 bg-white dark:bg-emerald-950/95 border border-slate-200 dark:border-white/20 rounded-xl p-1 shadow-2xl z-50 animate-fade-in backdrop-blur-md"
               >
                 {room.type === "group" && (
                   <>
@@ -195,9 +195,9 @@ const ChatList = ({
                         setOpenEditModal(true);
                         setRoomToUpdate(room);
                       }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-white/90 hover:text-white hover:bg-white/10 rounded-lg text-left transition-colors cursor-pointer border-none"
+                      className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 dark:text-white/90 dark:hover:text-white dark:hover:bg-white/10 rounded-lg text-left transition-colors cursor-pointer border-none"
                     >
-                      <Edit className="w-4 h-4 text-cyan-400 flex-shrink-0" />
+                      <Edit className="w-4 h-4 text-cyan-400 shrink-0" />
                       <span>Chỉnh sửa nhóm</span>
                     </button>
                   </>
@@ -205,9 +205,9 @@ const ChatList = ({
                 <button
                   type="button"
                   onClick={() => handleDeleteRoom(room._id)}
-                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-500/20 rounded-lg text-left transition-colors cursor-pointer border-none"
+                  className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/20 rounded-lg text-left transition-colors cursor-pointer border-none"
                 >
-                  <Trash2 className="w-4 h-4 flex-shrink-0" />
+                  <Trash2 className="w-4 h-4 shrink-0" />
                   <span>Xóa cuộc trò chuyện</span>
                 </button>
               </div>
@@ -220,7 +220,7 @@ const ChatList = ({
       {searchTerm &&
         filteredRooms.length === 0 &&
         filteredUser.length === 0 && (
-          <div className="text-center text-white/50 py-8">
+          <div className="text-center text-slate-500 dark:text-white/50 py-8">
             <p className="text-sm">Không tìm thấy cuộc trò chuyện nào</p>
           </div>
         )}

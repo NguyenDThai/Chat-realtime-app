@@ -27,7 +27,7 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
   ];
 
   return (
-    <div className="w-[72px] h-screen bg-emerald-700/5 flex flex-col justify-between items-center py-6 border-r border-white/10 z-10 shrink-0">
+    <div className="w-[72px] h-screen bg-[#F9F9F9] dark:bg-zinc-950 flex flex-col justify-between items-center py-6 border-r border-slate-200 dark:border-zinc-800 z-10 shrink-0">
       {/* Top Menu Items */}
       <div className="flex flex-col items-center w-full gap-4">
         {menuItems.map((item) => {
@@ -39,8 +39,8 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
               onClick={() => setActiveTab(item.id)}
               className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "bg-linear-to-br from-emerald-400 to-teal-500 text-white shadow-lg shadow-emerald-500/20"
-                  : "text-emerald-100/60 hover:text-white hover:bg-white/10"
+                  ? "bg-linear-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/20"
+                  : "text-slate-500 dark:text-emerald-100/60 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10"
               }`}
               title={item.label}
             >
@@ -50,7 +50,7 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
         })}
 
         {/* Divider */}
-        <div className="w-8 h-px bg-white/10 my-1" />
+        <div className="w-8 h-px bg-slate-200 dark:bg-white/10 my-1" />
 
         {/* Action Items */}
         {actionItems.map((item) => {
@@ -62,8 +62,8 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
               onClick={() => setActiveTab(item.id)}
               className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "bg-linear-to-br from-emerald-400 to-teal-500 text-white shadow-lg shadow-emerald-500/20"
-                  : "text-emerald-100/60 hover:text-white hover:bg-white/10"
+                  ? "bg-linear-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/20"
+                  : "text-slate-500 dark:text-emerald-100/60 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10"
               }`}
               title={item.label}
             >
@@ -80,8 +80,8 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
           onClick={() => setActiveTab("settings")}
           className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-200 cursor-pointer ${
             activeTab === "settings"
-              ? "bg-linear-to-br from-emerald-400 to-teal-500 text-white shadow-lg shadow-emerald-500/20"
-              : "text-emerald-100/60 hover:text-white hover:bg-white/10"
+              ? "bg-linear-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/20"
+              : "text-slate-500 dark:text-emerald-100/60 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10"
           }`}
           title="Settings"
         >
@@ -102,7 +102,7 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
                 user.name.charAt(0).toUpperCase()}
             </span>
           ) : (
-            <User size={20} className="text-white/80" />
+            <User size={20} className="text-slate-700 dark:text-white/80" />
           )}
         </div>
       </div>

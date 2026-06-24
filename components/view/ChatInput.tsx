@@ -32,17 +32,17 @@ const ChatInput = () => {
   };
 
   return (
-    <div className="p-4 border-t border-white/20 bg-emerald-900/40">
+    <div className="p-4 border-t border-[#E5E7EB] dark:border-zinc-800 bg-white dark:bg-[#1A1A1A]">
       <form
         onSubmit={handleSendMessage}
         className="flex items-center space-x-3"
       >
         <button
           type="button"
-          className="p-2 hover:bg-white/10 rounded-xl transition-all duration-200"
+          className="p-2 hover:bg-slate-100 dark:hover:bg-white/10 rounded-xl transition-all duration-200"
         >
           <svg
-            className="w-6 h-6 text-white/70"
+            className="w-6 h-6 text-slate-500 dark:text-white/70"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -60,11 +60,11 @@ const ChatInput = () => {
           placeholder="Nhập tin nhắn của bạn..."
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/50 transition-all duration-200 text-white placeholder-white/50"
+          className="flex-1 px-4 py-3 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/50 transition-all duration-200 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500"
         />
         <button
           type="submit"
-          className="p-3 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-xl hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-500/30"
+          className="p-3 bg-linear-to-r from-emerald-500 to-teal-500 rounded-xl hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-500/30"
         >
           <svg
             className="w-5 h-5 text-white"

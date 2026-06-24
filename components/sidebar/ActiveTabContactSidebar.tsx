@@ -18,13 +18,17 @@ const ActiveTabContactSidebar = ({
         {/* Danh sách thành viên */}
         <div
           onClick={() => setContactSubTab("members")}
-          className={`flex items-center justify-between ${contactSubTab === "members" ? "bg-linear-to-br from-emerald-400/50 to-teal-500/50" : ""} px-3 py-2 rounded-lg cursor-pointer`}
+          className={`flex items-center justify-between ${
+            contactSubTab === "members"
+              ? "bg-linear-to-br from-emerald-500/50 to-teal-500/50 text-white"
+              : "text-slate-700 dark:text-white/80 hover:bg-slate-200/50 dark:hover:bg-white/10"
+          } px-3 py-2 rounded-lg cursor-pointer`}
         >
           <div className="flex items-center gap-2">
-            <UserRoundCheck className="w-[16px] h-[16px] text-white" />
-            <span className="text-white text-[16px]">Danh sách thành viên</span>
+            <UserRoundCheck className="w-[16px] h-[16px]" />
+            <span className="text-[16px]">Danh sách thành viên</span>
           </div>
-          <span className="text-white text-[16px]">{allUser.length}</span>
+          <span className="text-[16px]">{allUser.length}</span>
         </div>
 
         {/* Danh sách nhóm */}
@@ -32,15 +36,15 @@ const ActiveTabContactSidebar = ({
           onClick={() => setContactSubTab("groups")}
           className={`flex items-center justify-between ${
             contactSubTab === "groups"
-              ? "bg-linear-to-br from-emerald-400/50 to-teal-500/50"
-              : ""
+              ? "bg-linear-to-br from-emerald-500/50 to-teal-500/50 text-white"
+              : "text-slate-700 dark:text-white/80 hover:bg-slate-200/50 dark:hover:bg-white/10"
           } px-3 py-2 rounded-lg cursor-pointer`}
         >
           <div className="flex items-center gap-2">
-            <Users className="w-[16px] h-[16px] text-white" />
-            <span className="text-white text-[16px]">Danh sách nhóm</span>
+            <Users className="w-[16px] h-[16px]" />
+            <span className="text-[16px]">Danh sách nhóm</span>
           </div>
-          <span className="text-white text-[16px]">
+          <span className="text-[16px]">
             {rooms.filter((room) => room.type === "group").length}
           </span>
         </div>
