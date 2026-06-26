@@ -133,16 +133,10 @@ const MessageList = () => {
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "center" });
 
-      element.classList.add(
-        "bg-emerald-500/20",
-        "shadow-[0_0_15px_rgba(16,185,129,0.3)]",
-      );
+      element.classList.add("bg-[var(--color-theme-primary)]/20");
 
       setTimeout(() => {
-        element.classList.remove(
-          "bg-emerald-500/20",
-          "shadow-[0_0_15px_rgba(16,185,129,0.3)]",
-        );
+        element.classList.remove("bg-[var(--color-theme-primary)]/20");
       }, 1000);
     }
   };
@@ -241,7 +235,7 @@ const MessageList = () => {
               )}
               {!isMe && (
                 <div className="shrink-0 mr-3">
-                  <div className="w-8 h-8 rounded-full overflow-hidden bg-emerald-600 dark:bg-emerald-800 flex items-center justify-center text-white text-xs font-bold uppercase border border-slate-200 dark:border-white/20">
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-[var(--color-theme-primary)] dark:bg-[var(--color-theme-primary)] flex items-center justify-center text-white text-xs font-bold uppercase border border-slate-200 dark:border-white/20">
                     {msg.sender.avatar ? (
                       <img
                         src={msg.sender.avatar}
@@ -266,9 +260,9 @@ const MessageList = () => {
                     onClick={() =>
                       msg.replyTo && handleScrollToOriginal(msg.replyTo._id)
                     }
-                    className={`mb-2 px-3 py-1.5 bg-slate-100 dark:bg-black/20 rounded-lg border-l-[3px] border-emerald-500 dark:border-l-emerald-400 text-xs flex flex-col min-w-0 select-none cursor-pointer ${isMe ? "ml-auto" : "mr-auto"}`}
+                    className={`mb-2 px-3 py-1.5 bg-slate-100 dark:bg-black/20 rounded-lg border-l-[3px] border-[var(--color-theme-primary)] dark:border-l-[var(--color-theme-primary)] text-xs flex flex-col min-w-0 select-none cursor-pointer ${isMe ? "ml-auto" : "mr-auto"}`}
                   >
-                    <div className="flex items-center gap-1 font-semibold text-emerald-600 dark:text-emerald-300 text-[10px] mb-0.5">
+                    <div className="flex items-center gap-1 font-semibold text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)] text-[10px] mb-0.5">
                       <span className="text-[12px] font-bold">
                         <CornerDownRight size={12} />
                       </span>
@@ -286,12 +280,12 @@ const MessageList = () => {
                   <div
                     className={`relative rounded-2xl p-3 min-w-0 ${
                       isMe
-                        ? "bg-linear-to-r from-emerald-500 to-teal-500 text-white rounded-tr-none"
+                        ? "bg-[var(--color-theme-primary)] text-white rounded-tr-none"
                         : "dark:bg-[#4F4F4F] border border-slate-200 dark:border-white/20 text-slate-800 dark:text-white rounded-tl-none"
                     }`}
                   >
                     {msg.isRecalled ? (
-                      <p className="text-sm italic text-slate-500 dark:text-white select-none">
+                      <p className="text-sm italic text-slate-300 dark:text-white select-none">
                         Tin nhắn đã bị thu hồi
                       </p>
                     ) : (
@@ -302,7 +296,7 @@ const MessageList = () => {
                       msg.reactions &&
                       msg.reactions.length > 0 && (
                         <div
-                          className={`absolute z-10 -bottom-3.5 flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white dark:bg-emerald-950 border border-slate-200 dark:border-white/20 shadow-md text-[10px] select-none cursor-pointer`}
+                          className={`absolute z-10 -bottom-3.5 flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-white dark:bg-black border border-slate-200 dark:border-white/20 shadow-md text-[10px] select-none cursor-pointer`}
                           style={{
                             left: isMe ? "-16px" : "auto",
                             right: !isMe ? "-16px" : "auto",
@@ -330,7 +324,7 @@ const MessageList = () => {
 
                     {!msg.isRecalled && (
                       <div
-                        className="group/reactions absolute z-10 -bottom-4 group-hover:flex hidden items-center justify-center w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-emerald-800 dark:hover:bg-emerald-700 border border-slate-200 dark:border-white/20 text-slate-600 dark:text-white/90 cursor-pointer transition-all duration-150"
+                        className="group/reactions absolute z-10 -bottom-4 group-hover:flex hidden items-center justify-center w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 cursor-pointer transition-all duration-150"
                         style={{
                           left: isMe ? "auto" : "-16px",
                           right: isMe ? "-16px" : "auto",
@@ -353,7 +347,7 @@ const MessageList = () => {
                         )}
                         {/* Bảng chọn Emoji hiển thị khi hover vào nút Like */}
                         <div
-                          className={`absolute bottom-full mb-1.5 ${isMe ? "right-4" : "left-4"} hidden group-hover/reactions:flex items-center gap-3 px-3 py-2 rounded-full bg-white dark:bg-emerald-950/95 border border-slate-200 dark:border-white/25 backdrop-blur-md shadow-2xl animate-fade-in z-50 before:absolute before:h-3 before:w-full before:top-full before:left-0 before:content-['']`}
+                          className={`absolute bottom-full mb-1.5 ${isMe ? "right-4" : "left-4"} hidden group-hover/reactions:flex items-center gap-3 px-3 py-2 rounded-full bg-white border border-slate-200 backdrop-blur-md shadow-2xl animate-fade-in z-50 before:absolute before:h-3 before:w-full before:top-full before:left-0 before:content-['']`}
                         >
                           {["👍", "❤️", "😆", "😮", "😢", "😡"].map((emoji) => (
                             <span

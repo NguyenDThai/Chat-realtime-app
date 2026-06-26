@@ -2,13 +2,22 @@ import { Eye, Moon, Palette, Sun } from "lucide-react";
 import { useState } from "react";
 
 const ActiveTabSetting = () => {
-  const [selectedColor, setSelectedColor] = useState("green");
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== "undefined") {
       return document.documentElement.classList.contains("dark");
     }
     return false;
   });
+
+  const [selectedColor, setSelectedColor] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("colorTheme") || "green";
+    }
+    return "green";
+  });
+  // Chọn màu tạm thời
+  const [tempColor, setTempColor] = useState(selectedColor);
+
   // Chọn giao diện tạm thời
   const [tempTheme, setTempTheme] = useState<"dark" | "light">(
     isDarkMode ? "dark" : "light",
@@ -29,6 +38,11 @@ const ActiveTabSetting = () => {
       localStorage.setItem("theme", "light");
       setIsDarkMode(false);
     }
+
+    localStorage.setItem("colorTheme", tempColor);
+    setSelectedColor(tempColor);
+
+    document.documentElement.setAttribute("data-color-theme", tempColor);
   };
 
   // Mảng chứa cấu hình các màu sắc
@@ -93,7 +107,7 @@ const ActiveTabSetting = () => {
         </h3>
         <button
           onClick={handleSave}
-          className="py-1.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-[16px] text-sm cursor-pointer transition-colors"
+          className="py-1.5 px-3 bg-[var(--color-theme-primary)] hover:bg-[var(--color-theme-primary-hover)] text-white rounded-[16px] text-sm cursor-pointer transition-colors"
         >
           Lưu
         </button>
@@ -113,7 +127,7 @@ const ActiveTabSetting = () => {
               onClick={() => handleThemeChanege("light")}
               className={`w-full flex items-center justify-center gap-2 py-3 rounded-[8px] border-2 cursor-pointer transition-all ${
                 tempTheme === "light"
-                  ? "border-emerald-600 bg-emerald-500/10 text-emerald-600 dark:border-emerald-700 dark:bg-emerald-400/20 dark:text-emerald-400 font-semibold"
+                  ? "border-[var(--color-theme-primary)] bg-[var(--color-theme-primary)]/10 text-[var(--color-theme-primary)] dark:border-[var(--color-theme-primary)] dark:bg-[var(--color-theme-primary)]/20 dark:text-[var(--color-theme-primary)] font-semibold"
                   : "border-transparent bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10"
               }`}
             >
@@ -124,7 +138,7 @@ const ActiveTabSetting = () => {
               onClick={() => handleThemeChanege("dark")}
               className={`w-full flex items-center justify-center gap-2 py-3 rounded-[8px] border-2 cursor-pointer transition-all ${
                 tempTheme == "dark"
-                  ? "border-emerald-600 bg-emerald-500/10 text-emerald-600 dark:border-emerald-700 dark:bg-emerald-400/20 dark:text-emerald-400 font-semibold"
+                  ? "border-[var(--color-theme-primary)] bg-[var(--color-theme-primary)]/10 text-[var(--color-theme-primary)] dark:border-[var(--color-theme-primary)] dark:bg-[var(--color-theme-primary)]/20 dark:text-[var(--color-theme-primary)] font-semibold"
                   : "border-transparent bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-white/5 dark:text-white/60 dark:hover:bg-white/10"
               }`}
             >
@@ -133,6 +147,7 @@ const ActiveTabSetting = () => {
             </button>
           </div>
         </div>
+
         {/* color theme */}
         <div className="py-4 px-[18px] border border-slate-200 dark:border-gray-700 rounded-[10px]">
           <div className="flex items-center gap-2">
@@ -145,9 +160,9 @@ const ActiveTabSetting = () => {
             {colors.map((c) => (
               <button
                 key={c.id}
-                onClick={() => setSelectedColor(c.id)}
+                onClick={() => setTempColor(c.id)}
                 className={`min-w-[82px] h-[34px] flex items-center justify-center gap-1 px-3 py-1.5 rounded-full border transition-all cursor-pointer text-base font-medium ${c.bgClass} ${c.textClass} ${
-                  selectedColor === c.id
+                  tempColor === c.id
                     ? "border border-red"
                     : "border-transparent"
                 }`}

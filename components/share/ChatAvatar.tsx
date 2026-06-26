@@ -4,8 +4,9 @@ import { Users } from "lucide-react";
 import UserProfileModal from "@/components/modal/UserProfileModal";
 
 interface ChatAvatarProps {
-  room: ChatListType;
+  room?: ChatListType;
   currentUserId?: string;
+  user?: { _id: string; name: string; avatar?: string };
   className?: string; // Cho phép truyền class CSS tùy chỉnh (ví dụ: kích thước w-12 h-12)
   setActiveTab?: (value: string) => void;
 }
@@ -13,10 +14,37 @@ interface ChatAvatarProps {
 const ChatAvatar: FC<ChatAvatarProps> = ({
   room,
   currentUserId,
+  user,
   className = "w-12 h-12",
   setActiveTab,
 }) => {
   const [showProfile, setShowProfile] = useState(false);
+
+  // Cho phép truyền trực tiếp user
+  if (user) {
+    const hasAvatar =
+      user.avatar &&
+      (user.avatar.startsWith("http") || user.avatar.includes("/"));
+
+    return (
+      <div
+        className={`bg-[var(--color-theme-primary)] rounded-full flex items-center justify-center font-bold text-white overflow-hidden select-none ${className}`}
+      >
+        {hasAvatar ? (
+          <img
+            src={user.avatar}
+            alt={user.name}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          user.name.charAt(0).toUpperCase()
+        )}
+      </div>
+    );
+  }
+
+  if (!room) return null;
+
   const isSingle = room.type === "single";
 
   // 1. Nếu là Chat 1-1
@@ -33,7 +61,7 @@ const ChatAvatar: FC<ChatAvatarProps> = ({
             e.stopPropagation();
             setShowProfile(true);
           }}
-          className={`bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center font-bold text-white overflow-hidden ${className} cursor-pointer`}
+          className={`bg-[var(--color-theme-primary)] rounded-full flex items-center justify-center font-bold text-white overflow-hidden ${className} cursor-pointer`}
         >
           {hasAvatar ? (
             <img
@@ -63,7 +91,7 @@ const ChatAvatar: FC<ChatAvatarProps> = ({
 
   return (
     <div
-      className={`bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full flex items-center justify-center font-bold text-white overflow-hidden ${className}`}
+      className={`bg-[var(--color-theme-primary)] rounded-full flex items-center justify-center font-bold text-white overflow-hidden ${className}`}
     >
       {hasGroupAvatar ? (
         <img

@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { updateChatListApi } from "@/src/api/chat.list.api";
 import { useAuth } from "@/hooks/useAuth";
 import { useConfirm } from "@/hooks/useConfirm";
+import ChatAvatar from "@/components/share/ChatAvatar";
 
 interface UpdateChatRoomProps {
   room: ChatListType;
@@ -139,27 +140,27 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
   );
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 animate-fade-in select-none">
       <form
         id="update-room-form"
         onSubmit={handleSubmit}
-        className="relative flex flex-col bg-gradient-to-br from-emerald-900 to-teal-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden border border-white/20"
+        className="relative flex flex-col bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden border border-slate-200 dark:border-zinc-800 transition-colors"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-emerald-600/50 to-teal-600/50 p-6 border-b border-white/20">
+        <div className="bg-slate-50 dark:bg-zinc-800/50 p-6 border-b border-slate-200 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-slate-800 dark:text-white">
                 Chỉnh sửa phòng chat
               </h2>
-              <p className="text-emerald-200 text-sm mt-1">
+              <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
                 Thay đổi ảnh, tên và thành viên của nhóm
               </p>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-xl text-white"
+              className="p-2 hover:bg-slate-200/50 dark:hover:bg-white/10 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -167,10 +168,10 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-6">
+        <div className="p-6 overflow-y-auto custom-scrollbar flex-1 space-y-6 bg-white dark:bg-zinc-900 transition-colors">
           {/* Avatar upload */}
           <div className="flex flex-col items-center space-y-2">
-            <label className="block text-sm font-semibold text-white self-start">
+            <label className="block text-sm font-semibold text-slate-800 dark:text-white self-start">
               Ảnh đại diện nhóm
             </label>
             <div className="relative">
@@ -183,7 +184,7 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
               />
               <label
                 htmlFor="avatar-update-input"
-                className="w-24 h-24 rounded-2xl bg-white/5 border border-white/20 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:bg-white/10 hover:border-emerald-400"
+                className="w-24 h-24 rounded-2xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/20 flex flex-col items-center justify-center cursor-pointer overflow-hidden hover:bg-slate-100 dark:hover:bg-white/10 hover:border-[var(--color-theme-primary)] dark:hover:border-[var(--color-theme-primary-dark)] group-hover:shadow-[0_0_15px_var(--color-theme-primary)]"
               >
                 {selectedAvatar ? (
                   <>
@@ -194,12 +195,12 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
                     />
                     {isUploading && (
                       <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                        <div className="w-6 h-6 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin"></div>
+                        <div className="w-6 h-6 border-2 border-primary-theme border-t-transparent rounded-full animate-spin"></div>
                       </div>
                     )}
                   </>
                 ) : (
-                  <div className="flex flex-col items-center text-white/50">
+                  <div className="flex flex-col items-center text-slate-400 dark:text-white/50 transition-colors duration-200">
                     <Camera className="w-8 h-8 mb-1" />
                     <span className="text-[10px]">Tải ảnh lên</span>
                   </div>
@@ -210,20 +211,20 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
 
           {/* Tên nhóm */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-white">
+            <label className="block text-sm font-semibold text-slate-800 dark:text-white">
               Tên nhóm
             </label>
             <input
               type="text"
               value={roomName}
               onChange={(e) => setRoomName(e.target.value)}
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white"
+              className="w-full px-4 py-3 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl focus:outline-none focus:border-[var(--color-theme-primary)] focus:ring-2 focus:ring-[var(--color-theme-primary)]/50 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500"
             />
           </div>
 
           {/* Chọn thành viên */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-white">
+            <label className="block text-sm font-semibold text-slate-800 dark:text-white">
               Thành viên
             </label>
             <div className="relative mb-3">
@@ -232,32 +233,22 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
                 placeholder="Tìm kiếm thành viên..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 pl-10 bg-white/10 border border-white/20 rounded-xl text-white"
+                className="w-full px-4 py-2 pl-10 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl focus:outline-none focus:border-[var(--color-theme-primary)] focus:ring-2 focus:ring-[var(--color-theme-primary)]/50 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 text-sm"
               />
-              <Search className="w-4 h-4 text-white/50 absolute left-3 top-2.5" />
+              <Search className="w-4 h-4 text-slate-400 dark:text-white/50 absolute left-3 top-2.5" />
             </div>
 
             <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
               {filteredUsers.map((member) => (
                 <div
                   key={member._id}
-                  className="w-full p-3 rounded-xl flex items-center justify-between border bg-white/5 border-white/10 hover:bg-white/10 transition-all duration-200"
+                  className="w-full p-3 rounded-xl flex items-center justify-between border bg-slate-50 dark:bg-zinc-800/40 border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-all duration-200"
                 >
                   <div className="flex items-center space-x-3">
                     {/* Avatar thành viên */}
-                    <div className="w-8 h-8 rounded-full bg-emerald-800 flex items-center justify-center text-white text-xs font-bold uppercase border border-white/20">
-                      {member.avatar ? (
-                        <img
-                          src={member.avatar}
-                          alt={member.name}
-                          className="w-full h-full object-cover rounded-full"
-                        />
-                      ) : (
-                        member.name.charAt(0)
-                      )}
-                    </div>
+                    <ChatAvatar user={member} className="w-8 h-8 text-xs" />
                     {/* Tên thành viên */}
-                    <span className="text-white text-sm font-medium">
+                    <span className="text-slate-800 dark:text-white text-sm font-medium">
                       {member.name}
                     </span>
                   </div>
@@ -265,14 +256,14 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
                   <button
                     type="button"
                     onClick={() => handleRemoveUser(member)}
-                    className="p-2 hover:bg-red-500/20 rounded-lg text-white/60 hover:text-red-400 transition-all duration-200 cursor-pointer"
+                    className="p-2 hover:bg-red-500/20 rounded-lg text-slate-500 dark:text-white/60 hover:text-red-400 transition-all duration-200 cursor-pointer"
                   >
                     <Trash2 size={16} />
                   </button>
                 </div>
               ))}
               {filteredUsers.length === 0 && (
-                <p className="text-center text-white/40 text-xs py-4">
+                <p className="text-center text-slate-500 dark:text-white/40 text-xs py-4">
                   Không tìm thấy thành viên nào
                 </p>
               )}
@@ -281,18 +272,18 @@ const UpdateChatRoom: FC<UpdateChatRoomProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-white/20 flex space-x-3">
+        <div className="p-6 border-t border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/30 flex space-x-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-2 bg-white/10 rounded-xl text-white"
+            className="flex-1 py-2 bg-slate-100 dark:bg-zinc-800 border dark:border-zinc-750 rounded-xl text-slate-700 dark:text-white font-semibold hover:bg-slate-200/50 dark:hover:bg-zinc-700 transition-all duration-200 cursor-pointer"
           >
             Hủy
           </button>
           <button
             type="submit"
             form="update-room-form"
-            className="flex-1 py-2 bg-emerald-500 rounded-xl text-white"
+            className="flex-1 py-2 bg-[var(--color-theme-primary)] hover:bg-[var(--color-theme-primary-hover)] rounded-xl text-white font-semibold transform hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-[var(--color-theme-primary)]/30 cursor-pointer"
           >
             Cập nhật
           </button>
