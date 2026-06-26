@@ -34,11 +34,11 @@ const Register = () => {
   };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen overflow-hidden bg-gradient-to-br from-emerald-900 via-teal-800 to-cyan-900">
+    <div className="relative flex items-center justify-center min-h-screen overflow-hidden bg-gradient-to-br from-[var(--color-theme-primary)]/30 via-slate-950 to-black select-none">
       {/* Hiệu ứng bong bóng nền chuyển động */}
-      <div className="absolute w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-slow top-20 -left-48"></div>
-      <div className="absolute w-96 h-96 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delayed bottom-20 -right-48"></div>
-      <div className="absolute w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-fast top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute w-96 h-96 bg-[var(--color-theme-primary-dark)] rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.07] animate-float-slow top-20 -left-48"></div>
+      <div className="absolute w-96 h-96 bg-[var(--color-theme-primary-dark)] rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.07] animate-float-delayed bottom-20 -right-48"></div>
+      <div className="absolute w-96 h-96 bg-[var(--color-theme-primary-dark)] rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.05] animate-float-fast top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
 
       {/* Card chính - Glassmorphism */}
       <div className="relative bg-white/10 p-8 rounded-3xl shadow-2xl w-full max-w-md border border-white/20 hover:border-white/40 transition-all duration-500 hover:shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
@@ -47,7 +47,7 @@ const Register = () => {
 
         <div className="text-center mb-6">
           {/* Icon với hiệu ứng glow và animation */}
-          <div className="mx-auto w-20 h-20 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-emerald-500/30 animate-pulse-glow">
+          <div className="mx-auto w-20 h-20 bg-gradient-to-r from-[var(--color-theme-primary)] to-[var(--color-theme-primary-hover)] rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-[var(--color-theme-primary)]/30 animate-pulse-glow">
             <svg
               className="w-10 h-10 text-white"
               fill="none"
@@ -63,10 +63,10 @@ const Register = () => {
             </svg>
           </div>
 
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-[var(--color-theme-primary-dark)] bg-clip-text text-transparent">
             Tạo tài khoản
           </h1>
-          <p className="text-emerald-200 mt-2 text-sm tracking-wide">
+          <p className="text-[var(--color-theme-primary-dark)] mt-2 text-sm tracking-wide">
             Đăng ký để bắt đầu trò chuyện
           </p>
         </div>
@@ -85,7 +85,7 @@ const Register = () => {
               value={formData.name}
               onChange={handleChangeInput}
               placeholder="username123"
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/50 transition-all duration-200 text-white placeholder-white/50 backdrop-blur-sm"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-[var(--color-theme-primary-dark)] focus:ring-2 focus:ring-[var(--color-theme-primary)]/50 transition-all duration-200 text-white placeholder-white/50 backdrop-blur-sm"
             />
           </div>
 
@@ -102,7 +102,7 @@ const Register = () => {
               value={formData.email}
               onChange={handleChangeInput}
               placeholder="example@email.com"
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/50 transition-all duration-200 text-white placeholder-white/50 backdrop-blur-sm"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-[var(--color-theme-primary-dark)] focus:ring-2 focus:ring-[var(--color-theme-primary)]/50 transition-all duration-200 text-white placeholder-white/50 backdrop-blur-sm"
             />
           </div>
 
@@ -119,7 +119,7 @@ const Register = () => {
               value={formData.password}
               onChange={handleChangeInput}
               placeholder="••••••••"
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/50 transition-all duration-200 text-white placeholder-white/50 backdrop-blur-sm"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-[var(--color-theme-primary-dark)] focus:ring-2 focus:ring-[var(--color-theme-primary)]/50 transition-all duration-200 text-white placeholder-white/50 backdrop-blur-sm"
             />
           </div>
 
@@ -136,7 +136,7 @@ const Register = () => {
               value={formData.confirmPassword}
               onChange={handleChangeInput}
               placeholder="••••••••"
-              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/50 transition-all duration-200 text-white placeholder-white/50 backdrop-blur-sm"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-[var(--color-theme-primary-dark)] focus:ring-2 focus:ring-[var(--color-theme-primary)]/50 transition-all duration-200 text-white placeholder-white/50 backdrop-blur-sm"
             />
           </div>
 
@@ -144,20 +144,20 @@ const Register = () => {
             <input
               type="checkbox"
               id="terms"
-              className="w-4 h-4 rounded border-white/30 bg-white/10 text-emerald-500 focus:ring-emerald-400/50 focus:ring-offset-0"
+              className="w-4 h-4 rounded border-white/30 bg-white/10 text-[var(--color-theme-primary)] focus:ring-[var(--color-theme-primary)]/50 focus:ring-offset-0 cursor-pointer"
             />
             <label htmlFor="terms" className="text-white/70">
               Tôi đồng ý với{" "}
               <a
                 href="#"
-                className="text-emerald-300 hover:text-white font-semibold hover:underline transition-colors"
+                className="text-[var(--color-theme-primary-dark)] hover:text-white font-semibold hover:underline transition-colors"
               >
                 Điều khoản sử dụng
               </a>{" "}
               và{" "}
               <a
                 href="#"
-                className="text-emerald-300 hover:text-white font-semibold hover:underline transition-colors"
+                className="text-[var(--color-theme-primary-dark)] hover:text-white font-semibold hover:underline transition-colors"
               >
                 Chính sách bảo mật
               </a>
@@ -166,7 +166,7 @@ const Register = () => {
 
           <button
             type="submit"
-            className="relative group w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 rounded-xl font-semibold hover:from-emerald-600 hover:to-teal-600 transform hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 overflow-hidden"
+            className="relative group w-full bg-gradient-to-r from-[var(--color-theme-primary)] to-[var(--color-theme-primary-hover)] text-white py-3 rounded-xl font-semibold hover:from-[var(--color-theme-primary-hover)] to-[var(--color-theme-primary-hover)] transform hover:scale-[1.02] transition-all duration-200 shadow-lg shadow-[var(--color-theme-primary)]/30 hover:shadow-xl hover:shadow-[var(--color-theme-primary)]/40 overflow-hidden cursor-pointer"
           >
             {/* Hiệu ứng ripple khi hover */}
             <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></span>
@@ -177,7 +177,7 @@ const Register = () => {
             Đã có tài khoản?{" "}
             <Link
               to="/login"
-              className="text-emerald-300 hover:text-white font-semibold hover:underline transition-colors"
+              className="text-[var(--color-theme-primary-dark)] hover:text-white font-semibold hover:underline transition-colors"
             >
               Đăng nhập ngay
             </Link>
@@ -198,7 +198,7 @@ const Register = () => {
 
         {/* Social register buttons */}
         <div className="flex">
-          <button className="flex flex-1 items-center justify-center gap-2 px-4 py-2 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-all duration-200 group">
+          <button className="flex flex-1 items-center justify-center gap-2 px-4 py-2 bg-white/10 border border-white/20 rounded-xl hover:bg-white/20 transition-all duration-200 group cursor-pointer">
             <svg
               className="w-5 h-5 text-white/80 group-hover:text-white"
               viewBox="0 0 24 24"
