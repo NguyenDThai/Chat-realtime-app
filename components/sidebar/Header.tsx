@@ -8,12 +8,16 @@ const Header = () => {
   return (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center space-x-3">
-        <div className="w-10 h-10 bg-linear-to-r from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center">
+        <div className="w-10 h-10 bg-[var(--color-theme-primary)] rounded-xl flex items-center justify-center">
           <MessageSquareMore className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h2 className="text-slate-800 dark:text-white font-bold text-lg">Real Chat</h2>
-          <p className="text-emerald-600 dark:text-emerald-200 text-xs">Đang online</p>
+          <h2 className="text-slate-800 dark:text-white font-bold text-lg">
+            Real Chat
+          </h2>
+          <p className="text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)] text-xs">
+            Đang online
+          </p>
         </div>
       </div>
       <button

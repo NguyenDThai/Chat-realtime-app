@@ -114,9 +114,9 @@ const Home = () => {
   return (
     <div className="relative flex h-screen overflow-hidden bg-white dark:bg-black text-slate-800 dark:text-white">
       {/* Hiệu ứng bong bóng nền */}
-      <div className="absolute w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.07] animate-float-slow top-20 -left-48"></div>
-      <div className="absolute w-96 h-96 bg-teal-400 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.07] animate-float-delayed bottom-20 -right-48"></div>
-      <div className="absolute w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.05] animate-float-fast top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute w-96 h-96 bg-[var(--color-theme-primary-dark)] rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.07] animate-float-slow top-20 -left-48"></div>
+      <div className="absolute w-96 h-96 bg-[var(--color-theme-primary-dark)] rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.07] animate-float-delayed bottom-20 -right-48"></div>
+      <div className="absolute w-96 h-96 bg-[var(--color-theme-primary-dark)] rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-5 dark:opacity-[0.05] animate-float-fast top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
 
       {/* Navigate Sidebar */}
       <NavigateSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -154,14 +154,14 @@ const Home = () => {
                         }
                         className={`relative pb-2 text-[13px] font-medium cursor-pointer transition-all duration-200 hover:text-slate-800 dark:hover:text-white ${
                           searchTab === tab.id
-                            ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+                            ? "text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)] font-semibold"
                             : ""
                         }`}
                       >
                         {tab.label}
                         {/* Đường line gạch dưới di chuyển mượt mà */}
                         {searchTab === tab.id && (
-                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-600 dark:bg-emerald-400 rounded-full" />
+                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-theme-primary)] dark:bg-[var(--color-theme-primary)] rounded-full" />
                         )}
                       </button>
                     ))}
@@ -181,14 +181,14 @@ const Home = () => {
                         onClick={() => setSearchTab(tab.id as "all" | "unread")}
                         className={`relative pb-2 font-medium cursor-pointer transition-all duration-200 hover:text-slate-800 dark:hover:text-white ${
                           searchTab === tab.id
-                            ? "text-emerald-600 dark:text-emerald-400 font-semibold"
+                            ? "text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)] font-semibold"
                             : ""
                         }`}
                       >
                         {tab.label}
                         {/* Đường line gạch dưới di chuyển mượt mà */}
                         {searchTab === tab.id && (
-                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-emerald-600 dark:bg-emerald-400 rounded-full" />
+                          <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--color-theme-primary)] dark:bg-[var(--color-theme-primary)] rounded-full" />
                         )}
                       </button>
                     ))}
@@ -227,20 +227,20 @@ const Home = () => {
             {selectedRoom ? (
               <div className="flex flex-1 overflow-hidden">
                 {/* Chat Header */}
-                <div className="flex-1 flex flex-col overflow-hidden">
+                <div className="flex-1 flex flex-col overflow-hidden bg-[#F9FAFB] dark:bg-[#1F1F1F]">
                   <ChatHeader setShowDetailSidebar={setShowDetailSidebar} />
 
                   {/* Messages Area */}
                   <MessageList key={selectedRoom._id} />
                   {/* Reply preview */}
                   {replyingMessage && (
-                    <div className="mb-2 mx-6 rounded-lg border-l-4 border-emerald-500 bg-slate-50 dark:bg-emerald-950/20">
-                      <div className="flex items-center justify-between bg-slate-100 dark:bg-white/5 px-3 py-2 ">
+                    <div className="mb-2 mx-6 rounded-lg border-l-4 border-[var(--color-theme-primary)] bg-slate-50 dark:bg-[var(--color-theme-primary)]/20 overflow-hidden">
+                      <div className="flex items-center justify-between bg-white/5 px-3 py-2 ">
                         <div className="flex items-center gap-3">
                           <div className="text-slate-700 dark:text-white/80">
                             <Reply size={16} />
                           </div>
-                          <span className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
+                          <span className="text-xs text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)] font-medium">
                             Đang trả lời
                           </span>
                         </div>

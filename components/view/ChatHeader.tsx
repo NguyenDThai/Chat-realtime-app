@@ -54,7 +54,7 @@ const ChatHeader = ({
             <h2 className="text-slate-800 dark:text-white font-bold text-lg">
               {getRoomName(selectedRoom)}
             </h2>
-            <p className="text-emerald-600 dark:text-emerald-200 text-xs">
+            <p className="text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)] text-xs">
               {selectedRoom.type === "group"
                 ? `${selectedRoom.members.length} thành viên`
                 : isOnline

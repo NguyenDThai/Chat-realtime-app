@@ -60,11 +60,11 @@ const ChatInput = () => {
           placeholder="Nhập tin nhắn của bạn..."
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="flex-1 px-4 py-3 bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/50 transition-all duration-200 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500"
+          className="flex-1 px-2 py-2 bg-slate-100 dark:bg-zinc-900 border rounded-xl focus:outline-none focus:border-[var(--color-theme-primary)] focus:ring-[var(--color-theme-primary)]/50 transition-all duration-200 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500"
         />
         <button
           type="submit"
-          className="p-3 bg-linear-to-r from-emerald-500 to-teal-500 rounded-xl hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-500/30"
+          className="p-3 bg-[var(--color-theme-primary)] rounded-xl transform hover:scale-105 transition-all duration-200 shadow-lg"
         >
           <svg
             className="w-5 h-5 text-white"

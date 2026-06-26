@@ -39,7 +39,7 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
               onClick={() => setActiveTab(item.id)}
               className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "bg-linear-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/20"
+                  ? "bg-[var(--color-theme-primary)] text-white"
                   : "text-slate-500 dark:text-emerald-100/60 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10"
               }`}
               title={item.label}
@@ -62,7 +62,7 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
               onClick={() => setActiveTab(item.id)}
               className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "bg-linear-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/20"
+                  ? "bg-[var(--color-theme-primary)] text-white shadow-lg shadow-emerald-500/20"
                   : "text-slate-500 dark:text-emerald-100/60 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10"
               }`}
               title={item.label}
@@ -80,7 +80,7 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
           onClick={() => setActiveTab("settings")}
           className={`w-11 h-11 flex items-center justify-center rounded-2xl transition-all duration-200 cursor-pointer ${
             activeTab === "settings"
-              ? "bg-linear-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/20"
+              ? "bg-[var(--color-theme-primary)] text-white"
               : "text-slate-500 dark:text-emerald-100/60 hover:text-slate-800 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-white/10"
           }`}
           title="Settings"
@@ -93,7 +93,7 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
 
         {/* User Avatar Placeholder */}
         <div
-          className="w-11 h-11 rounded-full bg-linear-to-br from-emerald-600 to-teal-600 flex items-center justify-center text-white font-semibold cursor-pointer hover:brightness-110 transition-all duration-200 relative overflow-hidden shadow-inner"
+          className="w-11 h-11 rounded-full bg-[var(--color-theme-primary)] dark:bg-[var(--color-theme-primary)] flex items-center justify-center text-white font-semibold cursor-pointer hover:brightness-110 transition-all duration-200 relative overflow-hidden shadow-inner"
           title={user?.name || "User"}
         >
           {user?.name ? (

@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { setSelectedRoom } from "@/src/store/slides/chatSlide";
 import type { RootState } from "@/src/store";
+import ChatAvatar from "@/components/share/ChatAvatar"; // Import ChatAvatar
 
 interface AddMemberModalProps {
   onClose: () => void;
@@ -93,28 +94,28 @@ const AddMemberModal: FC<AddMemberModalProps> = ({
   );
 
   return createPortal(
-    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/50 animate-fade-in">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/50 animate-fade-in select-none">
       <form
         id="add-member-form"
         onSubmit={handleSubmit}
-        className="relative flex flex-col bg-linear-to-br from-emerald-900 to-teal-900 rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-hidden border border-white/20 animate-scale-in"
+        className="relative flex flex-col bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-hidden border border-slate-200 dark:border-zinc-800 transition-colors animate-scale-in"
       >
         {/* Header */}
-        <div className="bg-linear-to-r from-emerald-600/50 to-teal-600/50 p-5 border-b border-white/20">
+        <div className="bg-slate-50 dark:bg-zinc-800/50 p-5 border-b border-slate-200 dark:border-zinc-800">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+              <h2 className="text-xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
                 Thêm thành viên
               </h2>
-              <p className="text-emerald-200 text-xs mt-1">
+              <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
                 Quản lý thành viên cho nhóm:{" "}
-                <span className="font-semibold text-white">{room.name}</span>
+                <span className="font-semibold text-slate-800 dark:text-white">{room.name}</span>
               </p>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 hover:bg-white/10 rounded-lg text-white/80 hover:text-white transition-all cursor-pointer"
+              className="p-1.5 hover:bg-slate-200/50 dark:hover:bg-white/10 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -122,7 +123,7 @@ const AddMemberModal: FC<AddMemberModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4">
+        <div className="p-5 overflow-y-auto custom-scrollbar flex-1 space-y-4 bg-white dark:bg-zinc-900 transition-colors">
           {/* Thanh tìm kiếm */}
           <div className="relative">
             <input
@@ -130,17 +131,17 @@ const AddMemberModal: FC<AddMemberModalProps> = ({
               placeholder="Tìm kiếm theo tên hoặc email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2.5 pl-10 bg-white/10 border border-white/20 rounded-xl focus:outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/50 transition-all duration-200 text-white placeholder-white/50 text-sm"
+              className="w-full px-4 py-2.5 pl-10 bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-xl focus:outline-none focus:border-[var(--color-theme-primary)] focus:ring-2 focus:ring-[var(--color-theme-primary)]/50 transition-all duration-200 text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 text-sm"
             />
-            <Search className="w-4 h-4 text-white/50 absolute left-3 top-3" />
+            <Search className="w-4 h-4 text-slate-400 dark:text-white/50 absolute left-3 top-3" />
           </div>
 
           {/* Label số lượng */}
           <div className="flex justify-between items-center px-1">
-            <span className="text-xs font-medium text-white/60">
+            <span className="text-xs font-medium text-slate-500 dark:text-white/60">
               Danh sách người dùng hệ thống
             </span>
-            <span className="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">
+            <span className="text-xs bg-[var(--color-theme-primary)]/10 dark:bg-[var(--color-theme-primary-dark)]/15 text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary-dark)] px-2 py-0.5 rounded-full border border-[var(--color-theme-primary)]/20 dark:border-[var(--color-theme-primary-dark)]/30">
               Đã chọn: {selectedUserIds.length}
             </span>
           </div>
@@ -161,40 +162,30 @@ const AddMemberModal: FC<AddMemberModalProps> = ({
                   onClick={() => handleToggleUser(user)}
                   className={`w-full p-3 rounded-xl transition-all duration-200 flex items-center justify-between group text-left ${
                     isSelected
-                      ? "bg-emerald-500/10 border border-emerald-400/40"
-                      : "bg-white/5 hover:bg-white/10 border border-white/10"
+                      ? "bg-[var(--color-theme-primary)]/10 dark:bg-[var(--color-theme-primary-dark)]/15 border border-[var(--color-theme-primary)]/45 dark:border-[var(--color-theme-primary-dark)]/45"
+                      : "bg-slate-50 hover:bg-slate-100 border border-slate-200 dark:bg-zinc-800/40 dark:hover:bg-zinc-800 dark:border-zinc-800"
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     {/* Avatar */}
-                    <div className="w-9 h-9 bg-emerald-800 rounded-lg flex items-center justify-center font-bold text-white text-sm overflow-hidden border border-white/10">
-                      {user.avatar ? (
-                        <img
-                          src={user.avatar}
-                          alt={user.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        user.name.charAt(0).toUpperCase()
-                      )}
-                    </div>
+                    <ChatAvatar user={user} className="w-9 h-9 text-sm" />
 
                     {/* Thông tin */}
                     <div>
-                      <p className="text-white font-semibold text-sm flex items-center gap-1.5">
+                      <div className="text-slate-800 dark:text-white font-semibold text-sm flex items-center gap-1.5">
                         {user.name}
                         {isCreator && (
-                          <span className="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30 font-medium">
+                          <span className="text-[10px] bg-amber-500/25 text-amber-600 dark:text-amber-300 px-1.5 py-0.5 rounded border border-amber-500/30 font-medium">
                             Trưởng nhóm
                           </span>
                         )}
                         {!isCreator && isOriginalMember && (
-                          <span className="text-[10px] bg-teal-500/20 text-teal-300 px-1.5 py-0.5 rounded border border-teal-500/30 font-medium">
+                          <span className="text-[10px] bg-[var(--color-theme-primary)]/10 dark:bg-[var(--color-theme-primary-dark)]/15 text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary-dark)] px-1.5 py-0.5 rounded border border-[var(--color-theme-primary)]/25 dark:border-[var(--color-theme-primary-dark)]/30 font-medium">
                             Đã trong nhóm
                           </span>
                         )}
-                      </p>
-                      <p className="text-white/50 text-xs">{user.email}</p>
+                      </div>
+                      <p className="text-slate-500 dark:text-white/50 text-xs">{user.email}</p>
                     </div>
                   </div>
 
@@ -202,8 +193,8 @@ const AddMemberModal: FC<AddMemberModalProps> = ({
                   <div
                     className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all duration-200 ${
                       isSelected
-                        ? "bg-emerald-500 border-emerald-500"
-                        : "border-white/30 group-hover:border-emerald-400"
+                        ? "bg-[var(--color-theme-primary)] border-[var(--color-theme-primary)]"
+                        : "border-slate-300 dark:border-white/30 group-hover:border-[var(--color-theme-primary)]"
                     }`}
                   >
                     {isSelected && (
@@ -215,7 +206,7 @@ const AddMemberModal: FC<AddMemberModalProps> = ({
             })}
 
             {filteredUsers.length === 0 && (
-              <div className="text-center py-6 text-white/40 text-xs">
+              <div className="text-center py-6 text-slate-500 dark:text-white/40 text-xs">
                 Không tìm thấy người dùng nào
               </div>
             )}
@@ -223,18 +214,18 @@ const AddMemberModal: FC<AddMemberModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-5 border-t border-white/20 bg-linear-to-t from-emerald-950/20 to-transparent flex space-x-3">
+        <div className="p-5 border-t border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/30 flex space-x-3">
           <button
             type="button"
             onClick={onClose}
-            className="flex-1 py-2 bg-white/10 border border-white/20 rounded-xl text-white font-medium hover:bg-white/20 transition-all cursor-pointer text-sm"
+            className="flex-1 py-2 bg-slate-100 dark:bg-zinc-800 border dark:border-zinc-750 rounded-xl text-slate-700 dark:text-white font-medium hover:bg-slate-200/50 dark:hover:bg-zinc-700 transition-all cursor-pointer text-sm"
           >
             Hủy
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className={`flex-1 py-2 rounded-xl text-white font-semibold flex items-center justify-center gap-2 transition-all shadow-lg text-sm cursor-pointer bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 shadow-emerald-500/20 active:scale-[0.98]`}
+            className="flex-1 py-2 rounded-xl text-white font-semibold flex items-center justify-center gap-2 transition-all shadow-lg text-sm cursor-pointer bg-[var(--color-theme-primary)] hover:bg-[var(--color-theme-primary-hover)] shadow-[var(--color-theme-primary)]/20 active:scale-[0.98]"
           >
             {isLoading ? (
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

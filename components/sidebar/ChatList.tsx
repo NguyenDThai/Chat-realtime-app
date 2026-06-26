@@ -97,7 +97,7 @@ const ChatList = ({
       {searchTerm && filteredUser.length > 0 && (
         <div className="mt-1">
           {/* Tiêu đề phân chia phần */}
-          <div className="px-4 py-2 text-sm font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wider">
+          <div className="px-4 py-2 text-sm font-bold text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)] uppercase tracking-wider">
             Thành viên
           </div>
           {filteredUser.map((u) => (
@@ -107,7 +107,7 @@ const ChatList = ({
               className="flex items-center space-x-3 p-4 hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-slate-200 dark:border-white/10"
             >
               {/* Avatar */}
-              <div className="relative w-12 h-12 rounded-full overflow-hidden border border-slate-200 dark:border-white/20 bg-emerald-600 dark:bg-emerald-800 flex items-center justify-center text-white font-bold uppercase">
+              <div className="relative w-12 h-12 rounded-full overflow-hidden border border-slate-200 dark:border-white/20 bg-[var(--color-theme-primary)] dark:bg-[var(--color-theme-primary)] flex items-center justify-center text-white font-bold uppercase">
                 {u.avatar ? (
                   <img
                     src={u.avatar}
@@ -120,8 +120,12 @@ const ChatList = ({
               </div>
               {/* Thông tin */}
               <div className="flex-1 min-w-0">
-                <h3 className="text-slate-800 dark:text-white font-semibold truncate">{u.name}</h3>
-                <p className="text-xs text-slate-500 dark:text-white/50 truncate">{u.email}</p>
+                <h3 className="text-slate-800 dark:text-white font-semibold truncate">
+                  {u.name}
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-white/50 truncate">
+                  {u.email}
+                </p>
               </div>
             </div>
           ))}
@@ -134,7 +138,7 @@ const ChatList = ({
             onClick={() => dispatch(setSelectedRoom(room))}
             className={`group relative p-4 hover:bg-slate-100 dark:hover:bg-white/10 cursor-pointer transition-all duration-200 border-b border-slate-200 dark:border-white/10 ${
               selectedRoom?._id === room._id
-                ? "bg-slate-200/50 dark:bg-white/20 border-l-4 border-l-emerald-500 dark:border-l-emerald-400"
+                ? "bg-slate-200/50 dark:bg-white/20 border-l-4 border-l-[var(--color-theme-primary)] dark:border-l-[var(--color-theme-primary)]"
                 : ""
             }`}
           >
@@ -144,7 +148,11 @@ const ChatList = ({
                 <ChatAvatar
                   room={room}
                   currentUserId={user?._id}
-                  className={`w-12 h-12 ${selectedRoom?._id === room._id ? "shadow-lg shadow-emerald-500/30" : ""}`}
+                  className={`w-12 h-12 ${
+                    selectedRoom?._id === room._id
+                      ? "shadow-lg shadow-[var(--color-theme-primary)]/30"
+                      : ""
+                  }`}
                 />
                 {room.unreadCount && room.unreadCount > 0 ? (
                   <div className="absolute top-0 right-0 text-white bg-red-500 rounded-full px-1.5 py-0.5 text-xs">
@@ -159,7 +167,9 @@ const ChatList = ({
                   <h3 className="text-slate-800 dark:text-white font-semibold truncate flex-1 max-w-[180px]">
                     {getRoomName(room)}
                   </h3>
-                  <span className="text-xs text-slate-500 dark:text-white/50">{room.time}</span>
+                  <span className="text-xs text-slate-500 dark:text-white/50">
+                    {room.time}
+                  </span>
                 </div>
                 <p className="text-sm text-slate-500 dark:text-white/60 truncate">
                   {room.lastMessage ? room.lastMessage.content : ""}
@@ -180,11 +190,10 @@ const ChatList = ({
             </div>
 
             {/* Dropdown menu */}
-
             {activeMenuRoomId === room._id && (
               <div
                 onClick={(e) => e.stopPropagation()} // Chặn đóng menu khi click vào bên trong menu
-                className="absolute right-4 top-15 w-44 bg-white dark:bg-emerald-950/95 border border-slate-200 dark:border-white/20 rounded-xl p-1 shadow-2xl z-50 animate-fade-in backdrop-blur-md"
+                className="absolute right-4 top-15 w-44 bg-white dark:bg-black border border-slate-200 dark:border-white/20 rounded-xl p-1 z-50 animate-fade-in"
               >
                 {room.type === "group" && (
                   <>

@@ -1,9 +1,8 @@
-
 const EmptyChat = () => {
   return (
     <div className="flex-1 flex items-center justify-center">
       <div className="text-center max-w-md px-8">
-        <div className="mx-auto w-32 h-32 bg-linear-to-r from-emerald-500 to-teal-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-emerald-500/30 animate-pulse-glow">
+        <div className="mx-auto w-32 h-32 bg-[var(--color-theme-primary)] hover:bg-[var(--color-theme-primary-hover)] rounded-3xl flex items-center justify-center mb-6">
           <svg
             className="w-16 h-16 text-white"
             fill="none"
@@ -21,10 +20,10 @@ const EmptyChat = () => {
         <h2 className="text-3xl font-bold text-slate-800 dark:text-white mb-2">
           Chào mừng đến với Real Chat!
         </h2>
-        <p className="text-emerald-600 dark:text-emerald-200 mb-6">
+        <p className="text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)] mb-6">
           Hãy chọn hoặc tạo một phòng chat để bắt đầu trò chuyện
         </p>
-        <button className="px-6 py-3 bg-linear-to-r from-emerald-500 to-teal-500 text-white rounded-xl font-semibold hover:from-emerald-600 hover:to-teal-600 transform hover:scale-105 transition-all duration-200 shadow-lg shadow-emerald-500/30 inline-flex items-center space-x-2">
+        <button className="px-6 py-3 bg-[var(--color-theme-primary)] hover:bg-[var(--color-theme-primary-hover)] text-white rounded-xl font-semibold transform hover:scale-105 transition-all duration-200 shadow-lg inline-flex items-center space-x-2">
           <svg
             className="w-5 h-5"
             fill="none"
@@ -44,7 +43,7 @@ const EmptyChat = () => {
           <div className="text-center">
             <div className="w-12 h-12 bg-slate-100 dark:bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-2">
               <svg
-                className="w-6 h-6 text-emerald-600 dark:text-emerald-400"
+                className="w-6 h-6 text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -57,12 +56,14 @@ const EmptyChat = () => {
                 />
               </svg>
             </div>
-            <p className="text-slate-500 dark:text-white/60 text-xs">50+ Thành viên</p>
+            <p className="text-slate-500 dark:text-white/60 text-xs">
+              50+ Thành viên
+            </p>
           </div>
           <div className="text-center">
             <div className="w-12 h-12 bg-slate-100 dark:bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-2">
               <svg
-                className="w-6 h-6 text-emerald-600 dark:text-emerald-400"
+                className="w-6 h-6 text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -75,12 +76,14 @@ const EmptyChat = () => {
                 />
               </svg>
             </div>
-            <p className="text-slate-500 dark:text-white/60 text-xs">24/7 Support</p>
+            <p className="text-slate-500 dark:text-white/60 text-xs">
+              24/7 Support
+            </p>
           </div>
           <div className="text-center">
             <div className="w-12 h-12 bg-slate-100 dark:bg-white/10 rounded-xl flex items-center justify-center mx-auto mb-2">
               <svg
-                className="w-6 h-6 text-emerald-600 dark:text-emerald-400"
+                className="w-6 h-6 text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)]"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -93,7 +96,9 @@ const EmptyChat = () => {
                 />
               </svg>
             </div>
-            <p className="text-slate-500 dark:text-white/60 text-xs">Phản hồi nhanh</p>
+            <p className="text-slate-500 dark:text-white/60 text-xs">
+              Phản hồi nhanh
+            </p>
           </div>
         </div>
       </div>

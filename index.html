@@ -13,6 +13,12 @@
         } else {
           document.documentElement.classList.remove("dark");
         }
+
+        const saveColorTheme = localStorage.getItem("colorTheme") || "green";
+        document.documentElement.setAttribute(
+          "data-color-theme",
+          saveColorTheme,
+        );
       })();
     </script>
   </head>

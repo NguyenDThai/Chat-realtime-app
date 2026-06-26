@@ -1,3 +1,4 @@
+import ChatAvatar from "@/components/share/ChatAvatar";
 import { useData } from "@/hooks/useData";
 import { createChatListApi } from "@/src/api/chat.list.api";
 import type { RootState } from "@/src/store";
@@ -65,7 +66,7 @@ const UserProfileModal = ({
       onClick={(e) => e.stopPropagation()}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 select-none"
     >
-      <div className="relative w-[385px] bg-emerald-800/95 rounded-3xl p-6 shadow-2xl flex flex-col items-center text-black">
+      <div className="relative w-[385px] bg-white dark:bg-[#2D2D2D] rounded-3xl p-6 shadow-2xl flex flex-col items-center text-black dark:text-white">
         {/* Nút đóng */}
         <button
           onClick={onClose}
@@ -76,23 +77,13 @@ const UserProfileModal = ({
 
         {/* Avatar lớn kèm trạng thái online */}
         <div className="relative mt-4">
-          <div className="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white text-2xl font-bold uppercase">
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt={user.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              user.name.charAt(0)
-            )}
-          </div>
+          <ChatAvatar user={user} className="w-20 h-20" />
           {isOnline && (
             <div className="absolute bottom-1 right-0 w-2.5 h-2.5 bg-green-500 rounded-full"></div>
           )}
         </div>
         {/* Tên trạng thái hoạt động */}
-        <h3 className="mt-3 text-lg font-bold text-white">{user.name}</h3>
+        <h3 className="mt-3 text-lg font-bold dark:text-white">{user.name}</h3>
         <p className="text-xs text-gray-400">
           {isOnline ? "Đang hoạt động" : "Không hoạt động"}
         </p>
@@ -100,23 +91,23 @@ const UserProfileModal = ({
         <div className="w-full grid grid-cols-3 gap-2.5 mt-5">
           <button
             onClick={handleCreateChat}
-            className="flex flex-col items-center justify-center p-3 bg-white/10 hover:bg-white/10 rounded-xl transition-all cursor-pointer border-none text-[16px] font-medium text-white/95 gap-1.5"
+            className="flex flex-col items-center justify-center p-3 bg-[#F9FAFB] dark:bg-[#4F4F4F] hover:bg-white/10 dark:hover:bg-white/10 rounded-xl transition-all cursor-pointer border-none text-[16px] font-medium text-black dark:text-white gap-1.5"
           >
-            <MessageSquare className="w-4 h-4 text-white/95" />
+            <MessageSquare className="w-4 h-4 text-black dark:text-white" />
             Nhắn tin
           </button>
           <button
             onClick={() => alert("Chức năng chưa được triển khai")}
-            className="flex flex-col items-center justify-center p-3 bg-white/10 hover:bg-white/10 rounded-xl transition-all cursor-pointer border-none text-[16px] font-medium text-white/95 gap-1.5"
+            className="flex flex-col items-center justify-center p-3 bg-[#F9FAFB] dark:bg-[#4F4F4F] hover:bg-white/10 dark:hover:bg-white/10 rounded-xl transition-all cursor-pointer border-none text-[16px] font-medium text-black dark:text-white gap-1.5"
           >
-            <Phone className="w-4 h-4 text-white/95" />
+            <Phone className="w-4 h-4 text-black dark:text-white" />
             Gọi
           </button>
           <button
             onClick={() => alert("Chức năng chưa được triển khai")}
-            className="flex flex-col items-center justify-center p-3 bg-white/10 hover:bg-white/10 rounded-xl transition-all cursor-pointer border-none text-[16px] font-medium text-white/95 gap-1.5"
+            className="flex flex-col items-center justify-center p-3 bg-[#F9FAFB] dark:bg-[#4F4F4F] hover:bg-white/10 dark:hover:bg-white/10 rounded-xl transition-all cursor-pointer border-none text-[16px] font-medium text-black dark:text-white gap-1.5"
           >
-            <Video className="w-4 h-4 text-white/95" />
+            <Video className="w-4 h-4 text-black dark:text-white" />
             Video
           </button>
         </div>
@@ -124,24 +115,44 @@ const UserProfileModal = ({
         {/* Information detail */}
         <div className="w-full mt-6 space-y-4 text-sm">
           <div className="flex items-cente border-gray-100 pb-2">
-            <span className="text-gray-400 w-[80px]">Phòng ban</span>
-            <span className="text-white font-medium">Đang cập nhật</span>
+            <span className="text-black/80 dark:text-gray-400 w-[80px]">
+              Phòng ban
+            </span>
+            <span className="text-black dark:text-white font-medium">
+              Đang cập nhật
+            </span>
           </div>
           <div className="flex items-center border-gray-100 pb-2">
-            <span className="text-gray-400 w-[80px]">Vai trò</span>
-            <span className="text-white font-medium">Thành viên</span>
+            <span className="text-black/80 dark:text-gray-400 w-[80px]">
+              Vai trò
+            </span>
+            <span className="text-black dark:text-white font-medium">
+              Thành viên
+            </span>
           </div>
           <div className="flex items-center border-gray-100 pb-2">
-            <span className="text-gray-400 w-[80px]">Ngày sinh</span>
-            <span className="text-white font-medium">Đang cập nhật</span>
+            <span className="text-black/80 dark:text-gray-400 w-[80px]">
+              Ngày sinh
+            </span>
+            <span className="text-black dark:text-white font-medium">
+              Đang cập nhật
+            </span>
           </div>
           <div className="flex items-center border-gray-100 pb-2">
-            <span className="text-gray-400 w-[80px]">Email</span>
-            <span className="text-white font-medium">{user.email}</span>
+            <span className="text-black/80 dark:text-gray-400 w-[80px]">
+              Email
+            </span>
+            <span className="text-black dark:text-white font-medium">
+              {user.email}
+            </span>
           </div>
           <div className="flex items-center border-gray-100 pb-2">
-            <span className="text-gray-400 w-[80px]">Điện thoại</span>
-            <span className="text-white font-medium">Đang cập nhật</span>
+            <span className="text-black/80 dark:text-gray-400 w-[80px]">
+              Điện thoại
+            </span>
+            <span className="text-black dark:text-white font-medium">
+              Đang cập nhật
+            </span>
           </div>
         </div>
       </div>

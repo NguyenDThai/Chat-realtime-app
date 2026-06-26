@@ -123,7 +123,7 @@ const ActiveTabContact = ({
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Tìm bạn"
-              className="w-full bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[8px] py-2 pl-10 pr-4 text-slate-800 dark:text-white text-sm focus:outline-hidden focus:border-emerald-500 focus:bg-slate-100 dark:focus:bg-white/10 transition-all"
+              className="w-full bg-slate-100/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-[8px] py-2 pl-10 pr-4 text-slate-800 dark:text-white text-sm focus:outline-hidden focus:border-[var(--color-theme-primary)] focus:dark:border-[var(--color-theme-primary)] focus:bg-slate-100 dark:focus:bg-white/10 transition-all"
             />
           </div>
           {contactSubTab === "members" && (
@@ -152,7 +152,7 @@ const ActiveTabContact = ({
             {sortedLetters.length > 0 ? (
               sortedLetters.map((letter) => (
                 <div key={letter} className="space-y-2">
-                  <div className="text-emerald-600 dark:text-emerald-400 font-bold text-sm uppercase select-none">
+                  <div className="text-[var(--color-theme-primary)] dark:text-[var(--color-theme-primary)] font-bold text-sm uppercase select-none">
                     {letter}
                   </div>
 

@@ -20,7 +20,7 @@ const ActiveTabContactSidebar = ({
           onClick={() => setContactSubTab("members")}
           className={`flex items-center justify-between ${
             contactSubTab === "members"
-              ? "bg-linear-to-br from-emerald-500/50 to-teal-500/50 text-white"
+              ? "bg-[var(--color-theme-primary)] text-white"
               : "text-slate-700 dark:text-white/80 hover:bg-slate-200/50 dark:hover:bg-white/10"
           } px-3 py-2 rounded-lg cursor-pointer`}
         >
@@ -36,7 +36,7 @@ const ActiveTabContactSidebar = ({
           onClick={() => setContactSubTab("groups")}
           className={`flex items-center justify-between ${
             contactSubTab === "groups"
-              ? "bg-linear-to-br from-emerald-500/50 to-teal-500/50 text-white"
+              ? "bg-[var(--color-theme-primary)] text-white"
               : "text-slate-700 dark:text-white/80 hover:bg-slate-200/50 dark:hover:bg-white/10"
           } px-3 py-2 rounded-lg cursor-pointer`}
         >
