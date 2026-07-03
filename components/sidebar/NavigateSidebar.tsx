@@ -27,7 +27,7 @@ const NavigateSidebar = ({ activeTab, setActiveTab }: NavigateSidebarProps) => {
   ];
 
   return (
-    <div className="w-[72px] h-screen bg-[#F9F9F9] dark:bg-zinc-950 flex flex-col justify-between items-center py-6 border-r border-slate-200 dark:border-zinc-800 z-10 shrink-0">
+    <div className="hidden md:flex w-[72px] h-screen bg-[#F9F9F9] dark:bg-zinc-950 flex-col justify-between items-center py-6 border-r border-slate-200 dark:border-zinc-800 z-10 shrink-0">
       {/* Top Menu Items */}
       <div className="flex flex-col items-center w-full gap-4">
         {menuItems.map((item) => {

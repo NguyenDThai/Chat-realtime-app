@@ -17,11 +17,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 interface ActiveTabContactProps {
   contactSubTab: "members" | "groups";
+  setContactSubTab?: (tab: "members" | "groups") => void;
   setActiveTab: (tab: string) => void;
 }
 
 const ActiveTabContact = ({
   contactSubTab,
+  setContactSubTab,
   setActiveTab,
 }: ActiveTabContactProps) => {
   const dispatch = useDispatch();
@@ -108,6 +110,31 @@ const ActiveTabContact = ({
           </h2>
         </div>
       </div>
+      {/* Subtab switcher for mobile */}
+      {setContactSubTab && (
+        <div className="flex md:hidden border-b border-slate-200 dark:border-white/10 bg-slate-100/30 dark:bg-black/10 p-2 shrink-0 gap-2">
+          <button
+            onClick={() => setContactSubTab("members")}
+            className={`flex-1 py-2 text-center text-sm font-medium rounded-lg transition-all cursor-pointer ${
+              contactSubTab === "members"
+                ? "bg-[var(--color-theme-primary)] text-white shadow-sm"
+                : "text-slate-600 dark:text-white/70 hover:bg-slate-200/50 dark:hover:bg-white/5"
+            }`}
+          >
+            Thành viên ({ortherUsers.length})
+          </button>
+          <button
+            onClick={() => setContactSubTab("groups")}
+            className={`flex-1 py-2 text-center text-sm font-medium rounded-lg transition-all cursor-pointer ${
+              contactSubTab === "groups"
+                ? "bg-[var(--color-theme-primary)] text-white shadow-sm"
+                : "text-slate-600 dark:text-white/70 hover:bg-slate-200/50 dark:hover:bg-white/5"
+            }`}
+          >
+            Danh sách nhóm ({rooms.filter((room) => room.type === "group").length})
+          </button>
+        </div>
+      )}
       {/* Body */}
       <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
         <h3 className="text-slate-700 dark:text-white text-[16px] mb-2">

@@ -12,7 +12,7 @@ import SearchBox from "@/components/sidebar/SearchBox";
 import NavigateSidebar from "@/components/sidebar/NavigateSidebar";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/src/store";
-import { Reply, X } from "lucide-react";
+import { Reply, X, MessageSquare, Users, Settings } from "lucide-react";
 import { markRoomRead, setReplyMessage } from "@/src/store/slides/chatSlide";
 import type { ChatListType } from "@/types/list.chat.type";
 import { markMessageAsReadApi } from "@/src/api/message.api";
@@ -122,7 +122,11 @@ const Home = () => {
       <NavigateSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
       {activeTab !== "settings" && (
-        <div className="relative w-80 bg-white dark:bg-[#1A1A1A] border-r border-slate-200 dark:border-zinc-800 flex flex-col">
+        <div className={`relative w-full md:w-80 bg-white dark:bg-[#1A1A1A] border-r border-slate-200 dark:border-zinc-800 flex flex-col shrink-0 ${
+          activeTab === "chat"
+            ? selectedRoom ? "hidden md:flex" : "flex pb-16 md:pb-0"
+            : "hidden md:flex pb-16 md:pb-0"
+        }`}>
           {/* Sidebar - Danh sách phòng chat */}
           {/* Sidebar Header */}
           {activeTab === "chat" ? (
@@ -221,7 +225,11 @@ const Home = () => {
       )}
 
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col relative">
+      <div className={`flex-1 flex flex-col relative ${
+        activeTab === "chat"
+          ? selectedRoom ? "flex h-full w-full" : "hidden md:flex"
+          : "flex pb-16 md:pb-0"
+      }`}>
         {activeTab == "chat" ? (
           <>
             {selectedRoom ? (
@@ -277,12 +285,59 @@ const Home = () => {
         ) : activeTab === "contact" ? (
           <ActiveTabContact
             contactSubTab={contactSubTab}
+            setContactSubTab={setContactSubTab}
             setActiveTab={setActiveTab}
           />
         ) : (
           <ActiveTabSetting />
         )}
       </div>
+
+      {/* Mobile Bottom Navigation Bar */}
+      {(!selectedRoom || activeTab !== "chat") && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white dark:bg-zinc-950 border-t border-slate-200 dark:border-zinc-800 flex items-center justify-around z-50 shadow-lg animate-in fade-in slide-in-from-bottom-5 duration-200">
+          <button
+            onClick={() => setActiveTab("chat")}
+            className={`relative flex flex-col items-center justify-center w-16 h-full transition-all duration-200 cursor-pointer ${
+              activeTab === "chat"
+                ? "text-[var(--color-theme-primary)]"
+                : "text-slate-500 dark:text-emerald-100/60 hover:text-slate-800 dark:hover:text-white"
+            }`}
+          >
+            <MessageSquare size={20} strokeWidth={activeTab === "chat" ? 2.5 : 2} />
+            <span className="text-[10px] mt-1 font-medium">Tin nhắn</span>
+            {unreadCount > 0 && (
+              <span className="absolute top-1.5 right-2 bg-red-500 text-white text-[10px] font-bold rounded-full h-4 min-w-[16px] px-1 flex items-center justify-center animate-pulse">
+                {unreadCount}
+              </span>
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab("contact")}
+            className={`flex flex-col items-center justify-center w-16 h-full transition-all duration-200 cursor-pointer ${
+              activeTab === "contact"
+                ? "text-[var(--color-theme-primary)]"
+                : "text-slate-500 dark:text-emerald-100/60 hover:text-slate-800 dark:hover:text-white"
+            }`}
+          >
+            <Users size={20} strokeWidth={activeTab === "contact" ? 2.5 : 2} />
+            <span className="text-[10px] mt-1 font-medium">Danh bạ</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("settings")}
+            className={`flex flex-col items-center justify-center w-16 h-full transition-all duration-200 cursor-pointer ${
+              activeTab === "settings"
+                ? "text-[var(--color-theme-primary)]"
+                : "text-slate-500 dark:text-emerald-100/60 hover:text-slate-800 dark:hover:text-white"
+            }`}
+          >
+            <Settings size={20} strokeWidth={activeTab === "settings" ? 2.5 : 2} />
+            <span className="text-[10px] mt-1 font-medium">Cài đặt</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

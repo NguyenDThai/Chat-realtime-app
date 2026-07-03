@@ -107,7 +107,7 @@ const RoomDetailSidebar: FC<RoomDetailSidebarProps> = ({ onClose }) => {
   };
 
   return (
-    <div className="w-80 bg-white dark:bg-[#1A1A1A] border-l border-slate-200 dark:border-zinc-800 flex flex-col h-full animate-fade-in relative z-20">
+    <div className="absolute md:relative top-0 right-0 w-full md:w-80 bg-white dark:bg-[#1A1A1A] border-l border-slate-200 dark:border-zinc-800 flex flex-col h-full animate-fade-in z-20 shadow-2xl md:shadow-none">
       {/* Nút đóng Sidebar */}
       <button
         onClick={onClose}

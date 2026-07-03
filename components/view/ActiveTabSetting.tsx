@@ -99,7 +99,7 @@ const ActiveTabSetting = () => {
   ];
 
   return (
-    <div className="w-[625px] mx-auto mt-6">
+    <div className="w-full max-w-[625px] px-4 md:px-0 mx-auto mt-6 pb-6">
       {/* Header */}
       <div className="flex justify-between">
         <h3 className="font-semibold text-lg text-slate-800 dark:text-white">

@@ -16,7 +16,6 @@ const ChatInput = () => {
   const [isUploadingFile, setIsUploadingFile] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<PreviewFileType[]>([]);
-  const [filePreview, setFilePreview] = useState<string | null>(null);
   const { selectedRoom, replyingMessage } = useSelector(
     (state: RootState) => state.chat,
   );
@@ -264,14 +263,6 @@ const ChatInput = () => {
       setIsUploadingFile(false);
     }
   };
-
-  useEffect(() => {
-    return () => {
-      if (filePreview && filePreview.startsWith("blob:")) {
-        URL.revokeObjectURL(filePreview);
-      }
-    };
-  }, [filePreview]);
 
   return (
     <div className="p-4 border-t border-[#E5E7EB] dark:border-zinc-800 bg-white dark:bg-[#1A1A1A]">

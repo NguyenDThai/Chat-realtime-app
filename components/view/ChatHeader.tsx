@@ -2,14 +2,16 @@ import ChatAvatar from "@/components/share/ChatAvatar";
 import { useAuth } from "@/hooks/useAuth";
 import type { RootState } from "@/src/store";
 import type { ChatListType } from "@/types/list.chat.type";
-import { EllipsisVertical } from "lucide-react";
-import { useSelector } from "react-redux";
+import { EllipsisVertical, ChevronLeft } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { setSelectedRoom } from "@/src/store/slides/chatSlide";
 
 const ChatHeader = ({
   setShowDetailSidebar,
 }: {
   setShowDetailSidebar: (show: boolean) => void;
 }) => {
+  const dispatch = useDispatch();
   const { user } = useAuth();
   const { selectedRoom, onlineUsers } = useSelector(
     (state: RootState) => state.chat,
@@ -41,6 +43,15 @@ const ChatHeader = ({
     <div className="bg-white dark:bg-[#1A1A1A] p-4 border-b border-white dark:border-zinc-800">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
+          {/* Nút Back quay lại trên mobile */}
+          <button
+            onClick={() => dispatch(setSelectedRoom(null))}
+            className="md:hidden p-1 mr-1 hover:bg-slate-100 dark:hover:bg-white/10 rounded-lg text-slate-600 dark:text-white/70 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer"
+            title="Quay lại"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+
           {/* Image user and group */}
           <div className="relative">
             <ChatAvatar
