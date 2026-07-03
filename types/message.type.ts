@@ -34,3 +34,9 @@ export interface MessageType {
   _v?: string;
   reactions?: ReactionType[];
 }
+
+export interface PreviewFileType {
+  id: string;
+  file: File;
+  previewUrl: string | null;
+}
