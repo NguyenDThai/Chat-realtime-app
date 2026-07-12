@@ -225,7 +225,7 @@ const Home = () => {
       )}
 
       {/* Main Chat Area */}
-      <div className={`flex-1 flex flex-col relative ${
+      <div className={`flex-1 flex flex-col relative overflow-hidden ${
         activeTab === "chat"
           ? selectedRoom ? "flex h-full w-full" : "hidden md:flex"
           : "flex pb-16 md:pb-0"
@@ -233,7 +233,7 @@ const Home = () => {
         {activeTab == "chat" ? (
           <>
             {selectedRoom ? (
-              <div className="flex flex-1 overflow-hidden">
+              <div className="flex flex-1 overflow-hidden animate-slide-in-right md:animate-none">
                 {/* Chat Header */}
                 <div className="flex-1 flex flex-col overflow-hidden bg-[#F9FAFB] dark:bg-[#1F1F1F]">
                   <ChatHeader setShowDetailSidebar={setShowDetailSidebar} />
